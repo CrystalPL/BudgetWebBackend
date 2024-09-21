@@ -28,7 +28,8 @@ class AuthenticationFilter extends OncePerRequestFilter {
     TokenDecoder tokenDecoder;
     TokenService tokenService;
     CookieService cookieService;
-    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/auth/login", "/auth/register", "/h2-console");
+    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/auth/login", "/auth/register",
+            "/h2-console", "/account/confirm-change-email");
 
     //https://stackoverflow.com/questions/23621037/return-http-error-401-code-skip-filter-chains
     //sendError spowoduje przekierowanie do strony obsługi błędów aplikacji i ponowne uruchomienie filtrów dla tego przekierowania
@@ -37,7 +38,6 @@ class AuthenticationFilter extends OncePerRequestFilter {
         final Optional<Cookie> cookieOptional = cookieService.getCookieWithToken(request.getCookies());
         if (cookieOptional.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            System.out.println("baczność kurwa");
             return;
         }
 
@@ -46,7 +46,6 @@ class AuthenticationFilter extends OncePerRequestFilter {
         final AccessTokenDetails tokenDetails = tokenDecoder.decodeToken(cookieValue);
         if (!tokenDetails.isVerified()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            System.out.println("baczność kurwa");
             return;
         }
 
@@ -54,7 +53,6 @@ class AuthenticationFilter extends OncePerRequestFilter {
             final Optional<String> newAccessTokenOptional = tokenService.createAccessToken(tokenDetails);
             if (newAccessTokenOptional.isEmpty()) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                System.out.println("baczność kurwa");
                 return;
             }
 

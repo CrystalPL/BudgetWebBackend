@@ -13,4 +13,9 @@ interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u.email FROM User u WHERE u.id = :id")
     Optional<String> findEmailById(final long id);
+
+    boolean existsByIdAndPassword(final long userId, final String encodePassword);
+
+    @Query("SELECT u.password FROM User u WHERE u.id = :id")
+    Optional<String> findPasswordById(final long id);
 }

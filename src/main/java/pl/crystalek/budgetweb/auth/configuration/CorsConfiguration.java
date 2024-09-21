@@ -9,7 +9,7 @@ class CorsConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(final CorsRegistry registry) {
-        registry.addMapping("/auth/**")
+        registry.addMapping("/**")
                 .allowedOrigins("https://budgetapp.pl", "http://localhost:8091/")
                 .allowedMethods("PUT", "DELETE", "POST", "GET")
                 .allowedHeaders("Content-Type", "accept",

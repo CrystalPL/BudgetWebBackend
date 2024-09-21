@@ -3,7 +3,6 @@ package pl.crystalek.budgetweb.auth.configuration;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -39,12 +38,12 @@ class SecurityConfiguration {
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(registry -> registry
                         .requestMatchers("/auth/confirm").permitAll()
-//                        .requestMatchers(PathRequest.toH2Console()).permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/auth/register").permitAll()
                         .requestMatchers("/auth/password/**").permitAll()
+                        .requestMatchers("/account/confirm-change-email/**").permitAll()
                         .requestMatchers("/auth/resend-email").hasRole(UserRole.GUEST.name())
-//                        .anyRequest().authenticated()
                         .anyRequest().hasAnyRole(UserRole.USER.name())
                 )
                 .build();

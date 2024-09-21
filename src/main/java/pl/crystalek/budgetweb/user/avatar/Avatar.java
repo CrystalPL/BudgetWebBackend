@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.auth.confirmation;
+package pl.crystalek.budgetweb.user.avatar;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -12,24 +12,25 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.user.User;
 
-import java.time.Instant;
 import java.util.UUID;
 
 @Entity
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class AccountConfirmation {
+public class Avatar {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
-    @OneToOne
+
+
+    @OneToOne()
     @JoinColumn(name = "user_id")
     User user;
-    Instant expireAt;
+    String extension;
 
-    public AccountConfirmation(final User user, final Instant expireAt) {
+    public Avatar(final User user, final String extension) {
         this.user = user;
-        this.expireAt = expireAt;
+        this.extension = extension;
     }
 }

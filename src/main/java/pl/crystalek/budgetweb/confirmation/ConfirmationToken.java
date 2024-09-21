@@ -1,13 +1,13 @@
-package pl.crystalek.budgetweb.auth.passwordrecovery;
+package pl.crystalek.budgetweb.confirmation;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,18 +21,23 @@ import java.util.UUID;
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "user_id"))
-public class PasswordRecovery {
+public class ConfirmationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
+
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;
+
     Instant expireAt;
 
-    public PasswordRecovery(final User user, final Instant expireAt) {
+    @Enumerated(EnumType.STRING)
+    ConfirmationTokenType confirmationTokenType;
+
+    public ConfirmationToken(final User user, final Instant expireAt, final ConfirmationTokenType confirmationTokenType) {
         this.user = user;
         this.expireAt = expireAt;
+        this.confirmationTokenType = confirmationTokenType;
     }
 }

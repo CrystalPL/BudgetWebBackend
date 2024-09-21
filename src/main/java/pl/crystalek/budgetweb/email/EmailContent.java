@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.experimental.FieldDefaults;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -15,6 +16,21 @@ public class EmailContent {
     String from;
     String to;
     String message;
+
+    public static EmailContent ofBasicEmail(final EmailProperties emailProperties, final String emailAddress, final String token) {
+        final String url = UriComponentsBuilder.fromUriString(emailProperties.getReturnAddress())
+                .queryParam("token", token)
+                .build().toString();
+
+        final String message = String.format(emailProperties.getMessage(), url);
+
+        return builder()
+                .from(emailProperties.getFrom())
+                .to(emailAddress)
+                .subject(emailProperties.getMessageSubject())
+                .message(message)
+                .build();
+    }
 
     public MimeMessage getMimeMessage(final JavaMailSender javaMailSender) throws MessagingException {
         final MimeMessage mimeMessage = javaMailSender.createMimeMessage();

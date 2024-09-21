@@ -16,9 +16,14 @@ account:
   confirmation:
     email:
       config:
-        return-confirm-address: http://localhost:8091/account-activation
+        return-address: http://localhost:8091/account-activation
 
 password-recovery:
   email:
     config:
-      return-confirm-address: http://localhost:8091/password-reset
+      return-address: http://localhost:8091/password-reset
+
+change-email:
+  email:
+    config:
+      return-address: http://localhost:8091/profile/change-email-confirmation

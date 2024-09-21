@@ -14,9 +14,14 @@ account:
   confirmation:
     email:
       config:
-        return-confirm-address: https://budgetapp.pl/account-activation
+        return-address: https://budgetapp.pl/account-activation
 
 password-recovery:
   email:
     config:
-      return-confirm-address: https://budgetapp.pl/password-reset
+      return-address: https://budgetapp.pl/password-reset
+
+change-email:
+  email:
+    config:
+      return-address: https://budgetapp.pl/profile/change-email-confirmation

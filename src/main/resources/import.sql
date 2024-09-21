@@ -1,5 +1,5 @@
 INSERT INTO users(email, password, nickname, user_role, receive_updates)
-VALUES ('test@test', '$2a$12$QcnVP4N0MtYrnHntGoIBEOzuu7S6739x/wIgPLEPICMiZ5Ws8XdB6', 'test', 'GUEST', true);
+VALUES ('test@test', '$2a$12$QcnVP4N0MtYrnHntGoIBEOzuu7S6739x/wIgPLEPICMiZ5Ws8XdB6', 'test', 'USER', true);
 INSERT INTO users(email, password, nickname, user_role, receive_updates)
 VALUES ('abc@test', '$2a$12$DQEP0nuU52/PWHiCxyCU0uznigOzmdfwassJJLryfogiAP3YPBoBa', 'abc', 'GUEST', true);
 

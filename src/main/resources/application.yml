@@ -1,6 +1,10 @@
 spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
   profiles:
-    active: prod
+    active: dev
   mail:
     host: ${MAIL_HOST}
     port: ${MAIL_PORT}
@@ -62,3 +66,26 @@ password-recovery:
             <p>Pozdrawiamy,<br>Ekipa Budget App</p>
         </div>
         </body>
+
+change-email:
+  email:
+    config:
+      from: "Budget App <noreply@budgetapp.pl>"
+      email-expire-time: 1d
+      clean-up-expired-emails: 5s
+      message-subject: "Potwierdzenie zmiany adresu email w serwisie Budget App"
+      message: >
+        <body>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: black">
+            <h2>Potwierdzenie zmiany adresu email</h2>
+            <p>Otrzymujesz tę wiadomość, ponieważ otrzymaliśmy prośbę o zmianę adresu e-mail przypisanego do Twojego konta w naszym serwisie.</p>
+            <p>Aby potwierdzić zmianę adresu e-mail, kliknij poniższy link:</p>
+            <p><a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none;">Potwierdź zmianę adresu email</a></p>
+            <p>Jeśli nie wysyłałeś/aś tej prośby, zignoruj tę wiadomość. Twój adres e-mail nie zostanie zmieniony.</p>
+            <p>Pozdrawiamy,<br>Ekipa Budget App</p>
+        </div>
+        </body>
+
+avatar:
+  max-avatar-size: 2MB
+  allowed-avatar-extensions: [ "jpg", "jpeg", "png" ]

@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.share;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class ResponseAPI<T extends Enum<T>> {
     @JsonProperty("message")
     T message;
 
+    @JsonIgnore
     public HttpStatusCode getStatusCode() {
         return success ? HttpStatus.OK : HttpStatus.BAD_REQUEST;
     }
