@@ -18,6 +18,10 @@ spring:
             enable: true
             required: true
 
+logging:
+  level:
+    org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR
+
 server:
   port: 8092
 

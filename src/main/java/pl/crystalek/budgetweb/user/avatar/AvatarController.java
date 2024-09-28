@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.user.avatar.controller.model;
+package pl.crystalek.budgetweb.user.avatar;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.share.ResponseAPI;
-import pl.crystalek.budgetweb.user.avatar.AvatarService;
+import pl.crystalek.budgetweb.user.avatar.model.UploadAvatarResponseMessage;
 
 import java.io.File;
 

@@ -31,6 +31,7 @@ import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.UserRole;
 import pl.crystalek.budgetweb.user.UserService;
+import pl.crystalek.budgetweb.user.UserValidator;
 
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ class AuthController {
     CookieService cookieService;
     TokenDecoder tokenDecoder;
     TokenCreator tokenCreator;
+    UserValidator userValidator;
 
     @PostMapping("/login")
     private ResponseEntity<ResponseAPI<LoginResponseMessage>> login(@Valid @RequestBody final LoginRequest loginRequest, final HttpServletRequest request, final HttpServletResponse response) {
@@ -71,12 +73,16 @@ class AuthController {
 
     @PostMapping("/register")
     private ResponseEntity<RegisterResponse> register(@Valid @RequestBody final RegisterRequest registerRequest) {
-        final RegisterResponse registerResponse = userService.createUser(registerRequest);
-        if (registerResponse.isSuccess()) {
-            accountConfirmationService.sendVerificationEmail(registerResponse.getCreatedUser());
+        RegisterResponse result = userValidator.validate(registerRequest.email());
+        if (result.isSuccess()) {
+            result = userService.createUser(registerRequest);
+            if (result.isSuccess()) {
+                accountConfirmationService.sendVerificationEmail(result.getCreatedUser());
+            }
         }
 
-        return ResponseEntity.status(registerResponse.getStatusCode()).body(registerResponse);
+
+        return ResponseEntity.status(result.getStatusCode()).body(result);
     }
 
     @PostMapping("/confirm")

@@ -1,16 +1,14 @@
-logging:
-  level:
-    org:
-      hibernate: OFF
 spring:
   datasource:
-    url: jdbc:h2:mem:test
+    url: jdbc:mysql://localhost:3306/budget_app?useSSL=false&serverTimezone=Europe/Warsaw
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
   jpa:
     show-sql: true
-    properties:
-      hibernate:
-        hbm2ddl:
-          import_files_sql_extractor: org.hibernate.tool.schema.internal.script.MultiLineSqlScriptExtractor
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
 
 account:
   confirmation:

@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.user.controller.model;
+package pl.crystalek.budgetweb.user.model;
 
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
@@ -17,7 +17,7 @@ public record ChangeEmailRequest(
 ) {
 
     @AssertTrue(message = "EMAIL_MISMATCH")
-    private boolean isPasswordMatching() {
+    private boolean isEmailMatching() {
         return email.equals(confirmEmail);
     }
 }

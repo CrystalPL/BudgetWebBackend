@@ -23,7 +23,7 @@ public class CookieService {
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
         cookie.setPath("/");
-        if (!rememberMe) {
+        if (rememberMe) {
             cookie.setMaxAge(COOKIE_MAX_AGE);
         }
 

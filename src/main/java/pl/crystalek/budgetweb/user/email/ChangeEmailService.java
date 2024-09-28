@@ -13,8 +13,8 @@ import pl.crystalek.budgetweb.email.EmailSender;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.controller.model.ChangeEmailResponseMessage;
-import pl.crystalek.budgetweb.user.controller.model.ConfirmEmailChangingResponseMessage;
+import pl.crystalek.budgetweb.user.model.ChangeEmailResponseMessage;
+import pl.crystalek.budgetweb.user.model.ConfirmEmailChangingResponseMessage;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -30,6 +30,14 @@ public class ChangeEmailService {
     EntityManager entityManager;
     EmailSender emailSender;
     UserService userService;
+
+    public boolean isEmailExists(final String email) {
+        return repository.existsByNewEmail(email);
+    }
+
+    public boolean isEmailChangingWaitingToConfirm(final long userId) {
+        return repository.existsByConfirmationToken_User_Id(userId);
+    }
 
     public ResponseAPI<ChangeEmailResponseMessage> changeEmail(final long userId, final String newEmail, final String password) {
         if (!userService.isCorrectPassword(userId, password)) {
@@ -61,18 +69,8 @@ public class ChangeEmailService {
         return new ResponseAPI<>(true, ChangeEmailResponseMessage.SUCCESS);
     }
 
-    public Optional<ChangeEmail> getNewEmail(final UUID token) {
-        return repository.findByConfirmationToken_Id(token);
-    }
-
     public ResponseAPI<ConfirmEmailChangingResponseMessage> confirmEmailChanging(final String changingToken) {
-        final UUID token;
-        try {
-            token = UUID.fromString(changingToken);
-        } catch (final IllegalArgumentException exception) {
-            return new ResponseAPI<>(false, ConfirmEmailChangingResponseMessage.INVALID_TOKEN);
-        }
-
+        final UUID token = UUID.fromString(changingToken);
         final Optional<ConfirmationToken> tokenOptional = confirmationTokenService.getConfirmationToken(token, ConfirmationTokenType.CHANGE_EMAIL);
         if (tokenOptional.isEmpty()) {
             return new ResponseAPI<>(false, ConfirmEmailChangingResponseMessage.TOKEN_EXPIRED);
