@@ -5,7 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface ChangeEmailRepository extends CrudRepository<ChangeEmail, UUID> {
+interface ChangeEmailRepository extends CrudRepository<ChangeEmail, UUID> {
 
     Optional<ChangeEmail> findByConfirmationToken_User_Id(final long userId);
 

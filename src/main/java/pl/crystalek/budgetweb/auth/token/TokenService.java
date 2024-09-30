@@ -57,6 +57,10 @@ public class TokenService {
         return Optional.of(tokenCreator.create(userId, refreshTokenId, tokenDetails.getRole()));
     }
 
+    public void logoutByRefreshTokenId(final long tokenId) {
+        tokenRepository.deleteById(tokenId);
+    }
+
     public void logoutUserFromDevices(final User user) {
         tokenRepository.deleteByUser(user);
     }

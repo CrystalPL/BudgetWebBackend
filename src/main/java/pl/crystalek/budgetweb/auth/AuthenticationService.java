@@ -46,4 +46,8 @@ public class AuthenticationService {
             return new ResponseAPI<>(false, LoginResponseMessage.USER_NOT_EXIST);
         }
     }
+
+    public void logout(final long tokenId) {
+        tokenService.logoutByRefreshTokenId(tokenId);
+    }
 }

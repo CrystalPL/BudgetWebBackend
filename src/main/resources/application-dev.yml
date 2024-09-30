@@ -24,4 +24,4 @@ password-recovery:
 change-email:
   email:
     config:
-      return-address: http://localhost:8091/profile/change-email-confirmation
+      return-address: http://localhost:8091/change-email-confirmation

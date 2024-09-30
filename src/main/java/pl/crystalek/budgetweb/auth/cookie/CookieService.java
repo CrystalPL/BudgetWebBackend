@@ -18,6 +18,16 @@ public class CookieService {
     private static final int COOKIE_MAX_AGE = 10 * 365 * 24 * 60 * 60; // 10 lat w sekundach
     TokenProperties tokenProperties;
 
+    public void deleteCookie(final HttpServletResponse response) {
+        final Cookie cookie = new Cookie(tokenProperties.getCookieName(), null);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+    }
+
     public void createCookieAndAddToResponse(final String accessToken, final boolean rememberMe, final HttpServletResponse response) {
         final Cookie cookie = new Cookie(tokenProperties.getCookieName(), accessToken);
         cookie.setHttpOnly(true);

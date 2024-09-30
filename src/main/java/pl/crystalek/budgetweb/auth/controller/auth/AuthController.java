@@ -104,4 +104,12 @@ class AuthController {
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
+
+    @PostMapping("/logout")
+    private void logout(final HttpServletRequest request, final HttpServletResponse httpServletResponse) {
+        final Optional<Cookie> cookieOptional = cookieService.getCookieWithToken(request.getCookies()); //nie sprawdzam czy optional jest pusty, bo zrobił to authenticationfilter
+        final AccessTokenDetails accessTokenDetails = tokenDecoder.decodeToken(cookieOptional.get().getValue());
+        authenticationService.logout(accessTokenDetails.getRefreshTokenId());
+        cookieService.deleteCookie(httpServletResponse);
+    }
 }
