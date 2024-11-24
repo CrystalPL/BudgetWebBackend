@@ -15,7 +15,8 @@ public class AccessTokenDetails {
     long userId;
     long refreshTokenId;
     UserRole role;
-    Instant expiresAt;
+    @Builder.Default
+    Instant expiresAt = Instant.EPOCH;
     @Builder.Default
     boolean verified = true;
 

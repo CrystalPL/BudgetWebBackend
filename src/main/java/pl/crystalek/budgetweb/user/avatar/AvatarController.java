@@ -7,6 +7,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,7 +28,11 @@ class AvatarController {
     AvatarService avatarService;
 
     @PostMapping()
-    private ResponseEntity<ResponseAPI<UploadAvatarResponseMessage>> uploadAvatar(@RequestBody final MultipartFile file) {
+    private ResponseEntity<ResponseAPI<UploadAvatarResponseMessage>> uploadAvatar(@RequestBody(required = false) final MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new HttpMessageNotReadableException("Avatar not found");
+        }
+
         final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         final ResponseAPI<UploadAvatarResponseMessage> response = avatarService.uploadAvatar(userId, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);

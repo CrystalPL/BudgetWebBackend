@@ -3,7 +3,6 @@ package pl.crystalek.budgetweb.auth.passwordrecovery;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.auth.controller.password.model.PasswordRecoveryResponseMessage;
@@ -69,8 +68,9 @@ public class PasswordRecoveryService {
         return new ResponseAPI<>(true, PasswordResetResponseMessage.SUCCESS);
     }
 
-    @Scheduled(fixedRateString = "#{T(java.time.Duration).parse('${password-recovery.email.config.cleanUpExpiredEmails}').toMillis()}")
-    private void removeExpiredEmails() {
-        confirmationTokenService.clearByExpireTime(ConfirmationTokenType.PASSWORD_RECOVERY);
-    }
+    //TODO
+//    @Scheduled(fixedRateString = "#{T(java.time.Duration).parse('${password-recovery.email.config.cleanUpExpiredEmails}').toMillis()}")
+//    private void removeExpiredEmails() {
+//        confirmationTokenService.clearByExpireTime(ConfirmationTokenType.PASSWORD_RECOVERY);
+//    }
 }

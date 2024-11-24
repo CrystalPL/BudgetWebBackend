@@ -24,7 +24,7 @@ public class Avatar {
     UUID id;
 
 
-    @OneToOne()
+    @OneToOne
     @JoinColumn(name = "user_id")
     User user;
     String extension;

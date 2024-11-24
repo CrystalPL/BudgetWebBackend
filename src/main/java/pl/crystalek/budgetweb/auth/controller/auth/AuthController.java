@@ -3,14 +3,15 @@ package pl.crystalek.budgetweb.auth.controller.auth;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.crystalek.budgetweb.auth.AuthenticationService;
@@ -39,7 +40,7 @@ import java.util.Optional;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-class AuthController {
+public class AuthController {
     AuthenticationService authenticationService;
     UserService userService;
     AccountConfirmationService accountConfirmationService;
@@ -49,8 +50,7 @@ class AuthController {
     UserValidator userValidator;
 
     @PostMapping("/login")
-    private ResponseEntity<ResponseAPI<LoginResponseMessage>> login(@Valid @RequestBody final LoginRequest loginRequest, final HttpServletRequest request, final HttpServletResponse response) {
-        final String userAgent = request.getHeader("User-Agent");
+    private ResponseEntity<ResponseAPI<LoginResponseMessage>> login(@Validated(LoginRequest.LoginRequestValidation.class) @RequestBody final LoginRequest loginRequest, @RequestHeader("User-Agent") String userAgent, final HttpServletResponse response) {
         final DeviceInfo deviceInfo = DeviceUtil.getDeviceInfo(userAgent);
         final ResponseAPI<LoginResponseMessage> responseAPI = authenticationService.authenticateAndAddCookie(loginRequest, response, deviceInfo);
 
@@ -72,7 +72,7 @@ class AuthController {
     }
 
     @PostMapping("/register")
-    private ResponseEntity<RegisterResponse> register(@Valid @RequestBody final RegisterRequest registerRequest) {
+    private ResponseEntity<RegisterResponse> register(@Validated(RegisterRequest.RegisterRequestValidation.class) @RequestBody final RegisterRequest registerRequest) {
         RegisterResponse result = userValidator.validate(registerRequest.email());
         if (result.isSuccess()) {
             result = userService.createUser(registerRequest);
@@ -81,12 +81,11 @@ class AuthController {
             }
         }
 
-
         return ResponseEntity.status(result.getStatusCode()).body(result);
     }
 
     @PostMapping("/confirm")
-    private ResponseEntity<ResponseAPI<AccountConfirmationResponseMessage>> confirmAccountRegister(@Valid @RequestBody final AccountConfirmationRequest accountConfirmationRequest, final HttpServletRequest request, final HttpServletResponse httpServletResponse) {
+    private ResponseEntity<ResponseAPI<AccountConfirmationResponseMessage>> confirmAccountRegister(@Validated(AccountConfirmationRequest.AccountConfirmationValidation.class) @RequestBody final AccountConfirmationRequest accountConfirmationRequest, final HttpServletRequest request, final HttpServletResponse httpServletResponse) {
         final ResponseAPI<AccountConfirmationResponseMessage> response = accountConfirmationService.confirmAccount(accountConfirmationRequest.confirmationToken());
         if (!response.isSuccess()) {
             return ResponseEntity.status(response.getStatusCode()).body(response);

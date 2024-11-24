@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/test?allowPublicKeyRetrieval=true&&useSSL=false&serverTimezone=Europe/Warsaw
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+
+account:
+  confirmation:
+    email:
+      config:
+        return-address: http://localhost:8091/account-activation
+
+password-recovery:
+  email:
+    config:
+      return-address: http://localhost:8091/password-reset
+
+change-email:
+  email:
+    config:
+      return-address: http://localhost:8091/change-email-confirmation

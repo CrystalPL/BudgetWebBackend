@@ -7,12 +7,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import pl.crystalek.budgetweb.household.member.HouseholdMember;
 
 @Entity
 @Getter
@@ -35,6 +37,9 @@ public class User {
     @Enumerated(EnumType.STRING)
     UserRole userRole = UserRole.GUEST;
     boolean receiveUpdates;
+
+    @OneToOne(mappedBy = "user")
+    HouseholdMember householdMember;
 
     public User(final String email, final String password, final String nickname, final boolean receiveUpdates) {
         this.email = email;

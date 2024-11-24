@@ -15,7 +15,7 @@ public class MethodArgumentNotValidExceptionHandler {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ExceptionHandler(MethodArgumentNotValidException.class) //TODO ten cały kod można wyjebać
     public MethodArgumentNotValidResponse methodArgumentNotValidException(final MethodArgumentNotValidException exception) {
         final String message = Optional.ofNullable(exception.getBindingResult().getFieldError())
                 .map(FieldError::getDefaultMessage)

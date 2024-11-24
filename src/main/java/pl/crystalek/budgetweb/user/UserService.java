@@ -9,12 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponse;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
+import pl.crystalek.budgetweb.household.role.permission.Permission;
+import pl.crystalek.budgetweb.household.role.permission.RolePermission;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.model.AccountInfoResponse;
 import pl.crystalek.budgetweb.user.model.ChangeNicknameResponseMessage;
 import pl.crystalek.budgetweb.user.model.ChangePasswordResponseMessage;
 
+import java.util.EnumSet;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +39,18 @@ public class UserService {
         return repository.findEmailById(userId);
     }
 
+    public Optional<User> getUserById(final long userId) {
+        return repository.findById(userId);
+    }
+
+    public EnumSet<Permission> getUserHouseholdPermissions(final long userId) {
+        return getUserById(userId).get().getHouseholdMember().getRole().getPermissionSet().stream()
+                .map(RolePermission::getPermissionName)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(Permission.class)));
+
+    }
+
+
     public RegisterResponse createUser(final RegisterRequest registerRequest) {
         final User user = new User(registerRequest.email(), passwordEncoder.encode(registerRequest.password()), registerRequest.username(), registerRequest.receiveUpdates());
         return new RegisterResponse(true, RegisterResponseMessage.SUCCESS, repository.save(user));
@@ -42,7 +58,7 @@ public class UserService {
 
     public AccountInfoResponse getAccountInfo(final long userId) {
         final User user = repository.findById(userId).get();//ignoruje optionala bo został sprawdzony w AuthenticationFilter
-        return new AccountInfoResponse(user.getNickname(), user.getEmail());
+        return new AccountInfoResponse(user.getNickname(), user.getEmail(), userId);
     }
 
     public ResponseAPI<ChangePasswordResponseMessage> changePassword(final long userId, final String oldPassword, final String newPassword) {

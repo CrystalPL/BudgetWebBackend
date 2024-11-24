@@ -16,6 +16,8 @@ import pl.crystalek.budgetweb.auth.cookie.CookieService;
 import pl.crystalek.budgetweb.auth.token.TokenDecoder;
 import pl.crystalek.budgetweb.auth.token.TokenService;
 import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
+import pl.crystalek.budgetweb.household.role.permission.Permission;
+import pl.crystalek.budgetweb.household.role.permission.RolePermissionService;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -28,6 +30,7 @@ class AuthenticationFilter extends OncePerRequestFilter {
     TokenDecoder tokenDecoder;
     TokenService tokenService;
     CookieService cookieService;
+    RolePermissionService rolePermissionService;
     Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/auth/login", "/auth/register",
             "/h2-console", "/account/confirm-change-email");
 
@@ -60,12 +63,15 @@ class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenDetails.getUserId(), null, Set.of(tokenDetails.getRole()));
+        final Set<Permission> userPermissions = rolePermissionService.getUserPermissions(tokenDetails.getUserId());
+        authenticationToken.setDetails(userPermissions);
+
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         filterChain.doFilter(request, response);
     }
 
     @Override
     protected boolean shouldNotFilter(final HttpServletRequest request) {
-        return shouldNotFilter.stream().anyMatch(request.getServletPath()::startsWith);
+        return shouldNotFilter.stream().anyMatch(request.getRequestURI()::startsWith);
     }
 }

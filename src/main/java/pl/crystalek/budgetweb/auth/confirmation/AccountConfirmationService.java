@@ -3,7 +3,6 @@ package pl.crystalek.budgetweb.auth.confirmation;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationResendEmailResponseMessage;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationResponseMessage;
@@ -68,8 +67,9 @@ public class AccountConfirmationService {
         return new ResponseAPI<>(true, AccountConfirmationResponseMessage.SUCCESS);
     }
 
-    @Scheduled(fixedRateString = "#{T(java.time.Duration).parse('${account.confirmation.email.config.cleanUpExpiredEmails}').toMillis()}")
-    private void removeExpiredEmails() {
-        confirmationTokenService.clearByExpireTime(ConfirmationTokenType.ACCOUNT_REGISTER);
-    }
+    //TODO
+//    @Scheduled(fixedRateString = "#{T(java.time.Duration).parse('${account.confirmation.email.config.cleanUpExpiredEmails}').toMillis()}")
+//    private void removeExpiredEmails() {
+//        confirmationTokenService.clearByExpireTime(ConfirmationTokenType.ACCOUNT_REGISTER);
+//    }
 }
