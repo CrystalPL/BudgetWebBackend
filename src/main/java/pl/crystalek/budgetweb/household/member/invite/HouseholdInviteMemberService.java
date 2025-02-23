@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.household.Household;
+import pl.crystalek.budgetweb.household.member.invite.model.GetInvitedUsersResponse;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberRequest;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberResponseMessage;
 import pl.crystalek.budgetweb.log.EventLog;
@@ -16,7 +17,9 @@ import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -25,6 +28,18 @@ public class HouseholdInviteMemberService {
     HouseholdInviteMemberRepository repository;
     UserService userService;
     EventLogService eventLogService;
+
+    public Set<GetInvitedUsersResponse> getInvitedUsers(final long userId) {
+        final Set<HouseholdInviteMember> invitedUsersByUserId = repository.getInvitedUsersByUserId(userId);
+
+        final Set<GetInvitedUsersResponse> invitedUsers = new HashSet<>();
+        for (final HouseholdInviteMember householdInviteMember : invitedUsersByUserId) {
+            final User user = householdInviteMember.getUser();
+            invitedUsers.add(new GetInvitedUsersResponse(user.getId(), user.getEmail(), householdInviteMember.getInviteDate()));
+        }
+
+        return invitedUsers;
+    }
 
     public ResponseAPI<InviteHouseholdMemberResponseMessage> invite(final InviteHouseholdMemberRequest inviteHouseholdMemberRequest, final long requesterUserId) {
         final Optional<User> userOptional = userService.getUserByEmail(inviteHouseholdMemberRequest.email());

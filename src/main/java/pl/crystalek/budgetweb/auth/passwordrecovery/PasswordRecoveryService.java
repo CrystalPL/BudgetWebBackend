@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.auth.passwordrecovery;
 
+import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +17,7 @@ import pl.crystalek.budgetweb.email.EmailSender;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
+import pl.crystalek.budgetweb.user.model.UserDTO;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -31,16 +33,18 @@ public class PasswordRecoveryService {
     PasswordEncoder passwordEncoder;
     TokenService tokenService;
     ConfirmationTokenService confirmationTokenService;
+    EntityManager entityManager;
 
     public ResponseAPI<PasswordRecoveryResponseMessage> sendRecoveringEmail(final String email) {
-        final Optional<User> userOptional = userService.getUserByEmail(email);
+        final Optional<UserDTO> userOptional = userService.getUserDTO(email);
         if (userOptional.isEmpty()) {
             return new ResponseAPI<>(false, PasswordRecoveryResponseMessage.USER_NOT_FOUND);
         }
 
         final Instant emailExpireTime = Instant.now().plus(passwordRecoveryProperties.getEmailExpireTime());
+        final User reference = entityManager.getReference(User.class, userOptional.get().id());
         final UUID token = confirmationTokenService.getConfirmationToken(email, ConfirmationTokenType.PASSWORD_RECOVERY)
-                .orElseGet(() -> confirmationTokenService.getToken(userOptional.get(), emailExpireTime, ConfirmationTokenType.PASSWORD_RECOVERY)).getId();
+                .orElseGet(() -> confirmationTokenService.getToken(reference, emailExpireTime, ConfirmationTokenType.PASSWORD_RECOVERY)).getId();
 
         final EmailContent emailContent = EmailContent.ofBasicEmail(passwordRecoveryProperties, email, token.toString());
         emailSender.send(emailContent);

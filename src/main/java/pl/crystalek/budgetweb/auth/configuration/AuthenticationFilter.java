@@ -38,6 +38,7 @@ class AuthenticationFilter extends OncePerRequestFilter {
     //sendError spowoduje przekierowanie do strony obsługi błędów aplikacji i ponowne uruchomienie filtrów dla tego przekierowania
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
+        System.out.println(request.getRequestURI());
         final Optional<Cookie> cookieOptional = cookieService.getCookieWithToken(request.getCookies());
         if (cookieOptional.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

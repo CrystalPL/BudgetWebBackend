@@ -44,7 +44,7 @@ public class ChangeEmailService {
             return new ResponseAPI<>(false, ChangeEmailResponseMessage.BAD_CREDENTIALS);
         }
 
-        if (userService.getUserByEmail(newEmail).isPresent()) {
+        if (userService.isUserExists(newEmail)) {
             return new ResponseAPI<>(false, ChangeEmailResponseMessage.EMAIL_ALREADY_EXISTS);
         }
 

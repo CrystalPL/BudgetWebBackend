@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponse;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
 import pl.crystalek.budgetweb.user.email.ChangeEmailService;
+import pl.crystalek.budgetweb.user.model.UserDTO;
 
 import java.util.Optional;
 
@@ -22,12 +23,12 @@ public class UserValidator { //klasa utworzona, aby uniknąć circular dependenc
             return new RegisterResponse(false, RegisterResponseMessage.ACCOUNT_EXISTS);
         }
 
-        final Optional<User> userOptional = userService.getUserByEmail(email);
+        final Optional<UserDTO> userOptional = userService.getUserDTO(email);
         if (userOptional.isEmpty()) {
             return new RegisterResponse(true, RegisterResponseMessage.SUCCESS);
         }
 
-        if (userOptional.get().getUserRole() == UserRole.USER) {
+        if (userOptional.get().userRole() == UserRole.USER) {
             return new RegisterResponse(false, RegisterResponseMessage.ACCOUNT_EXISTS);
         }
 

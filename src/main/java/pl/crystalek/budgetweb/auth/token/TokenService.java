@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.auth.token;
 
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
 import pl.crystalek.budgetweb.auth.token.model.RefreshToken;
 import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
+import pl.crystalek.budgetweb.user.model.UserDTO;
 
 import java.time.Instant;
 import java.util.Optional;
@@ -23,21 +25,23 @@ public class TokenService {
     TokenCreator tokenCreator;
     UserService userService;
     TokenProperties tokenProperties;
+    EntityManager entityManager;
 
     //tworzy nowy refresh i access token
     //zwraca access token
     @Transactional
     public String createRefreshAndAccessToken(final LoginRequest loginRequest, final DeviceInfo deviceInfo) {
-        final User user = userService.getUserByEmail(loginRequest.email()).get(); //zalogował się, dlatego ignoruje optionala
+        final UserDTO userCredentialsDTO = userService.getUserDTO(loginRequest.email()).get();
         final Instant expireAt = Instant.now().plus(tokenProperties.getRefreshTokenExpireTime());
         if (loginRequest.rememberMe()) {
             //użytkownik zalogowany z zapamiętaj mnie, może byc jednocześnie zalogowany tylko na jednym urządzeniu, pozostałe będą wylogowywane
-            tokenRepository.deleteByUserAndRememberMeIsTrue(user);
+            tokenRepository.deleteByUser_IdAndRememberMeIsTrue(userCredentialsDTO.id());
         }
 
-        final RefreshToken refreshToken = tokenRepository.save(new RefreshToken(deviceInfo, expireAt, loginRequest.rememberMe(), user));
+        final User reference = entityManager.getReference(User.class, userCredentialsDTO.id());
+        final RefreshToken refreshToken = tokenRepository.save(new RefreshToken(deviceInfo, expireAt, loginRequest.rememberMe(), reference));
 
-        return tokenCreator.create(user.getId(), refreshToken.getId(), user.getUserRole());
+        return tokenCreator.create(userCredentialsDTO.id(), refreshToken.getId(), userCredentialsDTO.userRole());
     }
 
     public Optional<String> createAccessToken(final AccessTokenDetails tokenDetails) {

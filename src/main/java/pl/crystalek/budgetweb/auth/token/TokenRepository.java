@@ -1,12 +1,16 @@
 package pl.crystalek.budgetweb.auth.token;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import pl.crystalek.budgetweb.auth.token.model.RefreshToken;
 import pl.crystalek.budgetweb.user.User;
 
-interface TokenRepository extends CrudRepository<RefreshToken, Long> {
+public interface TokenRepository extends CrudRepository<RefreshToken, Long> {
 
-    void deleteByUserAndRememberMeIsTrue(final User user);
+    @Modifying
+    @Query("DELETE FROM RefreshToken WHERE user.id = :userId AND rememberMe = true")
+    void deleteByUser_IdAndRememberMeIsTrue(final long userId);
 
     void deleteByUser(final User user);
 }

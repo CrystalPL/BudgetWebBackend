@@ -36,13 +36,14 @@ class SecurityConfiguration {
     public SecurityFilterChain applicationSecurity(final HttpSecurity httpSecurity, final AuthenticationFilter authenticationFilter) throws Exception {
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
+        //TODO ZWRACANIE NOT FOUND GDY PÓJDZIE REQUEST DO NIEISTNIEJĄCEGO PUNKTU KOŃCOWEGO
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/household/members/invite").access(PermissionAuthorizationManager.hasPermission(UserRole.USER, Permission.HOUSEHOLD_INVITE_MEMBER))
+                        .requestMatchers("/household/invitations/invite").access(PermissionAuthorizationManager.hasPermission(UserRole.USER, Permission.HOUSEHOLD_INVITE_MEMBER))
                         .requestMatchers("/auth/confirm").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() //TODO JAKIS PORZADEK Z TYM ZROBIĆ
                         .requestMatchers("/auth/login").permitAll()

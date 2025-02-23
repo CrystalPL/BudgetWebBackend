@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import pl.crystalek.budgetweb.user.model.UserCredentialsDTO;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
-        return userService.getUserByEmail(username)
+        return userService.getUserCredentials(username)
                 .map(this::userDetailsMapper)
                 .orElseThrow(this::throwException);
     }
 
-    private UserDetails userDetailsMapper(final User user) {
+    private UserDetails userDetailsMapper(final UserCredentialsDTO user) {
         return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getUserRole().name())
+                .username(user.email())
+                .password(user.password())
+                .roles(user.userRole().name())
                 .build();
     }
 

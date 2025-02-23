@@ -15,6 +15,8 @@ import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.model.AccountInfoResponse;
 import pl.crystalek.budgetweb.user.model.ChangeNicknameResponseMessage;
 import pl.crystalek.budgetweb.user.model.ChangePasswordResponseMessage;
+import pl.crystalek.budgetweb.user.model.UserCredentialsDTO;
+import pl.crystalek.budgetweb.user.model.UserDTO;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -29,6 +31,18 @@ public class UserService {
 
     public boolean isCorrectPassword(final long userId, final String password) {
         return passwordEncoder.matches(password, repository.findPasswordById(userId).get());
+    }
+
+    public Optional<UserCredentialsDTO> getUserCredentials(final String email) {
+        return repository.findUserCredentialsByEmail(email);
+    }
+
+    public Optional<UserDTO> getUserDTO(final String email) {
+        return repository.findUserDTOByEmail(email);
+    }
+
+    public boolean isUserExists(final String email) {
+        return repository.existsByEmail(email);
     }
 
     public Optional<User> getUserByEmail(final String email) {
@@ -49,7 +63,6 @@ public class UserService {
                 .collect(Collectors.toCollection(() -> EnumSet.noneOf(Permission.class)));
 
     }
-
 
     public RegisterResponse createUser(final RegisterRequest registerRequest) {
         final User user = new User(registerRequest.email(), passwordEncoder.encode(registerRequest.password()), registerRequest.username(), registerRequest.receiveUpdates());

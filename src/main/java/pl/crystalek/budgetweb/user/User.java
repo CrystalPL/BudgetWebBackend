@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.springframework.context.annotation.Lazy;
 import pl.crystalek.budgetweb.household.member.HouseholdMember;
 
 @Entity
@@ -31,6 +33,7 @@ public class User {
     @Column(unique = true)
     String email;
 
+    @Lazy
     String password;
     String nickname;
 
@@ -38,7 +41,8 @@ public class User {
     UserRole userRole = UserRole.GUEST;
     boolean receiveUpdates;
 
-    @OneToOne(mappedBy = "user")
+    //Ten obiekt niestety jest pobierany od razu, poniższe lazy nic nie dodaje, nie wiem jak to naprawić
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     HouseholdMember householdMember;
 
     public User(final String email, final String password, final String nickname, final boolean receiveUpdates) {

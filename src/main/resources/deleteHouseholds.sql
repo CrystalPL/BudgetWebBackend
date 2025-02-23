@@ -1,0 +1,10 @@
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE event_log;
+TRUNCATE TABLE household_invite_member;
+TRUNCATE TABLE household_member;
+TRUNCATE TABLE role_permission;
+TRUNCATE TABLE role;
+TRUNCATE TABLE household;
+
+SET FOREIGN_KEY_CHECKS = 1;
