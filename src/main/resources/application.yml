@@ -17,12 +17,10 @@ spring:
           starttls:
             enable: true
             required: true
-
 logging:
   level:
     org:
       springframework:
-        aop: DEBUG
         web:
           servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR
           socket: OFF

@@ -26,7 +26,7 @@ public class HouseholdMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "household_id", nullable = false)
     Household household;
 

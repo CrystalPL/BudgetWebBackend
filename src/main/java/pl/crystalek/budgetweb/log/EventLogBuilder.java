@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.user.User;
 
 import java.time.Instant;
@@ -20,8 +21,9 @@ public class EventLogBuilder<T extends Enum<T>, E> {
     String description;
     Class<E> entityType;
     User executorUser;
+    Household household;
 
     public EventLog<T> build() {
-        return new EventLog<>(timestamp, actionType, description, entityType, executorUser);
+        return new EventLog<>(timestamp, actionType, description, entityType, executorUser, household);
     }
 }

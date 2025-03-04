@@ -26,9 +26,9 @@ public class PermissionAuthorizationManager implements AuthorizationManager<Requ
     @Override
     public AuthorizationDecision check(final Supplier<Authentication> authenticationSupplier, final RequestAuthorizationContext object) {
         final Authentication authentication = authenticationSupplier.get();
-        if (authentication.getAuthorities().contains(userRole)) {
-            return new AuthorizationDecision(true);
-        }
+//        if (authentication.getAuthorities().contains(userRole)) {
+//            return new AuthorizationDecision(true);
+//        }
 
         final boolean checkedPermission = checkPermission(permission.getPermission(), ((Set<Permission>) authentication.getDetails()));
         return new AuthorizationDecision(checkedPermission);

@@ -2,35 +2,58 @@ package pl.crystalek.budgetweb.auth.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
+import pl.crystalek.budgetweb.user.User;
+import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
+import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class RegisterControllerTest {
-    MockMvc mockMvc;
+class RegisterControllerTest extends BaseAccessControllerTest {
     ObjectMapper objectMapper;
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    public RegisterControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper, final JdbcTemplate jdbcTemplate) {
+        super(mockMvc, userAccountUtil);
+        this.objectMapper = objectMapper;
+        this.jdbcTemplate = jdbcTemplate;
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithoutAccount() {
+        return new String[][]{{"/auth/register", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldDeniedAccessWithGuestRole() {
+        return new String[][]{{"/auth/register", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldDeniedAccessWithUserRole() {
+        return new String[][]{{"/auth/register", "POST"}};
+    }
+
 
     @Test
     void shouldRegisterSuccessfullyWhenCredentialsAreValid() throws Exception {
@@ -47,6 +70,14 @@ class RegisterControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
+
+        List<User> users = jdbcTemplate.query("SELECT * from users", new BeanPropertyRowMapper<>(User.class));
+        assertEquals(1, users.size());
+        assertEquals(request.username(), users.getFirst().getNickname());
+        assertEquals(request.email(), users.getFirst().getEmail());
+        assertTrue(BCrypt.checkpw(request.password(), users.getFirst().getPassword()));
+        assertTrue(BCrypt.checkpw(request.confirmPassword(), users.getFirst().getPassword()));
+        assertEquals(request.receiveUpdates(), users.getFirst().isReceiveUpdates());
     }
 
     @Test

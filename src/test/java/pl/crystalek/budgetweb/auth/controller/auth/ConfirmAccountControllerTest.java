@@ -10,7 +10,6 @@ import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 import lombok.AccessLevel;
 import lombok.Cleanup;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,12 +17,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
 import pl.crystalek.budgetweb.auth.token.TokenCreator;
@@ -31,6 +27,7 @@ import pl.crystalek.budgetweb.auth.token.TokenDecoder;
 import pl.crystalek.budgetweb.auth.token.TokenProperties;
 import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
 import pl.crystalek.budgetweb.user.UserRole;
+import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import java.time.Instant;
@@ -46,19 +43,38 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
+
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class ConfirmAccountControllerTest {
-    MockMvc mockMvc;
-    UserAccountUtil userAccountUtil;
+class ConfirmAccountControllerTest extends BaseAccessControllerTest {
     ObjectMapper objectMapper;
     TokenProperties tokenProperties;
     TokenDecoder tokenDecoder;
     TokenCreator tokenCreator;
     @NonFinal Validator validator;
+
+    @Autowired
+    public ConfirmAccountControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper, final TokenProperties tokenProperties, final TokenDecoder tokenDecoder, final TokenCreator tokenCreator) {
+        super(mockMvc, userAccountUtil);
+        this.objectMapper = objectMapper;
+        this.tokenProperties = tokenProperties;
+        this.tokenDecoder = tokenDecoder;
+        this.tokenCreator = tokenCreator;
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithoutAccount() {
+        return new String[][]{{"/auth/confirm", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithGuestRole() {
+        return new String[][]{{"/auth/confirm", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithUserRole() {
+        return new String[][]{{"/auth/confirm", "POST"}};
+    }
 
     @BeforeEach
     void setUp() {

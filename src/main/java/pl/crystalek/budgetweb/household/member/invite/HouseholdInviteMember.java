@@ -17,18 +17,17 @@ import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.user.User;
 
 import java.time.Instant;
-import java.util.UUID;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "household_invite_member", uniqueConstraints = {@UniqueConstraint(columnNames = {"household_id", "user_id"})})
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"household_id", "user_id"})})
 public class HouseholdInviteMember {
     @Id
     @Column(unique = true)
-    @GeneratedValue(strategy = GenerationType.UUID)
-    UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long id;
 
     @ManyToOne
     @JoinColumn(name = "household_id", nullable = false)

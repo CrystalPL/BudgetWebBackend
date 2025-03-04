@@ -70,8 +70,7 @@ public class UserService {
     }
 
     public AccountInfoResponse getAccountInfo(final long userId) {
-        final User user = repository.findById(userId).get();//ignoruje optionala bo został sprawdzony w AuthenticationFilter
-        return new AccountInfoResponse(user.getNickname(), user.getEmail(), userId);
+        return repository.findAccountInfoById(userId);
     }
 
     public ResponseAPI<ChangePasswordResponseMessage> changePassword(final long userId, final String oldPassword, final String newPassword) {

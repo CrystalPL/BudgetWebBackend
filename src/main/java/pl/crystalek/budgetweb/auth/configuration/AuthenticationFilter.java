@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,6 +22,7 @@ import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.household.role.permission.RolePermissionService;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -31,17 +34,20 @@ class AuthenticationFilter extends OncePerRequestFilter {
     TokenService tokenService;
     CookieService cookieService;
     RolePermissionService rolePermissionService;
-    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/auth/login", "/auth/register",
+    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset",
             "/h2-console", "/account/confirm-change-email");
 
-    //https://stackoverflow.com/questions/23621037/return-http-error-401-code-skip-filter-chains
-    //sendError spowoduje przekierowanie do strony obsługi błędów aplikacji i ponowne uruchomienie filtrów dla tego przekierowania
+    private static void anonymousUser(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
+        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken("anonymous", "anonymous", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))));
+        filterChain.doFilter(request, response);
+    }
+
     @Override
     protected void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws ServletException, IOException {
         System.out.println(request.getRequestURI());
         final Optional<Cookie> cookieOptional = cookieService.getCookieWithToken(request.getCookies());
         if (cookieOptional.isEmpty()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            anonymousUser(request, response, filterChain);
             return;
         }
 
@@ -49,18 +55,18 @@ class AuthenticationFilter extends OncePerRequestFilter {
         final String cookieValue = cookie.getValue();
         final AccessTokenDetails tokenDetails = tokenDecoder.decodeToken(cookieValue);
         if (!tokenDetails.isVerified()) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            anonymousUser(request, response, filterChain);
             return;
         }
 
         if (tokenDetails.isExpired()) {
             final Optional<String> newAccessTokenOptional = tokenService.createAccessToken(tokenDetails);
             if (newAccessTokenOptional.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                anonymousUser(request, response, filterChain);
                 return;
             }
 
-            cookieService.createCookieAndAddToResponse(newAccessTokenOptional.get(), cookie.getMaxAge() != -1, response);
+            cookieService.createCookieAndAddToResponse(newAccessTokenOptional.get(), cookie.getMaxAge() == -1, response);
         }
 
         final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenDetails.getUserId(), null, Set.of(tokenDetails.getRole()));

@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.user.User;
 
 import java.time.Instant;
@@ -30,27 +31,35 @@ public class EventLog<T extends Enum<T>> {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
 
+    @Column(nullable = false)
     Instant timestamp;
 
     @Transient
     @Setter
+    @Column(nullable = false)
     T actionType;
 
+    @Column(nullable = false)
     String description;
 
     @Column(nullable = false)
     String entityType;
 
     @ManyToOne
-    @JoinColumn(name = "executor_user_id")
+    @JoinColumn(name = "executor_user_id", nullable = false)
     User executorUser;
 
-    public EventLog(final Instant timestamp, final T actionType, final String description, final Class<?> entityType, final User executorUser) {
+    @ManyToOne
+    @JoinColumn(name = "household_id", nullable = false)
+    Household household;
+
+    public EventLog(final Instant timestamp, final T actionType, final String description, final Class<?> entityType, final User executorUser, final Household household) {
         this.timestamp = timestamp;
         this.actionType = actionType;
         this.description = description;
         this.entityType = entityType.getSimpleName();
         this.executorUser = executorUser;
+        this.household = household;
     }
 
     @Access(AccessType.PROPERTY)

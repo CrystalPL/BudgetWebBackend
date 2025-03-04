@@ -1,6 +1,5 @@
 package pl.crystalek.budgetweb.auth.controller.auth;
 
-import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -12,20 +11,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
 @Transactional
+@AutoConfigureMockMvc
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 class AuthControllerTest {
     MockMvc mockMvc;
-    UserAccountUtil userAccountUtil;
 
     @ParameterizedTest
     @CsvSource({
@@ -34,10 +31,7 @@ class AuthControllerTest {
             "'/auth/confirm', 'POST'",
     })
     void shouldReturnBadRequestWhenContentIsNull(final String path, final String httpMethod) throws Exception {
-        final Cookie cookie = userAccountUtil.createConfirmedAccountAndGetJwtToken();
-
-        mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path)
-                        .cookie(cookie))
+        mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Request body is missing or empty"));
     }

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.crystalek.budgetweb.household.member.invite.model.GetInvitedUsersResponse;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberRequest;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberResponseMessage;
+import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationRequest;
+import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Set;
@@ -26,8 +28,18 @@ class HouseholdInviteMemberController {
     HouseholdInviteMemberService invitationsMembersService;
 
     @PostMapping("/invite")
-    private ResponseEntity<ResponseAPI<InviteHouseholdMemberResponseMessage>> inviteMember(@RequestBody @Valid InviteHouseholdMemberRequest inviteHouseholdMemberRequest) {
-        final ResponseAPI<InviteHouseholdMemberResponseMessage> response = invitationsMembersService.invite(inviteHouseholdMemberRequest, 1);
+    private ResponseEntity<ResponseAPI<InviteHouseholdMemberResponseMessage>> inviteMember(@RequestBody @Valid final InviteHouseholdMemberRequest inviteHouseholdMemberRequest) {
+        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        final ResponseAPI<InviteHouseholdMemberResponseMessage> response = invitationsMembersService.invite(inviteHouseholdMemberRequest, userId);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
+    }
+
+    @PostMapping("/undo")
+    private ResponseEntity<ResponseAPI<UndoInvitationResponseMessage>> undoInvitation(@RequestBody @Valid final UndoInvitationRequest undoInvitationRequest) {
+        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        final ResponseAPI<UndoInvitationResponseMessage> response = invitationsMembersService.undoInvitation(undoInvitationRequest, userId);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 

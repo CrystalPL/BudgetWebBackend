@@ -31,6 +31,7 @@ class SecurityConfiguration {
     CustomUserDetailsService customUserDetailsService;
     PasswordEncoder passwordEncoder;
     CustomAccessDeniedHandler customAccessDeniedHandler;
+    CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain applicationSecurity(final HttpSecurity httpSecurity, final AuthenticationFilter authenticationFilter) throws Exception {
@@ -46,14 +47,18 @@ class SecurityConfiguration {
                         .requestMatchers("/household/invitations/invite").access(PermissionAuthorizationManager.hasPermission(UserRole.USER, Permission.HOUSEHOLD_INVITE_MEMBER))
                         .requestMatchers("/auth/confirm").permitAll()
                         .requestMatchers("/h2-console/**").permitAll() //TODO JAKIS PORZADEK Z TYM ZROBIĆ
-                        .requestMatchers("/auth/login").permitAll()
-                        .requestMatchers("/auth/register").permitAll()
-                        .requestMatchers("/auth/password/**").permitAll()
+                        .requestMatchers("/auth/login").anonymous()
+                        .requestMatchers("/auth/register").anonymous()
+                        .requestMatchers("/auth/password/recovery").anonymous()
+                        .requestMatchers("/auth/password/reset").permitAll()
                         .requestMatchers("/account/confirm-change-email/**").permitAll()
-                        .requestMatchers("/auth/resend-email").hasAnyRole(UserRole.GUEST.name(), UserRole.USER.name())
+                        .requestMatchers("/auth/resend-email").hasAnyRole(UserRole.GUEST.name())
                         .anyRequest().hasRole(UserRole.USER.name())
                 )
-//                .exceptionHandling(exceptionHandling -> exceptionHandling.accessDeniedHandler(customAccessDeniedHandler))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .accessDeniedHandler(customAccessDeniedHandler)
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .build();
     }
 

@@ -3,21 +3,18 @@ package pl.crystalek.budgetweb.auth.controller.auth;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.LoginRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.LoginResponseMessage;
+import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import java.util.UUID;
@@ -28,17 +25,34 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static pl.crystalek.budgetweb.utils.UserAccountUtil.getGuidFromByteArray;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class LoginControllerTest {
-    MockMvc mockMvc;
+class LoginControllerTest extends BaseAccessControllerTest {
     ObjectMapper objectMapper;
-    UserAccountUtil userAccountUtil;
     JdbcTemplate jdbcTemplate;
     EntityManager entityManager;
+
+    @Autowired
+    public LoginControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper, final JdbcTemplate jdbcTemplate, final EntityManager entityManager) {
+        super(mockMvc, userAccountUtil);
+        this.objectMapper = objectMapper;
+        this.jdbcTemplate = jdbcTemplate;
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithoutAccount() {
+        return new String[][]{{"/auth/login", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldDeniedAccessWithGuestRole() {
+        return new String[][]{{"/auth/login", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldDeniedAccessWithUserRole() {
+        return new String[][]{{"/auth/login", "POST"}};
+    }
 
     @Test
     void shouldLoginFailWhenCredentialsAreValidAndAccountNotConfirmed() throws Exception {

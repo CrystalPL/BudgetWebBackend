@@ -4,32 +4,46 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.EntityManager;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.transaction.annotation.Transactional;
+import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Transactional
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-class LogoutControllerTest {
-    MockMvc mockMvc;
+class LogoutControllerTest extends BaseAccessControllerTest {
     ObjectMapper objectMapper;
-    UserAccountUtil userAccountUtil;
     JdbcTemplate jdbcTemplate;
     EntityManager entityManager;
+
+    @Autowired
+    public LogoutControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper, final JdbcTemplate jdbcTemplate, final EntityManager entityManager) {
+        super(mockMvc, userAccountUtil);
+        this.objectMapper = objectMapper;
+        this.jdbcTemplate = jdbcTemplate;
+        this.entityManager = entityManager;
+    }
+
+    @Override
+    protected String[][] shouldDeniedAccessWithoutAccount() {
+        return new String[][]{{"/auth/logout", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithGuestRole() {
+        return new String[][]{{"/auth/logout", "POST"}};
+    }
+
+    @Override
+    protected String[][] shouldAllowAccessWithUserRole() {
+        return new String[][]{{"/auth/logout", "POST"}};
+    }
 
     @Test
     void shouldLogoutSuccessfully() throws Exception {

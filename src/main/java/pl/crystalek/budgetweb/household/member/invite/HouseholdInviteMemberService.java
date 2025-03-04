@@ -9,6 +9,8 @@ import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.household.member.invite.model.GetInvitedUsersResponse;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberRequest;
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberResponseMessage;
+import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationRequest;
+import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationResponseMessage;
 import pl.crystalek.budgetweb.log.EventLog;
 import pl.crystalek.budgetweb.log.EventLogBuilder;
 import pl.crystalek.budgetweb.log.EventLogService;
@@ -17,7 +19,6 @@ import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
 
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -30,15 +31,31 @@ public class HouseholdInviteMemberService {
     EventLogService eventLogService;
 
     public Set<GetInvitedUsersResponse> getInvitedUsers(final long userId) {
-        final Set<HouseholdInviteMember> invitedUsersByUserId = repository.getInvitedUsersByUserId(userId);
+        return repository.getInvitedUsersByUserId(userId);
+    }
 
-        final Set<GetInvitedUsersResponse> invitedUsers = new HashSet<>();
-        for (final HouseholdInviteMember householdInviteMember : invitedUsersByUserId) {
-            final User user = householdInviteMember.getUser();
-            invitedUsers.add(new GetInvitedUsersResponse(user.getId(), user.getEmail(), householdInviteMember.getInviteDate()));
+    public ResponseAPI<UndoInvitationResponseMessage> undoInvitation(final UndoInvitationRequest undoInvitationRequest, final long requesterUserId) {
+        final Optional<HouseholdInviteMember> householdInviteMemberOptional = repository.selectMember(undoInvitationRequest.getMemberId(), requesterUserId);
+        if (householdInviteMemberOptional.isEmpty()) {
+            return new ResponseAPI<>(false, UndoInvitationResponseMessage.INVITATION_NOT_FOUND);
         }
 
-        return invitedUsers;
+        final HouseholdInviteMember householdInviteMember = householdInviteMemberOptional.get();
+        repository.delete(householdInviteMember);
+//        final UserDTO userDTO = userService.getUserDTO(requesterUserId).get();
+//
+//        final EventLog<HouseholdInviteMemberActionType> eventLog = EventLogBuilder
+//                .<HouseholdInviteMemberActionType, HouseholdInviteMember>builder()
+//                .entityType(HouseholdInviteMember.class)
+//                .actionType(HouseholdInviteMemberActionType.UNDO)
+//                .description(userDTO. ())
+//                .household(householdInviteMember.getHousehold())
+//                .executorUser("requesterUserId")
+//                .build().build();
+//
+//        eventLogService.log(eventLog);
+
+        return new ResponseAPI<>(true, UndoInvitationResponseMessage.SUCCESS);
     }
 
     public ResponseAPI<InviteHouseholdMemberResponseMessage> invite(final InviteHouseholdMemberRequest inviteHouseholdMemberRequest, final long requesterUserId) {
@@ -72,6 +89,7 @@ public class HouseholdInviteMemberService {
                 .actionType(HouseholdInviteMemberActionType.INVITE)
                 .description(invitedUser.getNickname())
                 .executorUser(requesterUser)
+                .household(household)
                 .build().build();
 
         eventLogService.log(eventLog);
