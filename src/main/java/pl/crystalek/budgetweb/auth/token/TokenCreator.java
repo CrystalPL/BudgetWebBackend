@@ -6,7 +6,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import pl.crystalek.budgetweb.user.UserRole;
 
 import java.time.Instant;
 
@@ -16,16 +15,15 @@ import java.time.Instant;
 public class TokenCreator {
     TokenProperties tokenProperties;
 
-    public String createWithExpires(final long userId, final long refreshTokenId, final UserRole role, final Instant expiresAt) {
+    public String createWithExpires(final long userId, final long refreshTokenId, final Instant expiresAt) {
         return JWT.create()
                 .withExpiresAt(expiresAt)
                 .withClaim("refreshTokenId", refreshTokenId)
                 .withClaim("userId", userId)
-                .withClaim("role", role.name())
                 .sign(Algorithm.HMAC256(tokenProperties.getSecretKey()));
     }
 
-    public String create(final long userId, final long refreshTokenId, final UserRole role) {
-        return createWithExpires(userId, refreshTokenId, role, Instant.now().plus(tokenProperties.getTokenAccessTime()));
+    public String create(final long userId, final long refreshTokenId) {
+        return createWithExpires(userId, refreshTokenId, Instant.now().plus(tokenProperties.getTokenAccessTime()));
     }
 }

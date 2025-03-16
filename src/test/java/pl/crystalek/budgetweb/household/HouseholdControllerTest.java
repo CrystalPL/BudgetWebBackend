@@ -64,7 +64,7 @@ class HouseholdControllerTest {
     void shouldReturnBadRequest(final String name, final String errorMessage) {
         final CreateHouseholdRequest createHouseholdRequest = new CreateHouseholdRequest(name);
 
-        final Set<ConstraintViolation<CreateHouseholdRequest>> violations = validator.validate(createHouseholdRequest, CreateHouseholdRequest.CreateHouseholdRequestValidation.class);
+        final Set<ConstraintViolation<CreateHouseholdRequest>> violations = validator.validate(createHouseholdRequest, CreateHouseholdRequest.HouseholdNameRequestValidation.class);
 
         assertEquals(1, violations.size());
         assertTrue(violations.stream().anyMatch(v -> v.getMessage().equals(errorMessage)));

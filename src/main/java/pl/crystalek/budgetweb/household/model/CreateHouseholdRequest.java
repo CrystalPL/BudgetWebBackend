@@ -11,9 +11,9 @@ public record CreateHouseholdRequest(
         String name
 ) {
     @GroupSequence({ValidationGroups.NameNotBlank.class, ValidationGroups.NameMinSize.class, ValidationGroups.NameMaxSize.class})
-    public interface CreateHouseholdRequestValidation {}
+    public interface HouseholdNameRequestValidation {}
 
-    private interface ValidationGroups {
+    interface ValidationGroups {
         interface NameNotBlank {}
 
         interface NameMinSize {}

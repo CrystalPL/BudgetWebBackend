@@ -34,8 +34,7 @@ class AuthenticationFilter extends OncePerRequestFilter {
     TokenService tokenService;
     CookieService cookieService;
     RolePermissionService rolePermissionService;
-    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset",
-            "/h2-console", "/account/confirm-change-email");
+    Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/account/confirm-change-email");
 
     private static void anonymousUser(final HttpServletRequest request, final HttpServletResponse response, final FilterChain filterChain) throws IOException, ServletException {
         SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken("anonymous", "anonymous", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))));
@@ -69,7 +68,8 @@ class AuthenticationFilter extends OncePerRequestFilter {
             cookieService.createCookieAndAddToResponse(newAccessTokenOptional.get(), cookie.getMaxAge() == -1, response);
         }
 
-        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenDetails.getUserId(), null, Set.of(tokenDetails.getRole()));
+        //chyba trzeba bedzie wykorzystać w końcu te permisje poprawnie
+        final UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenDetails.getUserId(), null, Set.of());
         final Set<Permission> userPermissions = rolePermissionService.getUserPermissions(tokenDetails.getUserId());
         authenticationToken.setDetails(userPermissions);
 

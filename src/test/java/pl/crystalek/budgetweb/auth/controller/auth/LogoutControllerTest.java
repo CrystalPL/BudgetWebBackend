@@ -36,12 +36,7 @@ class LogoutControllerTest extends BaseAccessControllerTest {
     }
 
     @Override
-    protected String[][] shouldAllowAccessWithGuestRole() {
-        return new String[][]{{"/auth/logout", "POST"}};
-    }
-
-    @Override
-    protected String[][] shouldAllowAccessWithUserRole() {
+    protected String[][] shouldAllowAccessWithAccount() {
         return new String[][]{{"/auth/logout", "POST"}};
     }
 

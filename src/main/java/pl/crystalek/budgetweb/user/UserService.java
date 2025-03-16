@@ -6,9 +6,6 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponse;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.household.role.permission.RolePermission;
 import pl.crystalek.budgetweb.share.ResponseAPI;
@@ -17,6 +14,7 @@ import pl.crystalek.budgetweb.user.model.ChangeNicknameResponseMessage;
 import pl.crystalek.budgetweb.user.model.ChangePasswordResponseMessage;
 import pl.crystalek.budgetweb.user.model.UserCredentialsDTO;
 import pl.crystalek.budgetweb.user.model.UserDTO;
+import pl.crystalek.budgetweb.user.temporary.TemporaryUser;
 
 import java.util.EnumSet;
 import java.util.Optional;
@@ -64,9 +62,9 @@ public class UserService {
 
     }
 
-    public RegisterResponse createUser(final RegisterRequest registerRequest) {
-        final User user = new User(registerRequest.email(), passwordEncoder.encode(registerRequest.password()), registerRequest.username(), registerRequest.receiveUpdates());
-        return new RegisterResponse(true, RegisterResponseMessage.SUCCESS, repository.save(user));
+    public void createUser(final TemporaryUser temporaryUser) {
+        final User user = new User(temporaryUser.getEmail(), temporaryUser.getPassword(), temporaryUser.getNickname(), temporaryUser.isReceiveUpdates());
+        repository.save(user);
     }
 
     public AccountInfoResponse getAccountInfo(final long userId) {

@@ -19,7 +19,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.user.CustomUserDetailsService;
-import pl.crystalek.budgetweb.user.UserRole;
 
 @EnableScheduling
 @EnableAsync
@@ -44,16 +43,15 @@ class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(registry -> registry
-                        .requestMatchers("/household/invitations/invite").access(PermissionAuthorizationManager.hasPermission(UserRole.USER, Permission.HOUSEHOLD_INVITE_MEMBER))
+                        .requestMatchers("/household/invitations/invite").access(PermissionAuthorizationManager.hasPermission(Permission.HOUSEHOLD_INVITE_MEMBER))
                         .requestMatchers("/auth/confirm").permitAll()
-                        .requestMatchers("/h2-console/**").permitAll() //TODO JAKIS PORZADEK Z TYM ZROBIĆ
                         .requestMatchers("/auth/login").anonymous()
                         .requestMatchers("/auth/register").anonymous()
                         .requestMatchers("/auth/password/recovery").anonymous()
                         .requestMatchers("/auth/password/reset").permitAll()
                         .requestMatchers("/account/confirm-change-email/**").permitAll()
-                        .requestMatchers("/auth/resend-email").hasAnyRole(UserRole.GUEST.name())
-                        .anyRequest().hasRole(UserRole.USER.name())
+                        .requestMatchers("/auth/resend-email").anonymous()
+                        .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .accessDeniedHandler(customAccessDeniedHandler)

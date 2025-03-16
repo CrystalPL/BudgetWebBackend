@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
 import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
-import pl.crystalek.budgetweb.user.UserRole;
 
 @Component
 @RequiredArgsConstructor
@@ -42,7 +41,6 @@ public class TokenDecoder {
         tokenBuilder
                 .refreshTokenId(decodedJWT.getClaim("refreshTokenId").asLong())
                 .userId(decodedJWT.getClaim("userId").asLong())
-                .expiresAt(decodedJWT.getExpiresAtAsInstant())
-                .role(UserRole.getRoleByString(decodedJWT.getClaim("role").asString()));
+                .expiresAt(decodedJWT.getExpiresAtAsInstant());
     }
 }

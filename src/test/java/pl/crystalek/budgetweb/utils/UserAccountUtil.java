@@ -47,13 +47,12 @@ public class UserAccountUtil {
     }
 
     public UUID getConfirmationToken() {
-        final byte[] token = jdbcTemplate.queryForObject("SELECT id from confirmation_token", byte[].class);
+        final byte[] token = jdbcTemplate.queryForObject("SELECT id from temporary_users", byte[].class);
         return getGuidFromByteArray(token);
     }
 
     public Cookie createConfirmedAccountAndGetJwtToken() throws Exception {
         register(TESTING_USER);
-        entityManager.flush();
         final UUID uuid = getConfirmationToken();
 
         mockMvc.perform(post("/auth/confirm")
@@ -63,13 +62,6 @@ public class UserAccountUtil {
                 .andDo(print());
 
         return login();
-    }
-
-    public Cookie loginAndGetJwtToken() throws Exception {
-        register(TESTING_USER);
-
-        return login();
-
     }
 
     public Cookie login() throws Exception {

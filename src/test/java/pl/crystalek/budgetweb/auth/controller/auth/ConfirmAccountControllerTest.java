@@ -1,9 +1,6 @@
 package pl.crystalek.budgetweb.auth.controller.auth;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.servlet.http.Cookie;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -13,25 +10,19 @@ import lombok.Cleanup;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
 import pl.crystalek.budgetweb.auth.token.TokenCreator;
 import pl.crystalek.budgetweb.auth.token.TokenDecoder;
 import pl.crystalek.budgetweb.auth.token.TokenProperties;
-import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
-import pl.crystalek.budgetweb.user.UserRole;
 import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Set;
 import java.util.UUID;
 
@@ -39,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,12 +57,7 @@ class ConfirmAccountControllerTest extends BaseAccessControllerTest {
     }
 
     @Override
-    protected String[][] shouldAllowAccessWithGuestRole() {
-        return new String[][]{{"/auth/confirm", "POST"}};
-    }
-
-    @Override
-    protected String[][] shouldAllowAccessWithUserRole() {
+    protected String[][] shouldAllowAccessWithAccount() {
         return new String[][]{{"/auth/confirm", "POST"}};
     }
 
@@ -141,58 +126,6 @@ class ConfirmAccountControllerTest extends BaseAccessControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
                 .andExpect(status().isOk())
-                .andDo(print());
-    }
-
-    @Test
-    void shouldAddCookieToResponseWhenAccessTokenIsValidAndNotExpired() throws Exception {
-        final Cookie loginCookie = userAccountUtil.loginAndGetJwtToken();
-        final UUID uuid = userAccountUtil.getConfirmationToken();
-
-        final MvcResult result = mockMvc.perform(post("/auth/confirm")
-                        .cookie(loginCookie)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
-                .andExpect(status().isOk())
-                .andDo(print())
-                .andReturn();
-
-        final Cookie cookie = result.getResponse().getCookie(tokenProperties.getCookieName());
-        final AccessTokenDetails accessTokenDetails = tokenDecoder.decodeToken(cookie.getValue());
-        assertEquals(accessTokenDetails.getRole(), UserRole.USER);
-
-    }
-
-    @Test
-    void shouldNotAddCookieToResponseWhenAccessTokenIsExpired() throws Exception {
-        final Cookie loginCookie = userAccountUtil.loginAndGetJwtToken();
-        final UUID uuid = userAccountUtil.getConfirmationToken();
-        final AccessTokenDetails accessTokenDetails = tokenDecoder.decodeToken(loginCookie.getValue());
-        final String withExpires = tokenCreator.createWithExpires(accessTokenDetails.getUserId(), accessTokenDetails.getRefreshTokenId(),
-                accessTokenDetails.getRole(), Instant.now().minus(30, ChronoUnit.DAYS));
-        loginCookie.setValue(withExpires);
-
-        mockMvc.perform(post("/auth/confirm")
-                        .cookie(loginCookie)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
-                .andExpect(status().isOk())
-                .andExpect(cookie().doesNotExist(tokenProperties.getCookieName()))
-                .andDo(print());
-    }
-
-    @Test
-    void shouldNotAddCookieToResponseWhenAccessTokenIsNotVerified() throws Exception {
-        final Cookie loginCookie = userAccountUtil.loginAndGetJwtToken();
-        final UUID uuid = userAccountUtil.getConfirmationToken();
-        loginCookie.setValue(JWT.create().withClaim("123", 123).sign(Algorithm.HMAC256("123")));
-
-        mockMvc.perform(post("/auth/confirm")
-                        .cookie(loginCookie)
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
-                .andExpect(status().isOk())
-                .andExpect(cookie().doesNotExist(tokenProperties.getCookieName()))
                 .andDo(print());
     }
 }

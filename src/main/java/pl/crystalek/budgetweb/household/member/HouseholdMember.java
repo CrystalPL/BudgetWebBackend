@@ -11,10 +11,13 @@ import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.household.role.Role;
 import pl.crystalek.budgetweb.user.User;
+
+import java.time.Instant;
 
 @Entity
 @Getter
@@ -34,19 +37,18 @@ public class HouseholdMember {
     @JoinColumn(name = "user_id", nullable = false)
     User user;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     Role role;
 
-    public HouseholdMember(final Household household, final User user) {
-        this.household = household;
-        this.user = user;
-        this.role = household.getDefaultRole();
-    }
+    @Column(nullable = false)
+    Instant joinDate;
 
-    public HouseholdMember(final Household household, final User user, final Role role) {
+    public HouseholdMember(final Household household, final User user, final Role role, final Instant joinDate) {
         this.household = household;
         this.user = user;
         this.role = role;
+        this.joinDate = joinDate;
     }
 }

@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.household.role;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -41,7 +42,7 @@ public class Role {
 
     Instant creationTime;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<RolePermission> permissionSet;
 
     public Role(final Household household, final String name, final String color, final Instant creationTime) {

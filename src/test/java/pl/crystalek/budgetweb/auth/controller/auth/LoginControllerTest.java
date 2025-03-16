@@ -1,7 +1,6 @@
 package pl.crystalek.budgetweb.auth.controller.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.LoginRequest;
@@ -23,20 +21,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static pl.crystalek.budgetweb.utils.UserAccountUtil.getGuidFromByteArray;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class LoginControllerTest extends BaseAccessControllerTest {
     ObjectMapper objectMapper;
-    JdbcTemplate jdbcTemplate;
-    EntityManager entityManager;
 
     @Autowired
-    public LoginControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper, final JdbcTemplate jdbcTemplate, final EntityManager entityManager) {
+    public LoginControllerTest(final MockMvc mockMvc, final UserAccountUtil userAccountUtil, final ObjectMapper objectMapper) {
         super(mockMvc, userAccountUtil);
         this.objectMapper = objectMapper;
-        this.jdbcTemplate = jdbcTemplate;
-        this.entityManager = entityManager;
     }
 
     @Override
@@ -45,12 +38,7 @@ class LoginControllerTest extends BaseAccessControllerTest {
     }
 
     @Override
-    protected String[][] shouldDeniedAccessWithGuestRole() {
-        return new String[][]{{"/auth/login", "POST"}};
-    }
-
-    @Override
-    protected String[][] shouldDeniedAccessWithUserRole() {
+    protected String[][] shouldDeniedAccessWithAccount() {
         return new String[][]{{"/auth/login", "POST"}};
     }
 
@@ -58,26 +46,26 @@ class LoginControllerTest extends BaseAccessControllerTest {
     void shouldLoginFailWhenCredentialsAreValidAndAccountNotConfirmed() throws Exception {
         userAccountUtil.register(UserAccountUtil.TESTING_USER);
         final LoginRequest loginRequest = new LoginRequest("test@example.com", "StrongPassword1!", true);
+        final UUID confirmationToken = userAccountUtil.getConfirmationToken();
 
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.registrationToken").value(confirmationToken.toString()))
                 .andExpect(jsonPath("$.message").value(LoginResponseMessage.ACCOUNT_NOT_CONFIRMED.name()));
     }
 
     @Test
     void shouldLoginSuccessfullyWhenCredentialsAreValid() throws Exception {
-        final LoginRequest loginRequest = new LoginRequest("test@example.com", "StrongPassword1!", true);
         userAccountUtil.register(UserAccountUtil.TESTING_USER);
-        entityManager.flush();
-        final byte[] token = jdbcTemplate.queryForObject("SELECT id from confirmation_token", byte[].class);
-        final UUID uuid = getGuidFromByteArray(token);
+        final UUID confirmationToken = userAccountUtil.getConfirmationToken();
+        final LoginRequest loginRequest = new LoginRequest("test@example.com", "StrongPassword1!", false);
 
         mockMvc.perform(post("/auth/confirm")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
+                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(confirmationToken.toString()))))
                 .andExpect(status().isOk())
                 .andDo(print());
 
@@ -86,6 +74,7 @@ class LoginControllerTest extends BaseAccessControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.registrationToken").doesNotExist())
                 .andExpect(jsonPath("$.message").value(LoginResponseMessage.SUCCESS.name()));
     }
 
@@ -119,6 +108,7 @@ class LoginControllerTest extends BaseAccessControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.registrationToken").doesNotExist())
                 .andExpect(jsonPath("$.message").value(LoginResponseMessage.BAD_CREDENTIALS.name()));
     }
 
@@ -132,6 +122,7 @@ class LoginControllerTest extends BaseAccessControllerTest {
                         .content(objectMapper.writeValueAsString(loginRequest))
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.registrationToken").doesNotExist())
                 .andExpect(jsonPath("$.message").value(LoginResponseMessage.USER_NOT_EXIST.name()));
     }
 }

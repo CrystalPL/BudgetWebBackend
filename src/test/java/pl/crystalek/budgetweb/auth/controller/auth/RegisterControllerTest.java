@@ -8,18 +8,18 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
 import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
-import pl.crystalek.budgetweb.user.User;
+import pl.crystalek.budgetweb.user.temporary.TemporaryUser;
 import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -45,15 +45,9 @@ class RegisterControllerTest extends BaseAccessControllerTest {
     }
 
     @Override
-    protected String[][] shouldDeniedAccessWithGuestRole() {
+    protected String[][] shouldDeniedAccessWithAccount() {
         return new String[][]{{"/auth/register", "POST"}};
     }
-
-    @Override
-    protected String[][] shouldDeniedAccessWithUserRole() {
-        return new String[][]{{"/auth/register", "POST"}};
-    }
-
 
     @Test
     void shouldRegisterSuccessfullyWhenCredentialsAreValid() throws Exception {
@@ -66,12 +60,19 @@ class RegisterControllerTest extends BaseAccessControllerTest {
                 true
         );
 
-        mockMvc.perform(post("/auth/register")
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isOk());
+        userAccountUtil.register(request);
 
-        List<User> users = jdbcTemplate.query("SELECT * from users", new BeanPropertyRowMapper<>(User.class));
+        final List<TemporaryUser> users = jdbcTemplate.query("SELECT * FROM temporary_users", (rs, rowNum) -> {
+            TemporaryUser user = new TemporaryUser();
+            user.setId(UUID.nameUUIDFromBytes(rs.getBytes("id")));
+            user.setEmail(rs.getString("email"));
+            user.setPassword(rs.getString("password"));
+            user.setNickname(rs.getString("nickname"));
+            user.setReceiveUpdates(rs.getBoolean("receive_updates"));
+            user.setExpireAt(rs.getTimestamp("expire_at").toInstant());
+            return user;
+        });
+
         assertEquals(1, users.size());
         assertEquals(request.username(), users.getFirst().getNickname());
         assertEquals(request.email(), users.getFirst().getEmail());
@@ -83,8 +84,8 @@ class RegisterControllerTest extends BaseAccessControllerTest {
     @Test
     void shouldReturnAccountNotEnabledWhenAccountIsNotConfirmed() throws Exception {
         final String hashedPassword = new BCryptPasswordEncoder().encode("StrongPassword1!");
-        jdbcTemplate.execute("INSERT INTO users (email, nickname, password, receive_updates, user_role) " +
-                             "VALUES ('test@example.com', 'TestUser', '" + hashedPassword + "', 1, 'GUEST');");
+        jdbcTemplate.execute("INSERT INTO temporary_users (id, email, nickname, password, receive_updates, expire_at) " +
+                             "VALUES (UUID_TO_BIN('3f06af63-a93c-11e4-9797-00505690773f', true), 'test@example.com', 'TestUser', '" + hashedPassword + "', 1, '2025-03-19 07:01:04.549402');");
 
         final RegisterRequest request = new RegisterRequest(
                 "AnotherUser",
@@ -104,22 +105,11 @@ class RegisterControllerTest extends BaseAccessControllerTest {
 
     @Test
     void shouldReturnAccountExistsWhenEmailIsAlreadyUsed() throws Exception {
-        final String hashedPassword = new BCryptPasswordEncoder().encode("StrongPassword1!");
-        jdbcTemplate.execute("INSERT INTO users (email, nickname, password, receive_updates, user_role) " +
-                             "VALUES ('test@example.com', 'TestUser', '" + hashedPassword + "', 1, 'USER');");
-
-        final RegisterRequest request = new RegisterRequest(
-                "AnotherUser",
-                "test@example.com",
-                "test@example.com",
-                "StrongPassword1!",
-                "StrongPassword1!",
-                true
-        );
+        userAccountUtil.createConfirmedAccountAndGetJwtToken();
 
         mockMvc.perform(post("/auth/register")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .content(objectMapper.writeValueAsString(UserAccountUtil.TESTING_USER)))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(RegisterResponseMessage.ACCOUNT_EXISTS.name()));
     }

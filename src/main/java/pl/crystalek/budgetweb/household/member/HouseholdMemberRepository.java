@@ -4,11 +4,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import pl.crystalek.budgetweb.household.member.model.GetMembersResponse;
 
+import java.util.Optional;
 import java.util.Set;
 
 interface HouseholdMemberRepository extends CrudRepository<HouseholdMember, Long> {
 
-    boolean existsByUser_Id(final long userId);
+    Optional<HouseholdMember> findByUser_Id(final long userId);
 
     @Query("""
             SELECT new pl.crystalek.budgetweb.household.member.model.GetMembersResponse(u.id, u.nickname,

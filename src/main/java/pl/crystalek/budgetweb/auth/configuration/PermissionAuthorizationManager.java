@@ -8,7 +8,6 @@ import org.springframework.security.authorization.AuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
-import pl.crystalek.budgetweb.user.UserRole;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -16,20 +15,15 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class PermissionAuthorizationManager implements AuthorizationManager<RequestAuthorizationContext> {
-    UserRole userRole;
     Permission permission;
 
-    public static PermissionAuthorizationManager hasPermission(final UserRole userRole, final Permission permission) {
-        return new PermissionAuthorizationManager(userRole, permission);
+    public static PermissionAuthorizationManager hasPermission(final Permission permission) {
+        return new PermissionAuthorizationManager(permission);
     }
 
     @Override
     public AuthorizationDecision check(final Supplier<Authentication> authenticationSupplier, final RequestAuthorizationContext object) {
         final Authentication authentication = authenticationSupplier.get();
-//        if (authentication.getAuthorities().contains(userRole)) {
-//            return new AuthorizationDecision(true);
-//        }
-
         final boolean checkedPermission = checkPermission(permission.getPermission(), ((Set<Permission>) authentication.getDetails()));
         return new AuthorizationDecision(checkedPermission);
     }

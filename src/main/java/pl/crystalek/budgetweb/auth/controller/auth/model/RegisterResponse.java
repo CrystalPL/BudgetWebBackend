@@ -3,14 +3,14 @@ package pl.crystalek.budgetweb.auth.controller.auth.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import pl.crystalek.budgetweb.share.ResponseAPI;
-import pl.crystalek.budgetweb.user.User;
+import pl.crystalek.budgetweb.user.temporary.TemporaryUser;
 
 @Getter
 public class RegisterResponse extends ResponseAPI<RegisterResponseMessage> {
     @JsonIgnore
-    private User createdUser;
+    private TemporaryUser createdUser;
 
-    public RegisterResponse(final boolean success, final RegisterResponseMessage message, final User createdUser) {
+    public RegisterResponse(final boolean success, final RegisterResponseMessage message, final TemporaryUser createdUser) {
         super(success, message);
 
         this.createdUser = createdUser;

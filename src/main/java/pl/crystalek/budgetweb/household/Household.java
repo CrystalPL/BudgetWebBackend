@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.household.member.HouseholdMember;
 import pl.crystalek.budgetweb.household.member.invite.HouseholdInviteMember;
 import pl.crystalek.budgetweb.household.role.Role;
-import pl.crystalek.budgetweb.log.EventLog;
 import pl.crystalek.budgetweb.user.User;
 
 import java.time.Instant;
@@ -40,6 +39,7 @@ public class Household {
     Instant creationTime;
 
     @OneToOne
+    @Setter
     @JoinColumn(name = "owner_id", nullable = false, unique = true)
     User owner;
 
@@ -48,14 +48,19 @@ public class Household {
     @Setter
     Role defaultRole;
 
+    @OneToOne
+    @JoinColumn(name = "owner_role_id")
+    @Setter
+    Role ownerRole;
+
+    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Role> roles;
+
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<HouseholdMember> members;
 
     @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
     Set<HouseholdInviteMember> inviteMembers;
-
-    @OneToMany(mappedBy = "household", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<EventLog<?>> logs;
 
     public Household(final String name, final Instant creationTime, final User owner) {
         this.name = name;

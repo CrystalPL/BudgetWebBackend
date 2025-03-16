@@ -41,7 +41,7 @@ public class TokenService {
         final User reference = entityManager.getReference(User.class, userCredentialsDTO.id());
         final RefreshToken refreshToken = tokenRepository.save(new RefreshToken(deviceInfo, expireAt, loginRequest.rememberMe(), reference));
 
-        return tokenCreator.create(userCredentialsDTO.id(), refreshToken.getId(), userCredentialsDTO.userRole());
+        return tokenCreator.create(userCredentialsDTO.id(), refreshToken.getId());
     }
 
     public Optional<String> createAccessToken(final AccessTokenDetails tokenDetails) {
@@ -58,7 +58,7 @@ public class TokenService {
             return Optional.empty();
         }
 
-        return Optional.of(tokenCreator.create(userId, refreshTokenId, tokenDetails.getRole()));
+        return Optional.of(tokenCreator.create(userId, refreshTokenId));
     }
 
     public void logoutByRefreshTokenId(final long tokenId) {

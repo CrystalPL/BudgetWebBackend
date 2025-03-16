@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.user.UserRole;
 
 import java.time.Instant;
 
@@ -14,7 +13,6 @@ import java.time.Instant;
 public class AccessTokenDetails {
     long userId;
     long refreshTokenId;
-    UserRole role;
     @Builder.Default
     Instant expiresAt = Instant.EPOCH;
     @Builder.Default

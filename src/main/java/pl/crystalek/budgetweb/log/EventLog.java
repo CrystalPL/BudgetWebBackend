@@ -3,7 +3,6 @@ package pl.crystalek.budgetweb.log;
 import jakarta.persistence.Access;
 import jakarta.persistence.AccessType;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,7 +19,7 @@ import pl.crystalek.budgetweb.user.User;
 
 import java.time.Instant;
 
-@Entity
+//@Entity
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Access(AccessType.FIELD)

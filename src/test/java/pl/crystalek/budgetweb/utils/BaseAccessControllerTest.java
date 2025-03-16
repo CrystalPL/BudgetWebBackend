@@ -50,29 +50,11 @@ public abstract class BaseAccessControllerTest {
     }
 
     /**
-     * Określa endpointy, do których dostęp powinien być możliwy dla użytkowników z rolą gościa (brak potwierdzonej rejestracji konta).
-     *
-     * @return tablica ścieżek i metod HTTP, które są dostępne dla użytkownika-gościa
-     */
-    protected String[][] shouldAllowAccessWithGuestRole() {
-        return EMPTY_TEST;
-    }
-
-    /**
-     * Określa endpointy, do których dostęp powinien być zabroniony dla użytkowników z rolą gościa (brak potwierdzonej rejestracji konta).
-     *
-     * @return tablica ścieżek i metod HTTP, do których użytkownik-gość nie ma dostępu
-     */
-    protected String[][] shouldDeniedAccessWithGuestRole() {
-        return EMPTY_TEST;
-    }
-
-    /**
      * Określa endpointy, do których dostęp powinien być możliwy dla użytkowników z rolą użytkownika.
      *
      * @return tablica ścieżek i metod HTTP, które są dostępne dla zwykłego użytkownika
      */
-    protected String[][] shouldAllowAccessWithUserRole() {
+    protected String[][] shouldAllowAccessWithAccount() {
         return EMPTY_TEST;
     }
 
@@ -81,7 +63,7 @@ public abstract class BaseAccessControllerTest {
      *
      * @return tablica ścieżek i metod HTTP, do których zwykły użytkownik nie ma dostępu
      */
-    protected String[][] shouldDeniedAccessWithUserRole() {
+    protected String[][] shouldDeniedAccessWithAccount() {
         return EMPTY_TEST;
     }
 
@@ -104,29 +86,9 @@ public abstract class BaseAccessControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("shouldDeniedAccessWithGuestRole")
-    void shouldDeniedAccessWithGuestRole(final String path, final String httpMethod) throws Exception {
-        Assumptions.assumeTrue(shouldDeniedAccessWithGuestRole()[0][0] != null, "Brak danych testowych – test pominięty");
-
-        final Cookie cookie = userAccountUtil.loginAndGetJwtToken();
-        mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path).cookie(cookie))
-                .andExpect(status().isForbidden());
-    }
-
-    @ParameterizedTest
-    @MethodSource("shouldAllowAccessWithGuestRole")
-    void shouldAllowAccessWithGuestRole(final String path, final String httpMethod) throws Exception {
-        Assumptions.assumeTrue(shouldAllowAccessWithGuestRole()[0][0] != null, "Brak danych testowych – test pominięty");
-
-        final Cookie cookie = userAccountUtil.loginAndGetJwtToken();
-        mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path).cookie(cookie))
-                .andExpect(result -> assertNotEquals(HttpStatus.UNAUTHORIZED.value(), result.getResponse().getStatus()));
-    }
-
-    @ParameterizedTest
-    @MethodSource("shouldAllowAccessWithUserRole")
-    void shouldAllowAccessWithUserRole(final String path, final String httpMethod) throws Exception {
-        Assumptions.assumeTrue(shouldAllowAccessWithUserRole()[0][0] != null, "Brak danych testowych – test pominięty");
+    @MethodSource("shouldAllowAccessWithAccount")
+    void shouldAllowAccessWithAccount(final String path, final String httpMethod) throws Exception {
+        Assumptions.assumeTrue(shouldAllowAccessWithAccount()[0][0] != null, "Brak danych testowych – test pominięty");
 
         final Cookie cookie = userAccountUtil.createConfirmedAccountAndGetJwtToken();
         mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path).cookie(cookie))
@@ -135,9 +97,9 @@ public abstract class BaseAccessControllerTest {
     }
 
     @ParameterizedTest
-    @MethodSource("shouldDeniedAccessWithUserRole")
-    void shouldDeniedAccessWithUserRole(final String path, final String httpMethod) throws Exception {
-        Assumptions.assumeTrue(shouldDeniedAccessWithUserRole()[0][0] != null, "Brak danych testowych – test pominięty");
+    @MethodSource("shouldDeniedAccessWithAccount")
+    void shouldDeniedAccessWithAccount(final String path, final String httpMethod) throws Exception {
+        Assumptions.assumeTrue(shouldDeniedAccessWithAccount()[0][0] != null, "Brak danych testowych – test pominięty");
 
         final Cookie cookie = userAccountUtil.createConfirmedAccountAndGetJwtToken();
         mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path).cookie(cookie))

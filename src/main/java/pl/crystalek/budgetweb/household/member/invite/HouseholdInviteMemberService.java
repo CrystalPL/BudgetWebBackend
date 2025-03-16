@@ -11,9 +11,6 @@ import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMembe
 import pl.crystalek.budgetweb.household.member.invite.model.InviteHouseholdMemberResponseMessage;
 import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationRequest;
 import pl.crystalek.budgetweb.household.member.invite.model.UndoInvitationResponseMessage;
-import pl.crystalek.budgetweb.log.EventLog;
-import pl.crystalek.budgetweb.log.EventLogBuilder;
-import pl.crystalek.budgetweb.log.EventLogService;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
@@ -28,7 +25,6 @@ import java.util.Set;
 public class HouseholdInviteMemberService {
     HouseholdInviteMemberRepository repository;
     UserService userService;
-    EventLogService eventLogService;
 
     public Set<GetInvitedUsersResponse> getInvitedUsers(final long userId) {
         return repository.getInvitedUsersByUserId(userId);
@@ -83,16 +79,16 @@ public class HouseholdInviteMemberService {
             return new ResponseAPI<>(false, InviteHouseholdMemberResponseMessage.USER_ALREADY_INVITE);
         }
 
-        final EventLog<HouseholdInviteMemberActionType> eventLog = EventLogBuilder
-                .<HouseholdInviteMemberActionType, HouseholdInviteMember>builder()
-                .entityType(HouseholdInviteMember.class)
-                .actionType(HouseholdInviteMemberActionType.INVITE)
-                .description(invitedUser.getNickname())
-                .executorUser(requesterUser)
-                .household(household)
-                .build().build();
-
-        eventLogService.log(eventLog);
+//        final EventLog<HouseholdInviteMemberActionType> eventLog = EventLogBuilder
+//                .<HouseholdInviteMemberActionType, HouseholdInviteMember>builder()
+//                .entityType(HouseholdInviteMember.class)
+//                .actionType(HouseholdInviteMemberActionType.INVITE)
+//                .description(invitedUser.getNickname())
+//                .executorUser(requesterUser)
+//                .household(household)
+//                .build().build();
+//
+//        eventLogService.log(eventLog);
 
         return new ResponseAPI<>(true, InviteHouseholdMemberResponseMessage.SUCCESS);
     }

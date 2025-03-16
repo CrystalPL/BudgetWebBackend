@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.auth.confirmation;
+package pl.crystalek.budgetweb.user.temporary;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
