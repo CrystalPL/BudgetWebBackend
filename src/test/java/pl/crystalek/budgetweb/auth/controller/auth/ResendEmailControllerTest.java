@@ -18,9 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationResendEmailResponseMessage;
-import pl.crystalek.budgetweb.auth.controller.auth.model.ResendEmailRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.AccountConfirmationRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.ResendEmailRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.response.AccountConfirmationResendEmailResponseMessage;
 import pl.crystalek.budgetweb.utils.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 

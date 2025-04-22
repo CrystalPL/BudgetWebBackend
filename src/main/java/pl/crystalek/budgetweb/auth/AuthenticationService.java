@@ -8,11 +8,11 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.crystalek.budgetweb.auth.configuration.BCryptPasswordEncoder;
-import pl.crystalek.budgetweb.auth.controller.auth.model.LoginRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.LoginResponse;
-import pl.crystalek.budgetweb.auth.controller.auth.model.LoginResponseMessage;
+import pl.crystalek.budgetweb.auth.controller.auth.request.LoginRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.response.LoginResponse;
+import pl.crystalek.budgetweb.auth.controller.auth.response.LoginResponseMessage;
 import pl.crystalek.budgetweb.auth.cookie.CookieService;
 import pl.crystalek.budgetweb.auth.device.DeviceInfo;
 import pl.crystalek.budgetweb.auth.token.TokenService;
@@ -37,7 +37,7 @@ public class AuthenticationService {
             final Optional<TemporaryUser> userOptional = temporaryUserService.findByEmail(loginRequest.email());
             if (userOptional.isPresent()) {
                 final TemporaryUser temporaryUser = userOptional.get();
-                if (!bCryptPasswordEncoder.passwordEncoder().matches(loginRequest.password(), temporaryUser.getPassword())) {
+                if (!bCryptPasswordEncoder.matches(loginRequest.password(), temporaryUser.getPassword())) {
                     throw new BadCredentialsException("");
                 }
 

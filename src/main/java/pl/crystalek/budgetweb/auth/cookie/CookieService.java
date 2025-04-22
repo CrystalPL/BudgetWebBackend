@@ -15,7 +15,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class CookieService {
-    private static final int COOKIE_MAX_AGE = 10 * 365 * 24 * 60 * 60; // 10 lat w sekundach
+    public static final int COOKIE_MAX_AGE = 10 * 365 * 24 * 60 * 60; // 10 lat w sekundach
     TokenProperties tokenProperties;
 
     public void deleteCookie(final HttpServletResponse response) {

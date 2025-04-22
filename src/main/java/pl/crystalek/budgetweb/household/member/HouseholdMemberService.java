@@ -6,9 +6,9 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.household.Household;
-import pl.crystalek.budgetweb.household.member.model.DeleteMemberResponseMessage;
-import pl.crystalek.budgetweb.household.member.model.GetMembersResponse;
-import pl.crystalek.budgetweb.household.member.model.LeaveHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.member.response.DeleteMemberResponseMessage;
+import pl.crystalek.budgetweb.household.member.response.GetMembersResponse;
+import pl.crystalek.budgetweb.household.member.response.LeaveHouseholdResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Comparator;

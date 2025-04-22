@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.household.member.HouseholdMember;
 import pl.crystalek.budgetweb.household.member.HouseholdMemberService;
-import pl.crystalek.budgetweb.household.model.ChangeHouseholdNameResponseMessage;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdRequest;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdResponseMessage;
-import pl.crystalek.budgetweb.household.model.DeleteHouseholdResponseMessage;
-import pl.crystalek.budgetweb.household.model.TransferOwnerResponseMessage;
+import pl.crystalek.budgetweb.household.request.CreateHouseholdRequest;
+import pl.crystalek.budgetweb.household.response.ChangeHouseholdNameResponseMessage;
+import pl.crystalek.budgetweb.household.response.CreateHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.response.DeleteHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.response.TransferOwnerResponseMessage;
 import pl.crystalek.budgetweb.household.role.Role;
 import pl.crystalek.budgetweb.household.role.RoleService;
 import pl.crystalek.budgetweb.household.role.permission.RolePermissionService;
@@ -49,7 +49,6 @@ public class HouseholdService {
         final Role defaultRole = roleService.createDefaultRole(household);
         final Role ownerDefaultRole = roleService.createOwnerDefaultRole(household);
 
-        rolePermissionService.addPermissionsToDefaultRole(defaultRole);
         rolePermissionService.addPermissionsToOwnerDefaultRole(ownerDefaultRole);
 
         household.setDefaultRole(defaultRole);

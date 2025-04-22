@@ -26,9 +26,12 @@ class AuthControllerTest {
 
     @ParameterizedTest
     @CsvSource({
-            "'/auth/login', 'POST'",
-            "'/auth/register', 'POST'",
             "'/auth/confirm', 'POST'",
+            "'/auth/login', 'POST'",
+            "'/auth/password/recovery', 'POST'",
+            "'/auth/password/reset', 'POST'",
+            "'/auth/register', 'POST'",
+            "'/auth/resend-email', 'POST'",
     })
     void shouldReturnBadRequestWhenContentIsNull(final String path, final String httpMethod) throws Exception {
         mockMvc.perform(request(HttpMethod.valueOf(httpMethod), path))

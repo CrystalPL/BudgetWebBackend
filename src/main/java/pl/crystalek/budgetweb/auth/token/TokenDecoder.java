@@ -20,8 +20,9 @@ public class TokenDecoder {
     public AccessTokenDetails decodeToken(final String token) {
         final AccessTokenDetails.AccessTokenDetailsBuilder tokenBuilder = AccessTokenDetails.builder();
 
-        final DecodedJWT decode = JWT.decode(token);
+        DecodedJWT decode = null;
         try {
+            decode = JWT.decode(token);
             JWT
                     .require(Algorithm.HMAC256(tokenProperties.getSecretKey()))
                     .build()

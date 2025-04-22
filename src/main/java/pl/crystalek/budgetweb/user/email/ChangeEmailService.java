@@ -13,8 +13,8 @@ import pl.crystalek.budgetweb.email.EmailSender;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.User;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.model.ChangeEmailResponseMessage;
-import pl.crystalek.budgetweb.user.model.ConfirmEmailChangingResponseMessage;
+import pl.crystalek.budgetweb.user.response.ChangeEmailResponseMessage;
+import pl.crystalek.budgetweb.user.response.ConfirmEmailChangingResponseMessage;
 
 import java.time.Instant;
 import java.util.Optional;

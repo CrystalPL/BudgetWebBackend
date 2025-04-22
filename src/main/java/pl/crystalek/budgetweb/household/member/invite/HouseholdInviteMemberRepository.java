@@ -2,7 +2,7 @@ package pl.crystalek.budgetweb.household.member.invite;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import pl.crystalek.budgetweb.household.member.invite.model.GetInvitedUsersResponse;
+import pl.crystalek.budgetweb.household.member.invite.response.GetInvitedUsersResponse;
 
 import java.util.Optional;
 import java.util.Set;
@@ -11,7 +11,7 @@ import java.util.UUID;
 interface HouseholdInviteMemberRepository extends CrudRepository<HouseholdInviteMember, UUID> {
 
     @Query("""
-            SELECT new pl.crystalek.budgetweb.household.member.invite.model.GetInvitedUsersResponse(u.id, u.email, him.inviteDate)
+            SELECT new pl.crystalek.budgetweb.household.member.invite.response.GetInvitedUsersResponse(u.id, u.email, him.inviteDate)
             FROM HouseholdInviteMember him
                      JOIN HouseholdMember hm ON hm.user.id = :userId
                      JOIN User u ON him.user.id = u.id

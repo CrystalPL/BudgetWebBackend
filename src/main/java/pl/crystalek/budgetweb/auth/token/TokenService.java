@@ -6,13 +6,13 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import pl.crystalek.budgetweb.auth.controller.auth.model.LoginRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.LoginRequest;
 import pl.crystalek.budgetweb.auth.device.DeviceInfo;
 import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
 import pl.crystalek.budgetweb.auth.token.model.RefreshToken;
 import pl.crystalek.budgetweb.user.User;
+import pl.crystalek.budgetweb.user.UserDTO;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.model.UserDTO;
 
 import java.time.Instant;
 import java.util.Optional;

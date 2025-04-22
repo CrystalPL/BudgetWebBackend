@@ -10,13 +10,16 @@ import lombok.Cleanup;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.NonFinal;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.AccountConfirmationRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.LoginRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.RegisterRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.response.AccountConfirmationResponseMessage;
 import pl.crystalek.budgetweb.auth.token.TokenCreator;
 import pl.crystalek.budgetweb.auth.token.TokenDecoder;
 import pl.crystalek.budgetweb.auth.token.TokenProperties;
@@ -126,6 +129,21 @@ class ConfirmAccountControllerTest extends BaseAccessControllerTest {
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
                         .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(uuid.toString()))))
                 .andExpect(status().isOk())
-                .andDo(print());
+                .andExpect(jsonPath("$.message").value(AccountConfirmationResponseMessage.SUCCESS));
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(new LoginRequest(email, password, false)))
+                        .header("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldReturnTokenExpiredWhenTokenIsNotExists() throws Exception {
+        mockMvc.perform(post("/auth/confirm")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(new AccountConfirmationRequest(UUID.randomUUID().toString()))))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(AccountConfirmationResponseMessage.TOKEN_EXPIRED.name()));
     }
 }

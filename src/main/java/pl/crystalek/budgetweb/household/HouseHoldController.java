@@ -4,20 +4,21 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.crystalek.budgetweb.household.model.ChangeHouseholdNameRequest;
-import pl.crystalek.budgetweb.household.model.ChangeHouseholdNameResponseMessage;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdRequest;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdResponseMessage;
-import pl.crystalek.budgetweb.household.model.DeleteHouseholdResponseMessage;
-import pl.crystalek.budgetweb.household.model.TransferOwnerRequest;
-import pl.crystalek.budgetweb.household.model.TransferOwnerResponseMessage;
+import pl.crystalek.budgetweb.household.request.ChangeHouseholdNameRequest;
+import pl.crystalek.budgetweb.household.request.CreateHouseholdRequest;
+import pl.crystalek.budgetweb.household.request.TransferOwnerRequest;
+import pl.crystalek.budgetweb.household.response.ChangeHouseholdNameResponseMessage;
+import pl.crystalek.budgetweb.household.response.CreateHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.response.DeleteHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.response.TransferOwnerResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 @RestController
@@ -28,32 +29,39 @@ class HouseHoldController {
     HouseholdService householdService;
 
     @PostMapping("/create")
-    private ResponseEntity<ResponseAPI<CreateHouseholdResponseMessage>> create(@Validated(CreateHouseholdRequest.HouseholdNameRequestValidation.class) @RequestBody final CreateHouseholdRequest createHouseholdRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<ResponseAPI<CreateHouseholdResponseMessage>> create(
+            @Validated(CreateHouseholdRequest.HouseholdNameRequestValidation.class) @RequestBody final CreateHouseholdRequest createHouseholdRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<CreateHouseholdResponseMessage> response = householdService.create(createHouseholdRequest, userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @PreAuthorize("hasRole(T(pl.crystalek.budgetweb.household.role.permission.Permission).HOUSEHOLD_CHANGE_NAME)")
     @PostMapping("/changeName")
-    private ResponseEntity<ResponseAPI<ChangeHouseholdNameResponseMessage>> changeHouseholdName(@Validated(ChangeHouseholdNameRequest.HouseholdNameRequestValidation.class) @RequestBody final ChangeHouseholdNameRequest changeHouseholdNameRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<ResponseAPI<ChangeHouseholdNameResponseMessage>> changeHouseholdName(
+            @Validated(ChangeHouseholdNameRequest.HouseholdNameRequestValidation.class) @RequestBody final ChangeHouseholdNameRequest changeHouseholdNameRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<ChangeHouseholdNameResponseMessage> response = householdService.changeHouseholdName(changeHouseholdNameRequest.householdName(), userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
+    @PreAuthorize("hasRole(T(pl.crystalek.budgetweb.household.role.permission.Permission).HOUSEHOLD_DELETE)")
     @DeleteMapping("/delete")
-    private ResponseEntity<ResponseAPI<DeleteHouseholdResponseMessage>> deleteHousehold() {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<ResponseAPI<DeleteHouseholdResponseMessage>> deleteHousehold(@AuthenticationPrincipal final long userId) {
         final ResponseAPI<DeleteHouseholdResponseMessage> response = householdService.deleteHousehold(userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/transferOwner")
-    private ResponseEntity<ResponseAPI<TransferOwnerResponseMessage>> transferHouseholdOwner(@Validated @RequestBody final TransferOwnerRequest transferOwnerRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public ResponseEntity<ResponseAPI<TransferOwnerResponseMessage>> transferHouseholdOwner(
+            @Validated @RequestBody final TransferOwnerRequest transferOwnerRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<TransferOwnerResponseMessage> response = householdService.transferOwner(transferOwnerRequest.getMemberId(), userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);

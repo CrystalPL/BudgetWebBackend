@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.User;
-import pl.crystalek.budgetweb.user.avatar.model.UploadAvatarResponseMessage;
+import pl.crystalek.budgetweb.user.avatar.response.UploadAvatarResponseMessage;
 
 import java.io.File;
 import java.io.IOException;

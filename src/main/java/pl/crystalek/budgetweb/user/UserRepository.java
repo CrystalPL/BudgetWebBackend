@@ -3,9 +3,7 @@ package pl.crystalek.budgetweb.user;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import pl.crystalek.budgetweb.user.model.AccountInfoResponse;
-import pl.crystalek.budgetweb.user.model.UserCredentialsDTO;
-import pl.crystalek.budgetweb.user.model.UserDTO;
+import pl.crystalek.budgetweb.user.response.AccountInfoResponse;
 
 import java.util.Optional;
 
@@ -17,7 +15,7 @@ interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<UserDTO> findUserDTOByEmail(final String email);
 
-    @Query("SELECT new pl.crystalek.budgetweb.user.model.AccountInfoResponse(u.nickname, u.email, u.id) " +
+    @Query("SELECT new pl.crystalek.budgetweb.user.response.AccountInfoResponse(u.nickname, u.email, u.id) " +
            "FROM User u WHERE u.id = :userId")
     AccountInfoResponse findAccountInfoById(final long userId);
 

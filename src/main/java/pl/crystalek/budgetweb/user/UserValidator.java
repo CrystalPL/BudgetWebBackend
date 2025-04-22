@@ -4,8 +4,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponse;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterResponseMessage;
+import pl.crystalek.budgetweb.auth.controller.auth.response.RegisterResponse;
+import pl.crystalek.budgetweb.auth.controller.auth.response.RegisterResponseMessage;
 import pl.crystalek.budgetweb.user.email.ChangeEmailService;
 import pl.crystalek.budgetweb.user.temporary.TemporaryUserService;
 

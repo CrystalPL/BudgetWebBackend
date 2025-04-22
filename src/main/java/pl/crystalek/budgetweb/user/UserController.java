@@ -5,7 +5,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.email.ChangeEmailService;
-import pl.crystalek.budgetweb.user.model.AccountInfoResponse;
-import pl.crystalek.budgetweb.user.model.ChangeEmailRequest;
-import pl.crystalek.budgetweb.user.model.ChangeEmailResponseMessage;
-import pl.crystalek.budgetweb.user.model.ChangeNicknameRequest;
-import pl.crystalek.budgetweb.user.model.ChangeNicknameResponseMessage;
-import pl.crystalek.budgetweb.user.model.ChangePasswordRequest;
-import pl.crystalek.budgetweb.user.model.ChangePasswordResponseMessage;
-import pl.crystalek.budgetweb.user.model.ConfirmEmailChangingRequest;
-import pl.crystalek.budgetweb.user.model.ConfirmEmailChangingResponseMessage;
-import pl.crystalek.budgetweb.user.model.GetEmailChangingInfoResponse;
+import pl.crystalek.budgetweb.user.request.ChangeEmailRequest;
+import pl.crystalek.budgetweb.user.request.ChangeNicknameRequest;
+import pl.crystalek.budgetweb.user.request.ChangePasswordRequest;
+import pl.crystalek.budgetweb.user.request.ConfirmEmailChangingRequest;
+import pl.crystalek.budgetweb.user.response.AccountInfoResponse;
+import pl.crystalek.budgetweb.user.response.ChangeEmailResponseMessage;
+import pl.crystalek.budgetweb.user.response.ChangeNicknameResponseMessage;
+import pl.crystalek.budgetweb.user.response.ChangePasswordResponseMessage;
+import pl.crystalek.budgetweb.user.response.ConfirmEmailChangingResponseMessage;
+import pl.crystalek.budgetweb.user.response.GetEmailChangingInfoResponse;
 
 @RestController
 @RequestMapping("/account")
@@ -33,32 +33,33 @@ class UserController {
     ChangeEmailService changeEmailService;
 
     @GetMapping("/info")
-    private AccountInfoResponse getAccountInfo() {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private AccountInfoResponse getAccountInfo(@AuthenticationPrincipal final long userId) {
         return userService.getAccountInfo(userId);
     }
 
     @PostMapping("/change-email")
-    private ResponseEntity<ResponseAPI<ChangeEmailResponseMessage>> changeEmail(@Valid @RequestBody final ChangeEmailRequest changeEmailRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private ResponseEntity<ResponseAPI<ChangeEmailResponseMessage>> changeEmail(
+            @Valid @RequestBody final ChangeEmailRequest changeEmailRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<ChangeEmailResponseMessage> response = changeEmailService.changeEmail(userId, changeEmailRequest.email(), changeEmailRequest.password());
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/change-password")
-    private ResponseEntity<ResponseAPI<ChangePasswordResponseMessage>> changePassword(@Valid @RequestBody final ChangePasswordRequest changePasswordRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private ResponseEntity<ResponseAPI<ChangePasswordResponseMessage>> changePassword(
+            @Valid @RequestBody final ChangePasswordRequest changePasswordRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<ChangePasswordResponseMessage> response = userService.changePassword(userId, changePasswordRequest.oldPassword(), changePasswordRequest.password());
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/change-nickname")
-    private ResponseEntity<ResponseAPI<ChangeNicknameResponseMessage>> changeNickname(@Valid @RequestBody final ChangeNicknameRequest changeNicknameRequest) {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private ResponseEntity<ResponseAPI<ChangeNicknameResponseMessage>> changeNickname(
+            @Valid @RequestBody final ChangeNicknameRequest changeNicknameRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<ChangeNicknameResponseMessage> response = userService.changeNickname(userId, changeNicknameRequest.nickname());
         return ResponseEntity.status(response.getStatusCode()).body(response);
 
@@ -72,9 +73,7 @@ class UserController {
     }
 
     @GetMapping("/email-changing-wait-to-confirm")
-    private GetEmailChangingInfoResponse isEmailChangingWaitingToConfirm() {
-        final long userId = (long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private GetEmailChangingInfoResponse isEmailChangingWaitingToConfirm(@AuthenticationPrincipal final long userId) {
         return new GetEmailChangingInfoResponse(changeEmailService.isEmailChangingWaitingToConfirm(userId));
     }
 }

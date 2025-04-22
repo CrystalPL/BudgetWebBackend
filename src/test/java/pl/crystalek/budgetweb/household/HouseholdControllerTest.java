@@ -22,8 +22,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdRequest;
-import pl.crystalek.budgetweb.household.model.CreateHouseholdResponseMessage;
+import pl.crystalek.budgetweb.household.request.CreateHouseholdRequest;
+import pl.crystalek.budgetweb.household.response.CreateHouseholdResponseMessage;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
 import java.util.Set;

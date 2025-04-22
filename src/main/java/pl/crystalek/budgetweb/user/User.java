@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.user;
 
+import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -43,6 +44,7 @@ public class User {
 
     //Ten obiekt niestety jest pobierany od razu, poniższe lazy nic nie dodaje, nie wiem jak to naprawić
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+    @Getter(onMethod_ = @Nullable)
     HouseholdMember householdMember;
 
     public User(final String email, final String password, final String nickname, final boolean receiveUpdates) {

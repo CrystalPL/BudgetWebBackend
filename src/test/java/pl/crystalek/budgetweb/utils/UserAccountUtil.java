@@ -10,9 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
-import pl.crystalek.budgetweb.auth.controller.auth.model.AccountConfirmationRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.LoginRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.model.RegisterRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.AccountConfirmationRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.LoginRequest;
+import pl.crystalek.budgetweb.auth.controller.auth.request.RegisterRequest;
 import pl.crystalek.budgetweb.auth.token.TokenProperties;
 
 import java.nio.ByteBuffer;

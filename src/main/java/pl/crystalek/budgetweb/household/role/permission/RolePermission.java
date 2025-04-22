@@ -15,7 +15,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.security.core.GrantedAuthority;
 import pl.crystalek.budgetweb.household.role.Role;
 
 @Entity
@@ -23,7 +22,7 @@ import pl.crystalek.budgetweb.household.role.Role;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Table(name = "role_permission", uniqueConstraints = {@UniqueConstraint(columnNames = {"role_id", "permission_name"})})
-public class RolePermission implements GrantedAuthority {
+public class RolePermission {
     @Id
     @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +38,5 @@ public class RolePermission implements GrantedAuthority {
     public RolePermission(final Role role, final Permission permissionName) {
         this.role = role;
         this.permissionName = permissionName;
-    }
-
-    @Override
-    public String getAuthority() {
-        return permissionName.getPermission();
     }
 }

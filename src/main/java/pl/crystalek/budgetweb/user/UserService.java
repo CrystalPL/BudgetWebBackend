@@ -9,11 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.household.role.permission.RolePermission;
 import pl.crystalek.budgetweb.share.ResponseAPI;
-import pl.crystalek.budgetweb.user.model.AccountInfoResponse;
-import pl.crystalek.budgetweb.user.model.ChangeNicknameResponseMessage;
-import pl.crystalek.budgetweb.user.model.ChangePasswordResponseMessage;
-import pl.crystalek.budgetweb.user.model.UserCredentialsDTO;
-import pl.crystalek.budgetweb.user.model.UserDTO;
+import pl.crystalek.budgetweb.user.response.AccountInfoResponse;
+import pl.crystalek.budgetweb.user.response.ChangeNicknameResponseMessage;
+import pl.crystalek.budgetweb.user.response.ChangePasswordResponseMessage;
 import pl.crystalek.budgetweb.user.temporary.TemporaryUser;
 
 import java.util.EnumSet;
