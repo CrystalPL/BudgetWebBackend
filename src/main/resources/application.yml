@@ -1,0 +1,121 @@
+spring:
+  servlet:
+    multipart:
+      max-file-size: -1
+      max-request-size: -1
+  profiles:
+    active: dev
+  mail:
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
+  ai:
+    openai:
+      api-key: ${OPENAI_KEY}
+      chat:
+        options:
+          model: gpt-4.1-mini
+          temperature: 0.1
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver: ERROR
+          socket: OFF
+
+server:
+  port: 8092
+
+security:
+  jwt:
+    secret-key: ${JWT_SECRET_KEY}
+    cookie-name: "auth_token"
+    token-access-time: 5m
+    refresh-token-expire-time: 14d
+
+ai:
+  receipt:
+    max-photo-size: 12MB
+    allowed-photo-extensions: [ "jpg", "jpeg", "png" ]
+    prompt: "Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach,
+            które kupiłem. Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow),
+            dane te mają być w formacie JSON. Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc),
+            cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON. Zawsze dodawaj pole proponowana_nazwa
+            (masz zaproponować własną nazwę dla produktu), a odczytaną wartość dać w polu nazwa_produktu. Usuwaj z proponowanej nazwy
+            różne zbędne przyrostki, które nie tworzą nazwy produktu. Gdy znajdziesz pod jakimś produktem opust"
+
+account:
+  confirmation:
+    email:
+      config:
+        from: "Budget App <noreply@budgetapp.pl>"
+        email-expire-time: 3d
+        clean-up-expired-emails: 5s
+        message-subject: "Potwierdzenie rejestracji w serwisie Budget App"
+        message: >
+          <body>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: black">
+              <h2>Potwierdzenie założenia konta</h2>
+              <p>Dziękujemy za założenie konta w naszym serwisie. Aby dokończyć proces rejestracji, prosimy o potwierdzenie adresu e-mail.</p>
+              <p>Kliknij poniższy link, aby aktywować swoje konto:</p>
+              <p><a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none;">Aktywuj konto</a></p>
+              <p>Jeśli nie rejestrowałeś się w naszym serwisie, zignoruj tę wiadomość.</p>
+              <p>Pozdrawiamy,<br>Ekipa Budget App</p>
+          </div>
+          </body>
+
+password-recovery:
+  email:
+    config:
+      from: "Budget App <noreply@budgetapp.pl>"
+      email-expire-time: 3d
+      clean-up-expired-emails: 5s
+      message-subject: "Zmiana hasła w serwisie Budget App"
+      message: >
+        <body>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: black">
+            <h2>Przywrócenie hasła</h2>
+            <p>Otrzymujesz tę wiadomość, ponieważ otrzymaliśmy prośbę o przywrócenie hasła do konta w naszym serwisie.</p>
+            <p>Aby zresetować swoje hasło, kliknij poniższy link:</p>
+            <p><a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none;">Zresetuj hasło</a></p>
+            <p>Jeśli nie wysyłałeś/aś tej prośby, zignoruj tę wiadomość. Twoje hasło nie zostało zmienione.</p>
+            <p>Pozdrawiamy,<br>Ekipa Budget App</p>
+        </div>
+        </body>
+
+change-email:
+  email:
+    config:
+      from: "Budget App <noreply@budgetapp.pl>"
+      email-expire-time: 1d
+      clean-up-expired-emails: 5s
+      message-subject: "Potwierdzenie zmiany adresu email w serwisie Budget App"
+      message: >
+        <body>
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: black">
+            <h2>Potwierdzenie zmiany adresu email</h2>
+            <p>Otrzymujesz tę wiadomość, ponieważ otrzymaliśmy prośbę o zmianę adresu e-mail przypisanego do Twojego konta w naszym serwisie.</p>
+            <p>Aby potwierdzić zmianę adresu e-mail, kliknij poniższy link:</p>
+            <p><a href="%s" style="display: inline-block; padding: 10px 20px; background-color: #007bff; color: #fff; text-decoration: none;">Potwierdź zmianę adresu email</a></p>
+            <p>Jeśli nie wysyłałeś/aś tej prośby, zignoruj tę wiadomość. Twój adres e-mail nie zostanie zmieniony.</p>
+            <p>Pozdrawiamy,<br>Ekipa Budget App</p>
+        </div>
+        </body>
+
+avatar:
+  max-avatar-size: 2MB
+  allowed-avatar-extensions: [ "jpg", "jpeg", "png" ]
