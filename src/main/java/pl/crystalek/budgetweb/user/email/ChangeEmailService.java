@@ -59,7 +59,7 @@ public class ChangeEmailService {
 
         final User userReference = entityManager.getReference(User.class, userId);
         final Instant expireAt = Instant.now().plus(changeEmailProperties.getEmailExpireTime());
-        final ConfirmationToken token = confirmationTokenService.getToken(userReference, expireAt, ConfirmationTokenType.CHANGE_EMAIL);
+        final ConfirmationToken token = confirmationTokenService.createToken(userReference, expireAt, ConfirmationTokenType.CHANGE_EMAIL);
 
         repository.save(new ChangeEmail(token, newEmail));
 

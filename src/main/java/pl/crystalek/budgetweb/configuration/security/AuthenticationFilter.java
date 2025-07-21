@@ -14,12 +14,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pl.crystalek.budgetweb.auth.cookie.CookieService;
-import pl.crystalek.budgetweb.auth.token.TokenDecoder;
-import pl.crystalek.budgetweb.auth.token.TokenService;
-import pl.crystalek.budgetweb.auth.token.model.AccessTokenDetails;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.household.role.permission.RolePermissionService;
+import pl.crystalek.budgetweb.token.TokenFacade;
+import pl.crystalek.budgetweb.token.model.AccessTokenDetails;
+import pl.crystalek.budgetweb.user.auth.CookieService;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -30,8 +29,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class AuthenticationFilter extends OncePerRequestFilter {
-    TokenDecoder tokenDecoder;
-    TokenService tokenService;
+    TokenFacade tokenFacade;
     CookieService cookieService;
     RolePermissionService rolePermissionService;
     Set<String> shouldNotFilter = Set.of("/auth/confirm", "/auth/password/recovery", "/auth/password/reset", "/account/confirm-change-email");
@@ -52,14 +50,14 @@ class AuthenticationFilter extends OncePerRequestFilter {
 
         final Cookie cookie = cookieOptional.get();
         final String cookieValue = cookie.getValue();
-        final AccessTokenDetails tokenDetails = tokenDecoder.decodeToken(cookieValue);
+        final AccessTokenDetails tokenDetails = tokenFacade.decodeToken(cookieValue);
         if (!tokenDetails.isVerified()) {
             anonymousUser(request, response, filterChain);
             return;
         }
 
         if (tokenDetails.isExpired()) {
-            final Optional<String> newAccessTokenOptional = tokenService.createAccessToken(tokenDetails);
+            final Optional<String> newAccessTokenOptional = tokenFacade.createAccessToken(tokenDetails);
             if (newAccessTokenOptional.isEmpty()) {
                 anonymousUser(request, response, filterChain);
                 return;

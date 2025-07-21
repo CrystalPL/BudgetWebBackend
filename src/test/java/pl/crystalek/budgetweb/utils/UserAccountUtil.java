@@ -14,10 +14,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.crystalek.budgetweb.auth.controller.auth.request.AccountConfirmationRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.request.LoginRequest;
-import pl.crystalek.budgetweb.auth.controller.auth.request.RegisterRequest;
-import pl.crystalek.budgetweb.auth.token.TokenProperties;
+import pl.crystalek.budgetweb.token.TokenProperties;
+import pl.crystalek.budgetweb.user.auth.request.AccountConfirmationRequest;
+import pl.crystalek.budgetweb.user.auth.request.LoginRequest;
+import pl.crystalek.budgetweb.user.auth.request.RegisterRequest;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.user.model.UserData;
 import pl.crystalek.budgetweb.utils.request.RequestHelper;
@@ -48,6 +48,10 @@ public class UserAccountUtil {
     EntityManager entityManager;
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
+    public User getCreatedUser() {
+        return entityManager.createQuery("select u from User u", User.class).getSingleResult();
+    }
+
     public UUID getConfirmationToken() {
         return (UUID) entityManager.createQuery("select tu.id from TemporaryUser tu").getSingleResult();
     }
@@ -74,7 +78,6 @@ public class UserAccountUtil {
         entityManager.flush();
     }
 
-    @SneakyThrows
     public Cookie createUserAndReturnAccessCookie(final RegisterRequest registerRequest) {
         final User user = new User(registerRequest.email(), bCryptPasswordEncoder.encode(registerRequest.password()), registerRequest.receiveUpdates());
         final UserData userData = new UserData(user, registerRequest.username());

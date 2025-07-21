@@ -2,6 +2,7 @@ package pl.crystalek.budgetweb.utils.request;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -228,7 +229,7 @@ public class RequestHelperBuilder {
             final String responseJson = resultAction.getResponse().getContentAsString();
             try {
                 this.responseObject = OBJECT_MAPPER.readValue(responseJson, expectedObject.getClass());
-            } catch (JsonParseException exception) {
+            } catch (JsonParseException | MismatchedInputException exception) {
                 this.responseObject = responseJson;
             }
 

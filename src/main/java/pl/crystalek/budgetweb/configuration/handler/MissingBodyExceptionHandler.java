@@ -16,14 +16,14 @@ class MissingBodyExceptionHandler {
     public ResponseEntity<Object> handleMissingRequestBody(final HttpMessageNotReadableException exception) {
         final Throwable cause = exception.getCause();
 
-        if (cause.getClass().equals(InvalidFormatException.class)) {
+        if (cause != null && cause.getClass().equals(InvalidFormatException.class)) {
             return handleInvalidFormat();
         }
 
         return ResponseEntity
                 .badRequest()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body("Request body is missing or malformed");
+                .body("Request body is missing or empty");
     }
 
     private ResponseEntity<Object> handleInvalidFormat() {

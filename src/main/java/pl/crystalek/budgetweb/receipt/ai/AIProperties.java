@@ -8,6 +8,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.unit.DataSize;
 
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -19,4 +20,5 @@ class AIProperties {
     DataSize maxPhotoSize;
     Set<String> allowedPhotoExtensions;
     String prompt;
+    List<String> forbiddenCharacters;
 }

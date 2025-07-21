@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,7 +35,8 @@ public class RequestHelper {
         return new RequestHelperBuilder();
     }
 
-    public ResponseData sendRequest(final MockMvc mockMvc) throws Exception {
+    @SneakyThrows
+    public ResponseData sendRequest(final MockMvc mockMvc) {
         final MockHttpServletRequestBuilder request = request(httpMethod, path)
                 .contentType(contentType)
                 .content(OBJECT_MAPPER.writeValueAsString(content));

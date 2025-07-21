@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponse;
 import pl.crystalek.budgetweb.receipt.items.ReceiptItemService;
 import pl.crystalek.budgetweb.receipt.items.response.GetProductListResponse;
 import pl.crystalek.budgetweb.receipt.items.response.GetReceiptItemsResponse;
@@ -26,6 +27,7 @@ import pl.crystalek.budgetweb.receipt.response.save.SaveReceiptResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @RestController
 @RequestMapping("/receipts")
@@ -36,8 +38,9 @@ class ReceiptController {
     ReceiptItemService receiptItemService;
 
     @PostMapping("/loadByAI")
-    public void loadReceiptByAI(@RequestBody final MultipartFile file, @AuthenticationPrincipal final long userId) {
-        receiptService.loadByAI(file, userId);
+    public CompletableFuture<AIReceiptResponse> loadReceiptByAI(@RequestBody MultipartFile file,
+                                                                @AuthenticationPrincipal final long userId) {
+        return receiptService.loadByAI(file, userId);
     }
 
     @DeleteMapping("/{id}")

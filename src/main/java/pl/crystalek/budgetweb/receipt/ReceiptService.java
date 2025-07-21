@@ -2,15 +2,11 @@ package pl.crystalek.budgetweb.receipt;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.model.ChatModel;
-import org.springframework.ai.content.Media;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.MimeTypeUtils;
 import org.springframework.web.multipart.MultipartFile;
+import pl.crystalek.budgetweb.receipt.ai.AIReceiptService;
+import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponse;
 import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptRequest;
 import pl.crystalek.budgetweb.receipt.response.CreateReceiptDetailsResponse;
 import pl.crystalek.budgetweb.receipt.response.DeleteReceiptResponse;
@@ -23,9 +19,9 @@ import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.UserService;
 import pl.crystalek.budgetweb.user.model.User;
 
-import java.io.File;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -33,39 +29,11 @@ import java.util.Set;
 public class ReceiptService {
     ReceiptRepository repository;
     UserService userService;
-    ChatModel chatModel;
+    AIReceiptService aiReceiptService;
 
-    @SneakyThrows
-    public void loadByAI(final MultipartFile file, final long userId) {
-        if (file == null || file.isEmpty()) {
-            throw new IllegalArgumentException("Plik nie może być pusty");
-        }
-
-        String contentType = file.getContentType();
-        if (contentType == null || !contentType.startsWith("image/")) {
-            throw new IllegalArgumentException("Plik musi być obrazem");
-        }
-
-//        if (file.getSize() > 5 * 1024 * 1024) {
-//            throw new IllegalArgumentException("Plik jest zbyt duży. Maksymalny rozmiar to 5MB");
-//        }
-
-        File tempFile = File.createTempFile("receipt-", ".tmp");
-        file.transferTo(tempFile);
-
-//        final String promptText = """
-//                Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach które kupiłem.
-//                Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow), dane te mają być w formacie JSON.
-//                Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc), cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON.
-//                Gdy nazwa produktu jest niekompletna, dziwna albo nieczytelna dla człowieka, to podaj prawidłową nazwę w nowym polu proponowana_nazwa, a odczytaną wartość dać w polu nazwa_produktu.
-//                Usuwaj z proponowanej nazwy różne zbędne przyrostki, które nie tworzą nazwy produktu.
-//                Gdy znajdziesz pod jakimś produktem opust/rabat to dodaj do produktu wyżej liste (pole listy ma się nazywac upusty)
-//                z opustami(same kwoty) i nie twórz dodatkowej pozycji na opust.
-//                """;
-        final String promptText = "Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach, które kupiłem. Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow), dane te mają być w formacie JSON. Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc), cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON. Zawsze dodawaj pole proponowana_nazwa (masz zaproponować własną nazwę dla produktu), a odczytaną wartość dać w polu nazwa_produktu. Usuwaj z proponowanej nazwy różne zbędne przyrostki, które nie tworzą nazwy produktu. Gdy znajdziesz pod jakimś produktem opust/rabat to dodaj do produktu wyżej liste (pole listy ma się nazywac upusty) z opustami(same kwoty) i nie twórz dodatkowej pozycji na opust.";
-        final Media media = new Media(MimeTypeUtils.IMAGE_PNG, new FileSystemResource(tempFile));
-        final String call = chatModel.call(new UserMessage(promptText, media));
-        System.out.println(call);
+    public CompletableFuture<AIReceiptResponse> loadByAI(final MultipartFile file, final long userId) {
+        final User user = userService.getUserById(userId).get();
+        return aiReceiptService.sendRequest(file, user);
     }
 
     public ResponseAPI<SaveReceiptResponseMessage> saveReceipt(final SaveReceiptRequest saveReceiptRequest, final long requesterId) {
