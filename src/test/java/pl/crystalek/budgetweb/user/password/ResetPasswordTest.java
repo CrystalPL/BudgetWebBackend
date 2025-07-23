@@ -28,12 +28,10 @@ import static org.mockito.Mockito.when;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class ResetPasswordTest {
     static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
-    @Mock
-    ConfirmationTokenService confirmationTokenService;
-    @Mock
-    TokenFacade tokenFacade;
-    @Mock
-    ConfirmationToken confirmationToken;
+    @Mock ConfirmationTokenService confirmationTokenService;
+    @Mock TokenFacade tokenFacade;
+    @Mock ConfirmationToken confirmationToken;
+
     ResetPassword resetPassword;
 
     @BeforeEach

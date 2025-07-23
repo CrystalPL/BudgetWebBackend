@@ -17,14 +17,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class ResetPassword {
     ConfirmationTokenService confirmationTokenService;
     TokenFacade tokenFacade;
     PasswordEncoder passwordEncoder;
 
-    public ResponseAPI<PasswordResetResponseMessage> resetPassword(final String stringToken, final String password, final String confirmPassword) {
+    ResponseAPI<PasswordResetResponseMessage> resetPassword(final String stringToken, final String password, final String confirmPassword) {
         final UUID token = UUID.fromString(stringToken);
 
         final Optional<ConfirmationToken> tokenOptional = confirmationTokenService.getConfirmationToken(token, ConfirmationTokenType.PASSWORD_RECOVERY);

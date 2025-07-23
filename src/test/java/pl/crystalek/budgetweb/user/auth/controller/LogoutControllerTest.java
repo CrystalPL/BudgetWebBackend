@@ -1,6 +1,9 @@
 package pl.crystalek.budgetweb.user.auth.controller;
 
 import jakarta.servlet.http.Cookie;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -17,8 +20,9 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class LogoutControllerTest extends BaseAccessControllerTest {
-    @Autowired
     TokenProperties tokenProperties;
 
     @Override

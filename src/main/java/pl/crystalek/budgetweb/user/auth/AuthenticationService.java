@@ -21,7 +21,7 @@ import pl.crystalek.budgetweb.user.temporary.TemporaryUserFacade;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class AuthenticationService {
     AuthenticationProvider authenticateProvider;

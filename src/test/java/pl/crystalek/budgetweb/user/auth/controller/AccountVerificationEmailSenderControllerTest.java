@@ -1,13 +1,8 @@
 package pl.crystalek.budgetweb.user.auth.controller;
 
-import jakarta.persistence.EntityManager;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import pl.crystalek.budgetweb.user.auth.request.AccountConfirmationRequest;
@@ -21,10 +16,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.UUID;
 
-@RequiredArgsConstructor(onConstructor = @__(@Autowired))
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class AccountVerificationEmailSenderControllerTest extends BaseAccessControllerTest {
-    EntityManager entityManager;
 
     @Override
     protected String[][] shouldDeniedAccessWithAccount() {

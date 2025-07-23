@@ -23,7 +23,6 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;

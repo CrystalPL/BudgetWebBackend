@@ -12,7 +12,7 @@ import pl.crystalek.budgetweb.user.auth.response.RegisterResponseMessage;
 import java.time.Instant;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class CreateUser {
     AccountConfirmationProperties accountConfirmationProperties;

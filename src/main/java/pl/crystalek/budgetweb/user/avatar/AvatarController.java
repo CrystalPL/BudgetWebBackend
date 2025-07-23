@@ -7,7 +7,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,23 +24,19 @@ import java.io.File;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class AvatarController {
-    AvatarService avatarService;
+    AvatarFacade avatarFacade;
 
     @PostMapping()
     public ResponseEntity<ResponseAPI<UploadAvatarResponseMessage>> uploadAvatar(
             @RequestBody(required = false) final MultipartFile file, @AuthenticationPrincipal final long userId
     ) {
-        if (file == null || file.isEmpty()) {
-            throw new HttpMessageNotReadableException("Avatar not found");
-        }
-
-        final ResponseAPI<UploadAvatarResponseMessage> response = avatarService.uploadAvatar(userId, file);
+        final ResponseAPI<UploadAvatarResponseMessage> response = avatarFacade.uploadAvatar(userId, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping
     public ResponseEntity<FileSystemResource> getAvatar(@AuthenticationPrincipal final long userId) {
-        final File avatar = avatarService.getAvatar(userId);
+        final File avatar = avatarFacade.getAvatar(userId);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_TYPE, "image/jpeg");
 

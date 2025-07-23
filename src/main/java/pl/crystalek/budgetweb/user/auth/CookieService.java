@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.token.TokenProperties;
 
@@ -47,7 +48,7 @@ public class CookieService {
     private Optional<Cookie> getCookie(final Cookie[] cookies) {
         return Arrays.stream(cookies)
                 .filter(cookie -> cookie.getName().equals(tokenProperties.getCookieName()))
-                .filter(cookie -> !cookie.getValue().isEmpty() && !cookie.getValue().isBlank())
+                .filter(cookie -> StringUtils.isNotEmpty(cookie.getValue()) && StringUtils.isNotBlank(cookie.getValue()))
                 .findFirst();
     }
 }

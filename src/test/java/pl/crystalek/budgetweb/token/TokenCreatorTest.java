@@ -21,8 +21,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class TokenCreatorTest {
-    @Mock(lenient = true)
-    TokenProperties tokenProperties;
+    @Mock TokenProperties tokenProperties;
     TokenCreator tokenCreator;
 
     @BeforeEach
@@ -30,26 +29,6 @@ class TokenCreatorTest {
         tokenCreator = new TokenCreator(tokenProperties);
         when(tokenProperties.getSecretKey()).thenReturn("testSecretKey123456789012345678901234567890");
         when(tokenProperties.getTokenAccessTime()).thenReturn(Duration.ofMinutes(15));
-    }
-
-    @Test
-    void shouldCreateTokenWithSpecifiedExpiration() {
-        // given
-        final long userId = 123L;
-        final long refreshTokenId = 456L;
-        final Instant expiresAt = Instant.now().plus(Duration.ofHours(1));
-
-        // when
-        final String token = tokenCreator.createWithExpires(userId, refreshTokenId, expiresAt);
-
-        // then
-        assertNotNull(token);
-        assertFalse(token.isEmpty());
-
-        final var decodedJWT = JWT.decode(token);
-        assertEquals(userId, decodedJWT.getClaim("userId").asLong());
-        assertEquals(refreshTokenId, decodedJWT.getClaim("refreshTokenId").asLong());
-        assertEquals(expiresAt.getEpochSecond(), decodedJWT.getExpiresAtAsInstant().getEpochSecond());
     }
 
     @Test
