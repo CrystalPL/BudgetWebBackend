@@ -31,6 +31,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     implementation 'org.springframework.ai:spring-ai-starter-model-openai'
     implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-M7")
