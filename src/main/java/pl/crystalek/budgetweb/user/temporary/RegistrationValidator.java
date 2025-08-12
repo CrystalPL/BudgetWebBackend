@@ -7,18 +7,18 @@ import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.user.UserService;
 import pl.crystalek.budgetweb.user.auth.response.RegisterResponse;
 import pl.crystalek.budgetweb.user.auth.response.RegisterResponseMessage;
-import pl.crystalek.budgetweb.user.email.ChangeEmailService;
+import pl.crystalek.budgetweb.user.email.ChangeEmailFacade;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class RegistrationValidator { //klasa utworzona, aby uniknąć circular dependency
     UserService userService;
-    ChangeEmailService changeEmailService;
+    ChangeEmailFacade changeEmailFacade;
     TemporaryUserFacade temporaryUserFacade;
 
     public RegisterResponse validate(final String email) {
-        if (changeEmailService.isEmailExists(email)) {
+        if (changeEmailFacade.isEmailExists(email)) {
             return new RegisterResponse(false, RegisterResponseMessage.ACCOUNT_EXISTS);
         }
 

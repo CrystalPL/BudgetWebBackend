@@ -2,7 +2,6 @@ package pl.crystalek.budgetweb.user.avatar;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -68,7 +66,10 @@ class GetAvatarTest {
 
 
     @AfterEach
-    void tearDown() throws IOException {
-        FileUtils.deleteDirectory(AvatarFacade.AVATAR_DIRECTORY);
+    void tearDown() {
+        if (avatar != null && avatar.getId() != null) {
+            final File userAvatarFile = new File(AvatarFacade.AVATAR_DIRECTORY, avatar.getId() + "." + "jpg");
+            userAvatarFile.delete();
+        }
     }
 }

@@ -1,6 +1,5 @@
 package pl.crystalek.budgetweb.user.avatar;
 
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
@@ -13,9 +12,15 @@ import java.io.File;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@FieldDefaults(makeFinal = true)
 public class AvatarFacade {
     static final File AVATAR_DIRECTORY = new File(System.getProperty("user.dir") + "/avatars");
+
+    static {
+        if (!AVATAR_DIRECTORY.exists()) {
+            AVATAR_DIRECTORY.mkdir();
+        }
+    }
 
     UploadAvatar uploadAvatar;
     UploadAvatarValidator uploadAvatarValidator;

@@ -3,6 +3,7 @@ package pl.crystalek.budgetweb.user.avatar;
 import jakarta.persistence.EntityManager;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,10 +14,10 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.avatar.response.UploadAvatarResponseMessage;
-import pl.crystalek.budgetweb.user.model.User;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,133 +25,89 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class UploadAvatarTest {
+    @Mock EntityManager entityManager;
+    @Mock AvatarRepository avatarRepository;
+    @Mock Avatar testAvatar;
+    @Mock Avatar returnSaveAvatar;
+    @InjectMocks UploadAvatar uploadAvatar;
 
-    @Mock
-    EntityManager entityManager;
-
-    @Mock
-    AvatarRepository avatarRepository;
-
-    @InjectMocks
-    UploadAvatar uploadAvatar;
-
-    User testUser;
     MultipartFile mockFile;
-    long userId;
-    File avatarDirectory;
 
     @BeforeEach
     void setUp() {
-        userId = 1L;
-        testUser = new User();
+        AvatarFacade.AVATAR_DIRECTORY.mkdir();
         mockFile = new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", "test image content".getBytes());
-
-        // Zapisanie oryginalnej lokalizacji katalogu awatarów
-        avatarDirectory = AvatarFacade.AVATAR_DIRECTORY;
-
-        // Utworzenie tymczasowego katalogu testowego dla awatarów
-        File tempDir = new File(System.getProperty("java.io.tmpdir"), "test_avatars");
-        tempDir.mkdirs();
-//        AvatarFacade.AVATAR_DIRECTORY = tempDir;
     }
 
     @Test
     void shouldDeleteCurrentAvatarIfExistsAndUploadNewOne() throws IOException {
-        // given
-        UUID oldAvatarId = UUID.randomUUID();
-        Avatar oldAvatar = new Avatar(testUser, "png");
-        when(oldAvatar.getId()).thenReturn(oldAvatarId);
-        when(oldAvatar.getExtension()).thenReturn("png");
-        when(avatarRepository.findByUser_Id(userId)).thenReturn(Optional.of(oldAvatar));
+        when(avatarRepository.findByUser_Id(anyLong())).thenReturn(Optional.of(testAvatar));
+        mockAvatar(testAvatar);
+        mockReturnSaveAvatar();
+        final File avatarFile = new File(AvatarFacade.AVATAR_DIRECTORY, testAvatar.getId().toString() + "." + testAvatar.getExtension());
+        mockFile.transferTo(avatarFile);
 
-        UUID newAvatarId = UUID.randomUUID();
-        Avatar newAvatar = new Avatar(testUser, "jpg");
-        when(newAvatar.getId()).thenReturn(newAvatarId);
-        when(entityManager.getReference(User.class, userId)).thenReturn(testUser);
-        when(avatarRepository.save(any(Avatar.class))).thenReturn(newAvatar);
+        final ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(anyLong(), mockFile);
 
-        // when
-        ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(userId, mockFile);
-
-        // then
-        verify(avatarRepository).delete(oldAvatar);
-        verify(entityManager).flush();
-        verify(entityManager).getReference(User.class, userId);
-        verify(avatarRepository).save(any(Avatar.class));
+        assertFalse(avatarFile.exists());
+        assertTrue(new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).exists());
         assertTrue(result.isSuccess());
         assertEquals(UploadAvatarResponseMessage.SUCCESS, result.getMessage());
     }
 
     @Test
     void shouldUploadNewAvatarWhenUserHasNoAvatar() {
-        // given
-        when(avatarRepository.findByUser_Id(userId)).thenReturn(Optional.empty());
+        mockReturnSaveAvatar();
+        final ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(anyLong(), mockFile);
 
-        UUID newAvatarId = UUID.randomUUID();
-        Avatar newAvatar = new Avatar(testUser, "jpg");
-        when(newAvatar.getId()).thenReturn(newAvatarId);
-        when(entityManager.getReference(User.class, userId)).thenReturn(testUser);
-        when(avatarRepository.save(any(Avatar.class))).thenReturn(newAvatar);
-
-        // when
-        ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(userId, mockFile);
-
-        // then
-        verify(entityManager).getReference(User.class, userId);
-        verify(avatarRepository).save(any(Avatar.class));
+        verify(avatarRepository, never()).delete(any());
         assertTrue(result.isSuccess());
+        assertTrue(new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).exists());
         assertEquals(UploadAvatarResponseMessage.SUCCESS, result.getMessage());
     }
 
     @Test
     void shouldReturnErrorWhenFileTransferFails() throws IOException {
-        // given
-        when(avatarRepository.findByUser_Id(userId)).thenReturn(Optional.empty());
+        mockReturnSaveAvatar();
+        final MultipartFile mockFileThatThrowsException = mock(MultipartFile.class);
+        doThrow(new IOException("Błąd transferu pliku")).when(mockFileThatThrowsException).transferTo(any(Path.class));
 
-        UUID newAvatarId = UUID.randomUUID();
-        Avatar newAvatar = new Avatar(testUser, "jpg");
-        when(newAvatar.getId()).thenReturn(newAvatarId);
-        when(newAvatar.getExtension()).thenReturn("jpg");
-        when(entityManager.getReference(User.class, userId)).thenReturn(testUser);
-        when(avatarRepository.save(any(Avatar.class))).thenReturn(newAvatar);
+        final ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(anyLong(), mockFileThatThrowsException);
 
-        MultipartFile mockFileThatThrowsException = mock(MultipartFile.class);
-        doThrow(new IOException("Błąd transferu pliku")).when(mockFileThatThrowsException).transferTo(any(File.class));
-
-        // when
-        ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(userId, mockFileThatThrowsException);
-
-        // then
-        verify(entityManager).getReference(User.class, userId);
-        verify(avatarRepository).save(any(Avatar.class));
         assertFalse(result.isSuccess());
         assertEquals(UploadAvatarResponseMessage.FILE_UPLOAD_ERROR, result.getMessage());
     }
 
-    @Test
-    void shouldSaveAvatarWithCorrectProperties() {
-        // given
-        when(avatarRepository.findByUser_Id(userId)).thenReturn(Optional.empty());
-        when(entityManager.getReference(User.class, userId)).thenReturn(testUser);
+    @AfterEach
+    void tearDown() {
+        if (testAvatar != null && testAvatar.getId() != null) {
+            new File(AvatarFacade.AVATAR_DIRECTORY, testAvatar.getId() + "." + testAvatar.getExtension()).delete();
+        }
 
-        UUID newAvatarId = UUID.randomUUID();
-        Avatar savedAvatar = new Avatar(testUser, "jpg");
-        when(savedAvatar.getId()).thenReturn(newAvatarId);
-        when(avatarRepository.save(any(Avatar.class))).thenReturn(savedAvatar);
+        if (returnSaveAvatar != null) {
+            new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).delete();
+        }
 
-        // when
-        uploadAvatar.uploadAvatar(userId, mockFile);
+    }
 
-        // then
-        // Sprawdzenie, czy avatar został zapisany z odpowiednimi parametrami
-        verify(avatarRepository).save(any(Avatar.class));
+    private void mockAvatar(final Avatar avatar) {
+        final UUID oldAvatarId = UUID.randomUUID();
+        when(avatar.getId()).thenReturn(oldAvatarId);
+        when(avatar.getExtension()).thenReturn("png");
+    }
+
+    private void mockReturnSaveAvatar() {
+        mockAvatar(returnSaveAvatar);
+        when(avatarRepository.save(any())).thenReturn(returnSaveAvatar);
     }
 }

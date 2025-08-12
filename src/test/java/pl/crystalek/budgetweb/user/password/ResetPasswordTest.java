@@ -13,6 +13,7 @@ import pl.crystalek.budgetweb.confirmation.ConfirmationTokenService;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.token.TokenFacade;
 import pl.crystalek.budgetweb.user.model.User;
+import pl.crystalek.budgetweb.user.password.request.PasswordResetRequest;
 import pl.crystalek.budgetweb.user.password.response.PasswordResetResponseMessage;
 
 import java.util.Optional;
@@ -46,7 +47,8 @@ class ResetPasswordTest {
     void shouldReturnTokenExpiredWhenTokenIsEmpty() {
         when(confirmationTokenService.getConfirmationToken(any(UUID.class), any())).thenReturn(Optional.empty());
 
-        final ResponseAPI<PasswordResetResponseMessage> response = resetPassword.resetPassword(UUID.randomUUID().toString(), null, null);
+        final PasswordResetRequest passwordResetRequest = new PasswordResetRequest(UUID.randomUUID().toString(), null, null);
+        final ResponseAPI<PasswordResetResponseMessage> response = resetPassword.resetPassword(passwordResetRequest);
         assertFalse(response.isSuccess());
         assertEquals(PasswordResetResponseMessage.TOKEN_EXPIRED, response.getMessage());
     }
@@ -58,7 +60,8 @@ class ResetPasswordTest {
         doNothing().when(confirmationTokenService).delete(any());
         doNothing().when(tokenFacade).logoutUserFromDevices(any());
 
-        final ResponseAPI<PasswordResetResponseMessage> response = resetPassword.resetPassword(UUID.randomUUID().toString(), "123", "123");
+        final PasswordResetRequest passwordResetRequest = new PasswordResetRequest(UUID.randomUUID().toString(), "123", "123");
+        final ResponseAPI<PasswordResetResponseMessage> response = resetPassword.resetPassword(passwordResetRequest);
         assertTrue(response.isSuccess());
         assertEquals(PasswordResetResponseMessage.SUCCESS, response.getMessage());
         assertTrue(PASSWORD_ENCODER.matches("123", user.getPassword()));

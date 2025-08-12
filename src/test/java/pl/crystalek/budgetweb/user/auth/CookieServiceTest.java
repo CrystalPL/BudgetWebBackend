@@ -4,7 +4,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -32,13 +31,10 @@ class CookieServiceTest {
     @Mock HttpServletResponse response;
     @InjectMocks CookieService cookieService;
 
-    @BeforeEach
-    void setUp() {
-        when(tokenProperties.getCookieName()).thenReturn(COOKIE_NAME);
-    }
-
     @Test
     void shouldCreateCookieAndAddToResponseWithRememberMeTrue() {
+        when(tokenProperties.getCookieName()).thenReturn(COOKIE_NAME);
+
         cookieService.createCookieAndAddToResponse(ACCESS_TOKEN, true, response);
 
         final ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
@@ -55,6 +51,8 @@ class CookieServiceTest {
 
     @Test
     void shouldCreateCookieAndAddToResponseWithRememberMeFalse() {
+        when(tokenProperties.getCookieName()).thenReturn(COOKIE_NAME);
+
         cookieService.createCookieAndAddToResponse(ACCESS_TOKEN, false, response);
 
         final ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
@@ -71,6 +69,8 @@ class CookieServiceTest {
 
     @Test
     void shouldDeleteCookie() {
+        when(tokenProperties.getCookieName()).thenReturn(COOKIE_NAME);
+
         cookieService.deleteCookie(response);
 
         final ArgumentCaptor<Cookie> cookieCaptor = ArgumentCaptor.forClass(Cookie.class);
@@ -87,6 +87,8 @@ class CookieServiceTest {
 
     @Test
     void shouldGetCookieWithTokenWhenCookiePresent() {
+        when(tokenProperties.getCookieName()).thenReturn(COOKIE_NAME);
+
         final Cookie cookie1 = new Cookie("other", "value");
         final Cookie cookie2 = new Cookie(COOKIE_NAME, ACCESS_TOKEN);
         final Cookie[] cookies = new Cookie[]{cookie1, cookie2};

@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.share.ResponseAPI;
@@ -24,12 +25,12 @@ class UploadAvatarValidator {
         }
 
         final String contentType = file.getContentType();
-        if (!ALLOWED_FILE_TYPES.contains(contentType)) {
+        if (StringUtils.isEmpty(contentType) || !ALLOWED_FILE_TYPES.contains(contentType)) {
             return new ResponseAPI<>(false, UploadAvatarResponseMessage.INVALID_FILE_TYPE);
         }
 
         final String fileExtension = FilenameUtils.getExtension(file.getOriginalFilename());
-        if (fileExtension == null || !avatarProperties.getAllowedAvatarExtensions().contains(fileExtension)) {
+        if (StringUtils.isEmpty(fileExtension) || !avatarProperties.getAllowedAvatarExtensions().contains(fileExtension)) {
             return new ResponseAPI<>(false, UploadAvatarResponseMessage.INVALID_FILE_EXTENSION);
         }
 

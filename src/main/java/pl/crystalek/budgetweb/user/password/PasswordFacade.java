@@ -23,7 +23,7 @@ class PasswordFacade {
     }
 
     public ResponseAPI<PasswordResetResponseMessage> resetPassword(final PasswordResetRequest passwordResetRequest) {
-        return resetPassword.resetPassword(passwordResetRequest.token(), passwordResetRequest.password(), passwordResetRequest.confirmPassword());
+        return resetPassword.resetPassword(passwordResetRequest);
     }
 
 //    @Scheduled(fixedRateString = "#{T(java.time.Duration).parse('${password-recovery.email.config.cleanUpExpiredEmails}').toMillis()}")

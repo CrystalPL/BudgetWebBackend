@@ -11,9 +11,14 @@ import org.intellij.lang.annotations.Language;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultMatcher;
 import pl.crystalek.budgetweb.utils.UserAccountUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -55,6 +60,7 @@ public class RequestHelperBuilder {
     Set<Cookie> cookies = new HashSet<>();
     Set<ResultMatcher> expects = new HashSet<>();
     Object responseObject;
+    MockMultipartFile file;
 
     /**
      * Dodaje ciasteczko użytkownika testowego.
@@ -238,11 +244,44 @@ public class RequestHelperBuilder {
     }
 
     /**
+     * Ustawia plik do przesłania w żądaniu multipart.
+     * <p>
+     * Plik zostanie dodany do żądania z nazwą parametru "file".
+     *
+     * @param file obiekt {@code File} reprezentujący plik, który ma być przesłany
+     * @return instancja buildera
+     * @throws RuntimeException jeśli nie można utworzyć {@code MockMultipartFile} z podanego pliku
+     */
+
+    public RequestHelperBuilder file(final File file, final MediaType contentType) {
+        try {
+            final InputStream inputStream = new FileInputStream(file);
+            this.file = new MockMultipartFile("file", file.getName(), contentType.toString(), inputStream);
+            return this;
+        } catch (final IOException exception) {
+            throw new RuntimeException("Cannot create MockMultipartFile object from file: " + file.getName(), exception);
+        }
+
+    }
+
+    /**
+     * Ustawia gotowy obiekt {@code MockMultipartFile} do przesłania w żądaniu multipart.
+     *
+     * @param file przygotowany obiekt {@code MockMultipartFile} do użycia w żądaniu
+     * @return instancja buildera
+     */
+
+    public RequestHelperBuilder file(final MockMultipartFile file) {
+        this.file = file;
+        return this;
+    }
+
+    /**
      * Buduje obiekt {@link RequestHelper}, który można wykorzystać do wysłania żądania.
      *
      * @return skonfigurowany {@link RequestHelper}
      */
     public RequestHelper build() {
-        return new RequestHelper(httpMethod, path, contentType, content, headers, cookies, expects, responseObject);
+        return new RequestHelper(httpMethod, path, contentType, content, headers, cookies, expects, responseObject, file);
     }
 }

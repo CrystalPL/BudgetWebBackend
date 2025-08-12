@@ -11,6 +11,7 @@ import pl.crystalek.budgetweb.confirmation.ConfirmationTokenType;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.token.TokenFacade;
 import pl.crystalek.budgetweb.user.model.User;
+import pl.crystalek.budgetweb.user.password.request.PasswordResetRequest;
 import pl.crystalek.budgetweb.user.password.response.PasswordResetResponseMessage;
 
 import java.util.Optional;
@@ -24,8 +25,8 @@ class ResetPassword {
     TokenFacade tokenFacade;
     PasswordEncoder passwordEncoder;
 
-    ResponseAPI<PasswordResetResponseMessage> resetPassword(final String stringToken, final String password, final String confirmPassword) {
-        final UUID token = UUID.fromString(stringToken);
+    ResponseAPI<PasswordResetResponseMessage> resetPassword(final PasswordResetRequest passwordResetRequest) {
+        final UUID token = UUID.fromString(passwordResetRequest.token());
 
         final Optional<ConfirmationToken> tokenOptional = confirmationTokenService.getConfirmationToken(token, ConfirmationTokenType.PASSWORD_RECOVERY);
         if (tokenOptional.isEmpty()) {
@@ -33,7 +34,7 @@ class ResetPassword {
         }
 
         final ConfirmationToken passwordRecovery = tokenOptional.get();
-        resetPassword(password, passwordRecovery);
+        resetPassword(passwordResetRequest.password(), passwordRecovery);
 
         return new ResponseAPI<>(true, PasswordResetResponseMessage.SUCCESS);
     }

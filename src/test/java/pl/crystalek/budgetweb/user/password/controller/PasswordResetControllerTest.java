@@ -38,16 +38,6 @@ class PasswordResetControllerTest extends BaseAccessControllerTest {
         );
     }
 
-    @Override
-    protected String[][] shouldAllowAccessWithAccount() {
-        return super.shouldAllowAccessWithAccount();
-    }
-
-    @Override
-    protected String[][] shouldAllowAccessWithoutAccount() {
-        return super.shouldAllowAccessWithoutAccount();
-    }
-
     @ParameterizedTest
     @MethodSource("provideInvalidData")
     void shouldFailValidationWhenInputIsInvalid(final String token, final String password, final String confirmPassword, final String expectedMessage) throws Exception {

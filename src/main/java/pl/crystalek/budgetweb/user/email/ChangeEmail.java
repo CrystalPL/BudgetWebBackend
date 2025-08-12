@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.user.email;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -21,7 +22,7 @@ public class ChangeEmail {
     @Id
     UUID id;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "confirmation_token_id")
     @MapsId
     ConfirmationToken confirmationToken;
