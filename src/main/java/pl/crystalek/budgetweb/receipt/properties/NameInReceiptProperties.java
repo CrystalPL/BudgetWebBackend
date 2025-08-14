@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.receipt;
+package pl.crystalek.budgetweb.receipt.properties;
 
 import lombok.AccessLevel;
 import lombok.Getter;

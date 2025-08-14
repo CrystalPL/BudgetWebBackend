@@ -6,13 +6,14 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.category.Category;
-import pl.crystalek.budgetweb.receipt.ReceiptProperties;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptItemJsonData;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptPrompt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponse;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponseMessage;
+import pl.crystalek.budgetweb.receipt.properties.ReceiptProperties;
+import pl.crystalek.budgetweb.user.UserService;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.utils.FileRelocationUtil;
 import pl.crystalek.budgetweb.utils.JsonDeserializer;
@@ -23,15 +24,16 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AIReceiptService {
     AIReceiptRequestValidator requestValidator;
     AIReceiptPromptBuilder promptBuilder;
     AIRequestSender requestSender;
     ReceiptProperties receiptProperties;
+    UserService userService;
 
-    public CompletableFuture<AIReceiptResponse> sendRequest(final MultipartFile multipartFile, final User requesterUser) {
+    public CompletableFuture<AIReceiptResponse> sendRequest(final MultipartFile multipartFile, final long userId) {
         final AIReceiptResponseMessage validateResult = requestValidator.validate(multipartFile);
         if (validateResult != AIReceiptResponseMessage.SUCCESS) {
             final AIReceiptResponse aiReceiptResponse = new AIReceiptResponse(false, validateResult);
@@ -44,6 +46,7 @@ public class AIReceiptService {
             return CompletableFuture.completedFuture(aiReceiptResponse);
         }
 
+        final User requesterUser = userService.getUserById(userId).get();
         final File imageFile = imageFileOptional.get();
         final AIReceiptPrompt prompt = getPrompt(imageFile, requesterUser);
         final CompletableFuture<String> requestResult = requestSender.sendRequest(prompt);
@@ -64,7 +67,6 @@ public class AIReceiptService {
 
         final AIProcessedReceiptMapper aiProcessedReceiptMapper = new AIProcessedReceiptMapper(jsonPurchaseDataOptional.get());
         final AIProcessedReceipt aiProcessedReceipt = aiProcessedReceiptMapper.map();
-        //analiza i mapowanie na obiekt dto zwracany przez request
         final AIReceiptMapper aiReceiptMapper = new AIReceiptMapper(aiProcessedReceipt, receiptProperties, requesterUser);
         final AIReceipt aiReceipt = aiReceiptMapper.map();
 

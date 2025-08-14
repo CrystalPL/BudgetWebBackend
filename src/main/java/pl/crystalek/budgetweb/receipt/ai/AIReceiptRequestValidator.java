@@ -9,12 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponseMessage;
 
 @Service
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 class AIReceiptRequestValidator {
     AIProperties aiProperties;
 
-    public AIReceiptResponseMessage validate(final MultipartFile file) {
+    AIReceiptResponseMessage validate(final MultipartFile file) {
         final String contentType = file.getContentType();
         if (contentType == null || !contentType.equals("image/png") && !contentType.equals("image/jpeg")) {
             return AIReceiptResponseMessage.INVALID_FILE_TYPE;

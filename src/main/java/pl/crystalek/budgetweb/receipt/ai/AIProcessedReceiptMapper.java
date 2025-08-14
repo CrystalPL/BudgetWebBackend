@@ -19,13 +19,13 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 class AIProcessedReceiptMapper {
     static DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     AIReceiptItemJsonData purchaseData;
 
-    public AIProcessedReceipt map() {
+    AIProcessedReceipt map() {
         final String shopName = purchaseData.shopName();
         final Instant shoppingTime = parseShoppingTime(purchaseData.purchaseDate());
         final List<AIProcessedReceiptItem> items = getItems();

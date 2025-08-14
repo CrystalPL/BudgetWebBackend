@@ -3,12 +3,12 @@ package pl.crystalek.budgetweb.receipt.ai;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.category.Category;
-import pl.crystalek.budgetweb.receipt.ReceiptProperties;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceiptItem;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptItem;
 import pl.crystalek.budgetweb.receipt.items.response.ReceiptItemCategoryDTO;
+import pl.crystalek.budgetweb.receipt.properties.ReceiptProperties;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.time.Instant;
@@ -21,7 +21,7 @@ class AIReceiptMapper {
     ReceiptProperties receiptProperties;
     Set<Category> categories;
 
-    public AIReceiptMapper(final AIProcessedReceipt aiProcessedReceipt, final ReceiptProperties receiptProperties, final User requsterUser) {
+    AIReceiptMapper(final AIProcessedReceipt aiProcessedReceipt, final ReceiptProperties receiptProperties, final User requsterUser) {
         this.aiProcessedReceipt = aiProcessedReceipt;
         this.receiptProperties = receiptProperties;
         this.categories = requsterUser.getHouseholdMember().getHousehold().getCategories();

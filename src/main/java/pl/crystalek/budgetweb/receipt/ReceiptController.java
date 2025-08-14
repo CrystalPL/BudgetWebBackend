@@ -34,18 +34,18 @@ import java.util.concurrent.CompletableFuture;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class ReceiptController {
-    ReceiptService receiptService;
+    ReceiptFacade receiptFacade;
     ReceiptItemService receiptItemService;
 
     @PostMapping("/loadByAI")
     public CompletableFuture<AIReceiptResponse> loadReceiptByAI(@RequestBody MultipartFile file,
                                                                 @AuthenticationPrincipal final long userId) {
-        return receiptService.loadByAI(file, userId);
+        return receiptFacade.loadByAI(file, userId);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseAPI<DeleteReceiptResponse>> deleteReceipt(@PathVariable final String id, @AuthenticationPrincipal final long userId) {
-        final ResponseAPI<DeleteReceiptResponse> response = receiptService.deleteReceipt(id, userId);
+        final ResponseAPI<DeleteReceiptResponse> response = receiptFacade.deleteReceipt(id, userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
@@ -55,19 +55,19 @@ class ReceiptController {
             @AuthenticationPrincipal final long userId,
             @Validated @RequestBody final SaveReceiptRequest saveReceiptRequest
     ) {
-        final ResponseAPI<SaveReceiptResponseMessage> response = receiptService.saveReceipt(saveReceiptRequest, userId);
+        final ResponseAPI<SaveReceiptResponseMessage> response = receiptFacade.saveReceipt(saveReceiptRequest, userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping
     public Set<GetReceiptResponse> getReceipt(@AuthenticationPrincipal final long userId) {
-        return receiptService.getReceipts(userId);
+        return receiptFacade.getReceipts(userId);
     }
 
     @GetMapping("/getCreateDetails")
     public CreateReceiptDetailsResponse getCreateReceiptDetails(@AuthenticationPrincipal final long userId) {
-        return receiptService.getCreateReceiptDetails(userId);
+        return receiptFacade.getCreateReceiptDetails(userId);
     }
 
     @GetMapping("/getProductList")

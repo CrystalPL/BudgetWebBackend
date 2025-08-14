@@ -12,13 +12,13 @@ import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptPrompt;
 import java.util.concurrent.CompletableFuture;
 
 @Component
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-@RequiredArgsConstructor
 class AIRequestSender {
     ChatModel chatModel;
 
     @Async
-    public CompletableFuture<String> sendRequest(final AIReceiptPrompt prompt) {
+    CompletableFuture<String> sendRequest(final AIReceiptPrompt prompt) {
         final Message[] prompts = prompt.getPrompts();
         final String result = chatModel.call(prompts);
 

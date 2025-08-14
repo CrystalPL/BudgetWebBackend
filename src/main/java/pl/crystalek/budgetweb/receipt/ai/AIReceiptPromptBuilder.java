@@ -24,13 +24,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class AIReceiptPromptBuilder {
-    static TextFilter TEXT_FILTER = new TextFilterImpl(FilterStrategy.getAllFilters());
+    private final static TextFilter TEXT_FILTER = new TextFilterImpl(FilterStrategy.getAllFilters());
     AIProperties aiProperties;
 
-    public AIReceiptPrompt buildAIMessage(final File imageFile, final Set<Category> categories) {
+    AIReceiptPrompt buildAIMessage(final File imageFile, final Set<Category> categories) {
         final String categoriesInString = getCategoriesInString(categories);
         final List<String> forbiddenCharacters = aiProperties.getForbiddenCharacters();
         final String filteredCategories = TEXT_FILTER.filterText(categoriesInString, forbiddenCharacters);
