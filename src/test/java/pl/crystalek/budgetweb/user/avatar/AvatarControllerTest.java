@@ -6,7 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
-@SpringBootTest
 @AutoConfigureMockMvc
 @FieldDefaults(level = AccessLevel.PRIVATE)
 class AvatarControllerTest extends BaseAccessControllerTest {
@@ -58,7 +56,7 @@ class AvatarControllerTest extends BaseAccessControllerTest {
         List<Avatar> result = this.entityManager.createQuery("select a from Avatar a", Avatar.class).getResultList();
         User user = this.entityManager.createQuery("select u from User u", User.class).getSingleResult();
         Avatar avatar = result.getFirst();
-        File file = new File(AvatarFacade.AVATAR_DIRECTORY, avatar.getId().toString() + "." + avatar.getExtension());
+        File file = new File(AvatarUtils.AVATAR_DIRECTORY, avatar.getFileName());
 
         assertEquals(1, result.size());
         assertEquals("png", avatar.getExtension());
@@ -126,7 +124,7 @@ class AvatarControllerTest extends BaseAccessControllerTest {
         List<Avatar> result = this.entityManager.createQuery("select a from Avatar a", Avatar.class).getResultList();
         if (!result.isEmpty()) {
             Avatar avatar = result.getFirst();
-            new File(AvatarFacade.AVATAR_DIRECTORY, avatar.getId().toString() + "." + avatar.getExtension()).delete();
+            new File(AvatarUtils.AVATAR_DIRECTORY, avatar.getFileName()).delete();
         }
 
     }

@@ -19,6 +19,8 @@ spring:
             required: true
   mvc:
     throw-exception-if-no-handler-found: true
+    async:
+      request-timeout: 60000
   web:
     resources:
       add-mappings: false
@@ -51,16 +53,7 @@ ai:
   receipt:
     max-photo-size: 12MB
     allowed-photo-extensions: [ "jpg", "jpeg", "png" ]
-    prompt: "Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach,
-            które kupiłem. Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow),
-            dane te mają być w formacie JSON. Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc),
-            cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON. Zawsze dodawaj pole proponowana_nazwa
-            (masz zaproponować własną nazwę dla produktu), a odczytaną wartość dać w polu nazwa_produktu. Usuwaj z proponowanej nazwy
-            różne zbędne przyrostki, które nie tworzą nazwy produktu. 
-            Gdy znajdziesz pod jakimś produktem opust/rabat to dodaj do produktu wyżej liste (pole listy ma się nazywac upusty)
-            z opustami(same kwoty) i nie twórz dodatkowej pozycji na opust.Gdy znajdziesz pod jakimś produktem opust.
-            Chce żebyś dla spróbował dopasować dla produktów kategorie. Jeśli nie ma pasującej kategorii to nie zgaduj, nie twórz kategorii własnych.
-            Kategorie: {KATEGORIE}"
+    prompt: "Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach, które kupiłem. Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow), dane te mają być w formacie JSON. Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc), cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON. Zawsze dodawaj pole proponowana_nazwa (masz zaproponować własną nazwę dla produktu), a odczytaną wartość dać w polu nazwa_produktu. Usuwaj z proponowanej nazwy różne zbędne przyrostki, które nie tworzą nazwy produktu. Gdy znajdziesz pod jakimś produktem opust/rabat to dodaj do produktu wyżej liste (pole listy ma się nazywac upusty) z opustami(same kwoty) i nie twórz dodatkowej pozycji na opust. Chce żebyś dla spróbował dopasować dla produktów kategorie. Jeśli nie ma pasującej kategorii to nie zgaduj, nie twórz kategorii własnych. Kategorie: {KATEGORIE}"
     forbidden-characters:
       - ignore previous instructions
       - disregard above instructions

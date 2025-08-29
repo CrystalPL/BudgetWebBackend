@@ -3,13 +3,15 @@ package pl.crystalek.budgetweb.receipt.ai;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptItemJsonData;
-import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptPrompt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponse;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponseMessage;
 import pl.crystalek.budgetweb.receipt.properties.ReceiptProperties;
@@ -29,9 +31,9 @@ import java.util.concurrent.CompletableFuture;
 public class AIReceiptService {
     AIReceiptRequestValidator requestValidator;
     AIReceiptPromptBuilder promptBuilder;
-    AIRequestSender requestSender;
     ReceiptProperties receiptProperties;
     UserService userService;
+    ChatModel chatModel;
 
     public CompletableFuture<AIReceiptResponse> sendRequest(final MultipartFile multipartFile, final long userId) {
         final AIReceiptResponseMessage validateResult = requestValidator.validate(multipartFile);
@@ -48,15 +50,16 @@ public class AIReceiptService {
 
         final User requesterUser = userService.getUserById(userId).get();
         final File imageFile = imageFileOptional.get();
-        final AIReceiptPrompt prompt = getPrompt(imageFile, requesterUser);
-        final CompletableFuture<String> requestResult = requestSender.sendRequest(prompt);
+        final CompletableFuture<String> requestResult = sendRequest(imageFile, requesterUser);
         return requestResult.thenApply(it -> mapToResultObject(it, requesterUser));
     }
 
-    private AIReceiptPrompt getPrompt(final File imageFile, final User requsterUser) {
+    @Async
+    protected CompletableFuture<String> sendRequest(final File imageFile, final User requsterUser) {
         final Set<Category> categories = requsterUser.getHouseholdMember().getHousehold().getCategories();
+        final Message prompt = promptBuilder.buildAIMessage(imageFile, categories);
 
-        return promptBuilder.buildAIMessage(imageFile, categories);
+        return CompletableFuture.completedFuture(chatModel.call(prompt));
     }
 
     private AIReceiptResponse mapToResultObject(final String aiResponse, final User requesterUser) {

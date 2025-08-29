@@ -9,6 +9,7 @@ public record AIProcessedReceiptItem(@Nullable String productName, @Nullable Dou
     public Double getSumOfDiscounts() {
         return discounts.stream()
                 .mapToDouble(Double::doubleValue)
+                .map(Math::abs)
                 .sum();
     }
 }

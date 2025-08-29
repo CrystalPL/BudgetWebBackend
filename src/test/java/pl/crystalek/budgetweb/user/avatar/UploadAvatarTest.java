@@ -45,7 +45,7 @@ class UploadAvatarTest {
 
     @BeforeEach
     void setUp() {
-        AvatarFacade.AVATAR_DIRECTORY.mkdir();
+        AvatarUtils.AVATAR_DIRECTORY.mkdir();
         mockFile = new MockMultipartFile("avatar", "avatar.jpg", "image/jpeg", "test image content".getBytes());
     }
 
@@ -54,13 +54,14 @@ class UploadAvatarTest {
         when(avatarRepository.findByUser_Id(anyLong())).thenReturn(Optional.of(testAvatar));
         mockAvatar(testAvatar);
         mockReturnSaveAvatar();
-        final File avatarFile = new File(AvatarFacade.AVATAR_DIRECTORY, testAvatar.getId().toString() + "." + testAvatar.getExtension());
+        when(testAvatar.getFileName()).thenAnswer(it -> testAvatar.getId().toString() + "." + testAvatar.getExtension());
+        final File avatarFile = new File(AvatarUtils.AVATAR_DIRECTORY, testAvatar.getFileName());
         mockFile.transferTo(avatarFile);
 
         final ResponseAPI<UploadAvatarResponseMessage> result = uploadAvatar.uploadAvatar(anyLong(), mockFile);
 
         assertFalse(avatarFile.exists());
-        assertTrue(new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).exists());
+        assertTrue(new File(AvatarUtils.AVATAR_DIRECTORY, returnSaveAvatar.getFileName()).exists());
         assertTrue(result.isSuccess());
         assertEquals(UploadAvatarResponseMessage.SUCCESS, result.getMessage());
     }
@@ -72,7 +73,7 @@ class UploadAvatarTest {
 
         verify(avatarRepository, never()).delete(any());
         assertTrue(result.isSuccess());
-        assertTrue(new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).exists());
+        assertTrue(new File(AvatarUtils.AVATAR_DIRECTORY, returnSaveAvatar.getFileName()).exists());
         assertEquals(UploadAvatarResponseMessage.SUCCESS, result.getMessage());
     }
 
@@ -91,11 +92,11 @@ class UploadAvatarTest {
     @AfterEach
     void tearDown() {
         if (testAvatar != null && testAvatar.getId() != null) {
-            new File(AvatarFacade.AVATAR_DIRECTORY, testAvatar.getId() + "." + testAvatar.getExtension()).delete();
+            new File(AvatarUtils.AVATAR_DIRECTORY, testAvatar.getFileName()).delete();
         }
 
         if (returnSaveAvatar != null) {
-            new File(AvatarFacade.AVATAR_DIRECTORY, returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension()).delete();
+            new File(AvatarUtils.AVATAR_DIRECTORY, returnSaveAvatar.getFileName()).delete();
         }
 
     }

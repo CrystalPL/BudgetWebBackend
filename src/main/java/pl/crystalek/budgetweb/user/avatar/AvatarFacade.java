@@ -14,14 +14,6 @@ import java.io.File;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true)
 public class AvatarFacade {
-    static final File AVATAR_DIRECTORY = new File(System.getProperty("user.dir") + "/avatars");
-
-    static {
-        if (!AVATAR_DIRECTORY.exists()) {
-            AVATAR_DIRECTORY.mkdir();
-        }
-    }
-
     UploadAvatar uploadAvatar;
     UploadAvatarValidator uploadAvatarValidator;
     GetAvatar getAvatar;
@@ -38,5 +30,10 @@ public class AvatarFacade {
 
     public File getAvatar(final long userId) {
         return getAvatar.getAvatar(userId);
+    }
+
+    public File getAvatar(final String targetUserId, final long requesterUserId) {
+
+        return getAvatar.getAvatar(requesterUserId);
     }
 }

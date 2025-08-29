@@ -36,7 +36,7 @@ class UploadAvatar {
     }
 
     private void deleteCurrentAvatarIfExists(final Avatar avatar) {
-        new File(AvatarFacade.AVATAR_DIRECTORY, avatar.getId().toString() + "." + avatar.getExtension()).delete();
+        new File(AvatarUtils.AVATAR_DIRECTORY, avatar.getFileName()).delete();
         avatarRepository.delete(avatar);
     }
 
@@ -50,7 +50,7 @@ class UploadAvatar {
 
     private boolean moveAvatarToDirectory(final MultipartFile imageFile, final Avatar avatar) {
         try {
-            imageFile.transferTo(new File(AvatarFacade.AVATAR_DIRECTORY, avatar.getId().toString() + "." + avatar.getExtension()).toPath());
+            imageFile.transferTo(new File(AvatarUtils.AVATAR_DIRECTORY, avatar.getFileName()).toPath());
         } catch (final IOException exception) {
             return false;
         }

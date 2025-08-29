@@ -28,7 +28,8 @@ class AvatarController {
 
     @PostMapping()
     public ResponseEntity<ResponseAPI<UploadAvatarResponseMessage>> uploadAvatar(
-            @RequestBody(required = false) final MultipartFile file, @AuthenticationPrincipal final long userId
+            @RequestBody(required = false) final MultipartFile file,
+            @AuthenticationPrincipal final long userId
     ) {
         final ResponseAPI<UploadAvatarResponseMessage> response = avatarFacade.uploadAvatar(userId, file);
         return ResponseEntity.status(response.getStatusCode()).body(response);
@@ -42,4 +43,16 @@ class AvatarController {
 
         return new ResponseEntity<>(new FileSystemResource(avatar), headers, HttpStatus.OK);
     }
+
+//    @GetMapping
+//    public ResponseEntity<FileSystemResource> getAvatar(
+//            @PathVariable final String targetUserId,
+//            @AuthenticationPrincipal final long requesterUserId
+//    ) {
+//        final File avatar = avatarFacade.getAvatar(requesterUserId);
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add(HttpHeaders.CONTENT_TYPE, "image/jpeg");
+//
+//        return new ResponseEntity<>(new FileSystemResource(avatar), headers, HttpStatus.OK);
+//    }
 }

@@ -32,4 +32,8 @@ public class Avatar {
         this.user = user;
         this.extension = extension;
     }
+
+    public String getFileName() {
+        return id.toString() + "." + extension;
+    }
 }
