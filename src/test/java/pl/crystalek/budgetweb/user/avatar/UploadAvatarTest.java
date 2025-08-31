@@ -109,6 +109,7 @@ class UploadAvatarTest {
 
     private void mockReturnSaveAvatar() {
         mockAvatar(returnSaveAvatar);
+        when(returnSaveAvatar.getFileName()).thenAnswer(it -> returnSaveAvatar.getId().toString() + "." + returnSaveAvatar.getExtension());
         when(avatarRepository.save(any())).thenReturn(returnSaveAvatar);
     }
 }
