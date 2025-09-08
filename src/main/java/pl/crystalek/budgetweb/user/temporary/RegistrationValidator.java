@@ -12,7 +12,7 @@ import pl.crystalek.budgetweb.user.email.ChangeEmailFacade;
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RegistrationValidator { //klasa utworzona, aby uniknąć circular dependency
+public class RegistrationValidator {
     UserService userService;
     ChangeEmailFacade changeEmailFacade;
     TemporaryUserFacade temporaryUserFacade;

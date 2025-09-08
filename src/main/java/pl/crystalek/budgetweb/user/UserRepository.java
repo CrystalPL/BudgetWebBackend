@@ -9,7 +9,6 @@ import pl.crystalek.budgetweb.user.model.UserDTO;
 import pl.crystalek.budgetweb.user.response.AccountInfoResponse;
 
 import java.util.Optional;
-import java.util.Set;
 
 interface UserRepository extends CrudRepository<User, Long> {
 
@@ -23,9 +22,6 @@ interface UserRepository extends CrudRepository<User, Long> {
            "FROM User u WHERE u.id = :userId")
     AccountInfoResponse findAccountInfoById(final long userId);
 
-    @Query("SELECT u.email FROM User u WHERE u.id = :id")
-    Optional<String> findEmailById(final long id);
-
     boolean existsByEmail(final String email);
 
     @Query("SELECT u.password FROM User u WHERE u.id = :id")
@@ -34,7 +30,4 @@ interface UserRepository extends CrudRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.password = :newPassword WHERE u.id = :id")
     void updatePasswordById(final long id, final String newPassword);
-
-    @Query("select u.id from User u WHERE u.id IN :ids")
-    Set<Long> findExistingIds(final Set<Long> ids);
 }
