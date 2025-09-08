@@ -23,7 +23,6 @@ public class Avatar {
     @GeneratedValue(strategy = GenerationType.UUID)
     UUID id;
 
-
     @OneToOne
     @JoinColumn(name = "user_id")
     User user;
@@ -32,5 +31,9 @@ public class Avatar {
     public Avatar(final User user, final String extension) {
         this.user = user;
         this.extension = extension;
+    }
+
+    public String getFileName() {
+        return id.toString() + "." + extension;
     }
 }

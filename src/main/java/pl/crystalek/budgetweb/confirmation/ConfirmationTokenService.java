@@ -16,7 +16,7 @@ import java.util.UUID;
 public class ConfirmationTokenService {
     ConfirmationTokenRepository repository;
 
-    public ConfirmationToken getToken(final User user, final Instant expireAt, final ConfirmationTokenType confirmationTokenType) {
+    public ConfirmationToken createToken(final User user, final Instant expireAt, final ConfirmationTokenType confirmationTokenType) {
         return repository.save(new ConfirmationToken(user, expireAt, confirmationTokenType));
     }
 

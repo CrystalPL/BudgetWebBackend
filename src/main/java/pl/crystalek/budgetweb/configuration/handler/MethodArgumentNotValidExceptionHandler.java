@@ -17,7 +17,7 @@ class MethodArgumentNotValidExceptionHandler {
     @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class) //TODO ten cały kod można wyjebać
     public MethodArgumentNotValidResponse methodArgumentNotValidException(final MethodArgumentNotValidException exception) {
-        exception.getBindingResult().getFieldErrors().forEach(fieldError -> System.out.println(fieldError.getDefaultMessage()));
+        System.out.println(exception.getBindingResult().getFieldErrors().size());
         final String message = Optional.ofNullable(exception.getBindingResult().getFieldError())
                 .map(FieldError::getDefaultMessage)
                 .orElse("WHAT HAPPEN BLYAT?");

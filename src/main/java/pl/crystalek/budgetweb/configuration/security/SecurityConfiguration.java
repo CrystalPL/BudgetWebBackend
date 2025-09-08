@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.configuration.security;
 
+import jakarta.servlet.DispatcherType;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -48,6 +49,7 @@ class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(registry -> registry
+                        .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
                         .requestMatchers("/household/invitations/invite").authenticated()
                         .requestMatchers("/auth/confirm").permitAll()
                         .requestMatchers("/auth/login").anonymous()
@@ -72,5 +74,4 @@ class SecurityConfiguration {
         impl.setHideUserNotFoundExceptions(false);
         return impl;
     }
-
 }

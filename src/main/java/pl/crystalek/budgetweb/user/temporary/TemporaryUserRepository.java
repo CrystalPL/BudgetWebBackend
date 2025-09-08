@@ -3,6 +3,7 @@ package pl.crystalek.budgetweb.user.temporary;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,6 @@ interface TemporaryUserRepository extends CrudRepository<TemporaryUser, UUID> {
 
     @Query("SELECT tu.id FROM TemporaryUser tu WHERE tu.email = :email")
     Optional<UUID> findIdByEmail(final String email);
+
+    void deleteAllByExpireAtBefore(Instant expireAtBefore);
 }
