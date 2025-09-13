@@ -1,29 +1,36 @@
 package pl.crystalek.budgetweb.user.request;
 
+import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import pl.crystalek.budgetweb.share.validation.password.ValidPassword;
 
 public record ChangePasswordRequest(
-        @NotBlank(message = "MISSING_OLD_PASSWORD")
+        @NotBlank(message = "MISSING_OLD_PASSWORD", groups = ValidationGroups.MissingOldPassword.class)
         String oldPassword,
 
-        @NotBlank(message = "MISSING_PASSWORD")
-        @Size(min = 8, message = "PASSWORD_TOO_SHORT")
-        @Size(max = 255, message = "PASSWORD_TOO_LONG")
-        @Pattern(regexp = ".*[A-Z].*", message = "MISSING_UPPERCASE")
-        @Pattern(regexp = ".*[a-z].*", message = "MISSING_LOWERCASE")
-        @Pattern(regexp = ".*\\d.*", message = "MISSING_NUMBER")
-        @Pattern(regexp = ".*[!@#$%^&*].*", message = "MISSING_SPECIAL_CHAR")
+        @ValidPassword(groups = ValidationGroups.MissingPassword.class)
         String password,
 
-        @NotBlank(message = "MISSING_CONFIRM_PASSWORD")
+        @NotBlank(message = "MISSING_CONFIRM_PASSWORD", groups = ValidationGroups.MissingConfirmPassword.class)
         String confirmPassword
 ) {
 
-    @AssertTrue(message = "PASSWORD_MISMATCH")
+    @AssertTrue(message = "PASSWORD_MISMATCH", groups = ValidationGroups.PasswordMismatch.class)
     private boolean isPasswordMatching() {
         return password.equals(confirmPassword);
+    }
+
+    @GroupSequence({ValidationGroups.MissingOldPassword.class, ValidationGroups.MissingPassword.class, ValidationGroups.MissingConfirmPassword.class, ValidationGroups.PasswordMismatch.class})
+    public interface ChangePasswordRequestValidation {}
+
+    private interface ValidationGroups {
+        interface MissingOldPassword {}
+
+        interface MissingPassword {}
+
+        interface MissingConfirmPassword {}
+
+        interface PasswordMismatch {}
     }
 }

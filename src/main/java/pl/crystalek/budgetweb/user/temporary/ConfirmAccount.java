@@ -4,9 +4,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import pl.crystalek.budgetweb.auth.response.AccountConfirmationResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.auth.response.AccountConfirmationResponseMessage;
 
 import java.util.Optional;
 import java.util.UUID;

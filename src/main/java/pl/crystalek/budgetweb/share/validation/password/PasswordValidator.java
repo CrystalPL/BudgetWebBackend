@@ -10,7 +10,6 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
     public boolean isValid(String password, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
-
         if (StringUtils.isEmpty(password)) {
             addMessage(context, PasswordValidationErrorType.MISSING_PASSWORD);
             return false;

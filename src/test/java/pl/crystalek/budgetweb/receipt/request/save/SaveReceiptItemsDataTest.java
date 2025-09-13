@@ -6,8 +6,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import pl.crystalek.budgetweb.utils.BaseTest;
-import pl.crystalek.budgetweb.utils.request.RequestHelper;
+import pl.crystalek.budgetweb.helper.BaseTest;
+import pl.crystalek.budgetweb.helper.request.RequestHelper;
 
 import java.util.HashMap;
 import java.util.Map;
