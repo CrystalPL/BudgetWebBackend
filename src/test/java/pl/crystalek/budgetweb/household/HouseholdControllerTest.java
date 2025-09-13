@@ -20,10 +20,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import pl.crystalek.budgetweb.helper.UserAccountUtil;
+import pl.crystalek.budgetweb.helper.request.RequestHelper;
 import pl.crystalek.budgetweb.household.request.CreateHouseholdRequest;
 import pl.crystalek.budgetweb.household.response.CreateHouseholdResponseMessage;
-import pl.crystalek.budgetweb.utils.UserAccountUtil;
-import pl.crystalek.budgetweb.utils.request.RequestHelper;
 
 import java.util.Set;
 

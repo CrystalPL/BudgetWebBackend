@@ -14,11 +14,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import pl.crystalek.budgetweb.auth.CookieService;
 import pl.crystalek.budgetweb.household.role.permission.Permission;
 import pl.crystalek.budgetweb.household.role.permission.RolePermissionService;
 import pl.crystalek.budgetweb.token.TokenFacade;
 import pl.crystalek.budgetweb.token.model.AccessTokenDetails;
-import pl.crystalek.budgetweb.user.auth.CookieService;
 
 import java.io.IOException;
 import java.util.Collections;

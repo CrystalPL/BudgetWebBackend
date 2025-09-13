@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ import pl.crystalek.budgetweb.user.response.ChangePasswordResponseMessage;
 
 @RestController
 @RequestMapping("/account")
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class UserController {
     UserService userService;
@@ -32,7 +33,7 @@ class UserController {
 
     @PostMapping("/change-password")
     private ResponseEntity<ResponseAPI<ChangePasswordResponseMessage>> changePassword(
-            @Valid @RequestBody final ChangePasswordRequest changePasswordRequest,
+            @Validated(ChangePasswordRequest.ChangePasswordRequestValidation.class) @RequestBody final ChangePasswordRequest changePasswordRequest,
             @AuthenticationPrincipal final long userId
     ) {
         final ResponseAPI<ChangePasswordResponseMessage> response = userService.changePassword(userId, changePasswordRequest.oldPassword(), changePasswordRequest.password());
@@ -46,6 +47,5 @@ class UserController {
     ) {
         final ResponseAPI<ChangeNicknameResponseMessage> response = userService.changeNickname(userId, changeNicknameRequest.nickname());
         return ResponseEntity.status(response.getStatusCode()).body(response);
-
     }
 }
