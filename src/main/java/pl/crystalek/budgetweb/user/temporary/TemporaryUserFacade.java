@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import pl.crystalek.budgetweb.auth.request.RegisterRequest;
+import pl.crystalek.budgetweb.auth.response.AccountConfirmationResendEmailResponseMessage;
+import pl.crystalek.budgetweb.auth.response.AccountConfirmationResponseMessage;
+import pl.crystalek.budgetweb.auth.response.RegisterResponse;
 import pl.crystalek.budgetweb.share.ResponseAPI;
-import pl.crystalek.budgetweb.user.auth.request.RegisterRequest;
-import pl.crystalek.budgetweb.user.auth.response.AccountConfirmationResendEmailResponseMessage;
-import pl.crystalek.budgetweb.user.auth.response.AccountConfirmationResponseMessage;
-import pl.crystalek.budgetweb.user.auth.response.RegisterResponse;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;

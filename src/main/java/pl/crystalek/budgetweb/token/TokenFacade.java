@@ -5,9 +5,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import pl.crystalek.budgetweb.auth.device.DeviceInfo;
+import pl.crystalek.budgetweb.auth.request.LoginRequest;
 import pl.crystalek.budgetweb.token.model.AccessTokenDetails;
-import pl.crystalek.budgetweb.user.auth.device.DeviceInfo;
-import pl.crystalek.budgetweb.user.auth.request.LoginRequest;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.util.Optional;

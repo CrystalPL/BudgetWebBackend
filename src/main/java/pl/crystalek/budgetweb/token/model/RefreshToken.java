@@ -12,7 +12,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.user.auth.device.DeviceInfo;
+import pl.crystalek.budgetweb.auth.device.DeviceInfo;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.time.Instant;

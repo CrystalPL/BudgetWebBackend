@@ -4,15 +4,15 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import pl.crystalek.budgetweb.auth.response.RegisterResponse;
+import pl.crystalek.budgetweb.auth.response.RegisterResponseMessage;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.auth.response.RegisterResponse;
-import pl.crystalek.budgetweb.user.auth.response.RegisterResponseMessage;
-import pl.crystalek.budgetweb.user.email.ChangeEmailFacade;
+import pl.crystalek.budgetweb.user.profile.email.ChangeEmailFacade;
 
 @Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class RegistrationValidator { //klasa utworzona, aby uniknąć circular dependency
+public class RegistrationValidator {
     UserService userService;
     ChangeEmailFacade changeEmailFacade;
     TemporaryUserFacade temporaryUserFacade;

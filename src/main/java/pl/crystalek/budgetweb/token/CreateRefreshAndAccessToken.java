@@ -5,10 +5,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
+import pl.crystalek.budgetweb.auth.device.DeviceInfo;
+import pl.crystalek.budgetweb.auth.request.LoginRequest;
 import pl.crystalek.budgetweb.token.model.RefreshToken;
 import pl.crystalek.budgetweb.user.UserService;
-import pl.crystalek.budgetweb.user.auth.device.DeviceInfo;
-import pl.crystalek.budgetweb.user.auth.request.LoginRequest;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.user.model.UserDTO;
 
