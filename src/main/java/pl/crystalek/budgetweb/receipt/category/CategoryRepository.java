@@ -1,8 +1,8 @@
-package pl.crystalek.budgetweb.category;
+package pl.crystalek.budgetweb.receipt.category;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import pl.crystalek.budgetweb.category.response.GetCategoryResponse;
+import pl.crystalek.budgetweb.receipt.category.response.GetCategoryResponse;
 
 import java.util.Set;
 
@@ -12,7 +12,7 @@ interface CategoryRepository extends CrudRepository<Category, Long> {
     Set<Long> findExistingIds(final Set<Long> ids);
 
     @Query("""
-            SELECT new pl.crystalek.budgetweb.category.response.GetCategoryResponse(
+            SELECT new pl.crystalek.budgetweb.receipt.category.response.GetCategoryResponse(
                 c.id,
                 c.name,
                 c.color

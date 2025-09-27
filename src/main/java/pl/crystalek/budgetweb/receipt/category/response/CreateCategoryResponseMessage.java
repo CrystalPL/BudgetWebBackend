@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.category.response;
+package pl.crystalek.budgetweb.receipt.category.response;
 
 public enum CreateCategoryResponseMessage {
     SUCCESS, CATEGORY_EXISTS

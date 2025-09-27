@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.category.request;
+package pl.crystalek.budgetweb.receipt.category.request;
 
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.NotBlank;

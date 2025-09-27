@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.category;
+package pl.crystalek.budgetweb.receipt.category;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -7,14 +7,14 @@ import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import pl.crystalek.budgetweb.category.request.CreateCategoryRequest;
-import pl.crystalek.budgetweb.category.request.EditCategoryRequest;
-import pl.crystalek.budgetweb.category.response.CreateCategoryResponseMessage;
-import pl.crystalek.budgetweb.category.response.DeleteCategoryResponseMessage;
-import pl.crystalek.budgetweb.category.response.EditCategoryResponseMessage;
-import pl.crystalek.budgetweb.category.response.GetCategoryResponse;
 import pl.crystalek.budgetweb.household.CreateHouseholdEvent;
 import pl.crystalek.budgetweb.household.Household;
+import pl.crystalek.budgetweb.receipt.category.request.CreateCategoryRequest;
+import pl.crystalek.budgetweb.receipt.category.request.EditCategoryRequest;
+import pl.crystalek.budgetweb.receipt.category.response.CreateCategoryResponseMessage;
+import pl.crystalek.budgetweb.receipt.category.response.DeleteCategoryResponseMessage;
+import pl.crystalek.budgetweb.receipt.category.response.EditCategoryResponseMessage;
+import pl.crystalek.budgetweb.receipt.category.response.GetCategoryResponse;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 import pl.crystalek.budgetweb.user.UserService;
 

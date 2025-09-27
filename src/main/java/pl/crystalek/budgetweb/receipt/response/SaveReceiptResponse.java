@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.receipt.response.save;
+package pl.crystalek.budgetweb.receipt.response;
 
 import lombok.AccessLevel;
 import lombok.Getter;

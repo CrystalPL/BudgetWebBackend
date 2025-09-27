@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.receipt.request.save;
+package pl.crystalek.budgetweb.receipt.request;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

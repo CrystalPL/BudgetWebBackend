@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.category;
+package pl.crystalek.budgetweb.receipt.category;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
