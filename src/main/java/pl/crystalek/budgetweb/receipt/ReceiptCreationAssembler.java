@@ -3,13 +3,13 @@ package pl.crystalek.budgetweb.receipt;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.household.Household;
 import pl.crystalek.budgetweb.household.member.HouseholdMember;
+import pl.crystalek.budgetweb.receipt.category.Category;
 import pl.crystalek.budgetweb.receipt.items.ReceiptItem;
-import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptDetails;
-import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptItemsData;
-import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptRequest;
+import pl.crystalek.budgetweb.receipt.request.SaveReceiptDetails;
+import pl.crystalek.budgetweb.receipt.request.SaveReceiptItemsData;
+import pl.crystalek.budgetweb.receipt.request.SaveReceiptRequest;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.user.model.UserData;
 

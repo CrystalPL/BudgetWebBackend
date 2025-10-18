@@ -11,10 +11,10 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
-import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.receipt.ai.filter.TextFilter;
 import pl.crystalek.budgetweb.receipt.ai.filter.TextFilterImpl;
 import pl.crystalek.budgetweb.receipt.ai.filter.strategy.FilterStrategy;
+import pl.crystalek.budgetweb.receipt.category.Category;
 
 import java.io.File;
 import java.util.List;

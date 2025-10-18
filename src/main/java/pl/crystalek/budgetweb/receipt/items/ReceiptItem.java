@@ -12,8 +12,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.receipt.Receipt;
+import pl.crystalek.budgetweb.receipt.category.Category;
 import pl.crystalek.budgetweb.user.model.UserData;
 
 import java.time.Instant;

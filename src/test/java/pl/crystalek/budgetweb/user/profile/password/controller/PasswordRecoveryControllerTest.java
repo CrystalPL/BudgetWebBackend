@@ -11,10 +11,10 @@ import pl.crystalek.budgetweb.confirmation.ConfirmationTokenType;
 import pl.crystalek.budgetweb.helper.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.helper.UserAccountUtil;
 import pl.crystalek.budgetweb.helper.request.RequestHelper;
-import pl.crystalek.budgetweb.share.validation.email.EmailValidationErrorType;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.user.profile.password.request.PasswordRecoveryRequest;
 import pl.crystalek.budgetweb.user.profile.password.response.PasswordRecoveryResponseMessage;
+import pl.crystalek.budgetweb.user.validator.email.EmailValidationErrorType;
 
 import java.time.Instant;
 import java.util.List;

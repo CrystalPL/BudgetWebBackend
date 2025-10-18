@@ -50,6 +50,7 @@ class SecurityConfiguration {
                 .headers(customizer -> customizer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(registry -> registry
                         .dispatcherTypeMatchers(DispatcherType.ASYNC).permitAll()
+                        .requestMatchers("/validation").permitAll()
                         .requestMatchers("/household/invitations/invite").authenticated()
                         .requestMatchers("/auth/confirm").permitAll()
                         .requestMatchers("/auth/login").anonymous()

@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.receipt.ai.AIReceiptService;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptResponse;
-import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptRequest;
+import pl.crystalek.budgetweb.receipt.request.SaveReceiptRequest;
 import pl.crystalek.budgetweb.receipt.response.CreateReceiptDetailsResponse;
 import pl.crystalek.budgetweb.receipt.response.DeleteReceiptResponse;
 import pl.crystalek.budgetweb.receipt.response.GetReceiptResponse;
+import pl.crystalek.budgetweb.receipt.response.SaveReceiptResponseMessage;
 import pl.crystalek.budgetweb.receipt.response.ShopOccurrence;
 import pl.crystalek.budgetweb.receipt.response.UserWhoPaid;
-import pl.crystalek.budgetweb.receipt.response.save.SaveReceiptResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Set;
