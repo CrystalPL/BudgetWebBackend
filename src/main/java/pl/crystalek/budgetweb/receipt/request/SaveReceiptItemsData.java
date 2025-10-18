@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import org.jetbrains.annotations.Nullable;
+import pl.crystalek.budgetweb.receipt.items.ReceiptItemConstraints;
 
 public record SaveReceiptItemsData(
         @NotNull(message = "MISSING_RECEIPT_ITEM_ID", groups = ValidationGroups.MissingReceiptId.class)
@@ -14,8 +15,8 @@ public record SaveReceiptItemsData(
         Long receiptItemId,
 
         @NotBlank(message = "MISSING_NAME", groups = ValidationGroups.NameNotBlank.class)
-        @Size(min = 2, message = "NAME_TOO_SHORT", groups = ValidationGroups.NameMinSize.class)
-        @Size(max = 64, message = "NAME_TOO_LONG", groups = ValidationGroups.NameMaxSize.class)
+        @Size(min = ReceiptItemConstraints.PRODUCT_NAME_MIN_LENGTH, message = "NAME_TOO_SHORT", groups = ValidationGroups.NameMinSize.class)
+        @Size(max = ReceiptItemConstraints.PRODUCT_NAME_MAX_LENGTH, message = "NAME_TOO_LONG", groups = ValidationGroups.NameMaxSize.class)
         String productName,
 
         @NotNull(message = "MISSING_QUANTITY", groups = ValidationGroups.MissingQuantity.class)

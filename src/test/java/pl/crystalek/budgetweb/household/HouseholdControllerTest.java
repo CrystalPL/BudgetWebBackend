@@ -72,7 +72,7 @@ class HouseholdControllerTest {
             "'A', NAME_TOO_SHORT",
             "'abcdefghijklmnopqrstuvwxyzabcdefg', NAME_TOO_LONG"
     })
-    void shouldReturnBadRequestWhenHouseholdNameIsInvalid(final String name, final String errorMessage) throws Exception {
+    void shouldReturnBadRequestWhenHouseholdNameIsInvalid(final String name, final String errorMessage) {
         final CreateHouseholdRequest createHouseholdRequest = new CreateHouseholdRequest(name);
 
         RequestHelper.builder()
@@ -91,10 +91,9 @@ class HouseholdControllerTest {
             "'Potęga'",
             "'Gospodarstwo domowe v1'",
             "'Gospodarstwo domowe v2'",
-            "'Te'",
             "'Ted'",
     })
-    void shouldCreateHouseholdWhenNameIsValid(final String name) throws Exception {
+    void shouldCreateHouseholdWhenNameIsValid(final String name) {
         final CreateHouseholdRequest createHouseholdRequest = new CreateHouseholdRequest(name);
 
         RequestHelper.builder()

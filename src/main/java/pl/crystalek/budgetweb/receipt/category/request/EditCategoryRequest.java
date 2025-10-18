@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import pl.crystalek.budgetweb.receipt.category.constraints.CategoryConstraints;
 
 public record EditCategoryRequest(
         @NotNull(message = "MISSING_CATEGORY_ID", groups = EditCategoryRequest.ValidationGroups.MissingCategoryId.class)
@@ -12,12 +13,12 @@ public record EditCategoryRequest(
         String categoryId,
 
         @NotBlank(message = "MISSING_NAME", groups = EditCategoryRequest.ValidationGroups.NameNotBlank.class)
-        @Size(min = 2, message = "NAME_TOO_SHORT", groups = EditCategoryRequest.ValidationGroups.NameMinSize.class)
-        @Size(max = 32, message = "NAME_TOO_LONG", groups = EditCategoryRequest.ValidationGroups.NameMaxSize.class)
+        @Size(min = CategoryConstraints.CATEGORY_NAME_MIN_LENGTH, message = "NAME_TOO_SHORT", groups = EditCategoryRequest.ValidationGroups.NameMinSize.class)
+        @Size(max = CategoryConstraints.CATEGORY_NAME_MAX_LENGTH, message = "NAME_TOO_LONG", groups = EditCategoryRequest.ValidationGroups.NameMaxSize.class)
         String name,
 
         @NotBlank(message = "MISSING_COLOR", groups = EditCategoryRequest.ValidationGroups.MissingColor.class)
-        @Pattern(regexp = "^#[A-Fa-f0-9]{6}$", message = "INVALID_COLOR_FORMAT", groups = EditCategoryRequest.ValidationGroups.InvalidColorFormat.class)
+        @Pattern(regexp = CategoryConstraints.COLOR_FORMAT_REGEX, message = "INVALID_COLOR_FORMAT", groups = EditCategoryRequest.ValidationGroups.InvalidColorFormat.class)
         String color
 ) {
     public Long getCategoryId() {

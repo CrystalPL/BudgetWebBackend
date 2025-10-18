@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.auth;
+package pl.crystalek.budgetweb.user.validator.email;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import pl.crystalek.budgetweb.validation.Validator;
 
 @Component
 @FieldDefaults(level = AccessLevel.PUBLIC, makeFinal = true)
-public class EmailValidationConstraints implements Validator {
+class EmailValidationConstraints implements Validator {
     static int EMAIL_MAX_LENGTH = 255;
     static String EMAIL_REGEX = "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$";
 

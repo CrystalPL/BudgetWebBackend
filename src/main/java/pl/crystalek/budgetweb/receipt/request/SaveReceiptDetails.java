@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import pl.crystalek.budgetweb.receipt.ReceiptConstraints;
 
 import java.time.Instant;
 
@@ -15,8 +16,8 @@ public record SaveReceiptDetails(
         Long receiptId,
 
         @NotBlank(message = "MISSING_NAME", groups = ValidationGroups.NameNotBlank.class)
-        @Size(min = 2, message = "NAME_TOO_SHORT", groups = ValidationGroups.NameMinSize.class)
-        @Size(max = 64, message = "NAME_TOO_LONG", groups = ValidationGroups.NameMaxSize.class)
+        @Size(min = ReceiptConstraints.SHOP_NAME_MIN_LENGTH, message = "NAME_TOO_SHORT", groups = ValidationGroups.NameMinSize.class)
+        @Size(max = ReceiptConstraints.SHOP_NAME_MAX_LENGTH, message = "NAME_TOO_LONG", groups = ValidationGroups.NameMaxSize.class)
         String shopName,
 
         @NotNull(message = "MISSING_WHO_PAID_ID", groups = ValidationGroups.MissingWhoPaidId.class)

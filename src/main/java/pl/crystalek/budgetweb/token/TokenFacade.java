@@ -13,7 +13,7 @@ import pl.crystalek.budgetweb.user.model.User;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class TokenFacade {
     TokenRepository tokenRepository;

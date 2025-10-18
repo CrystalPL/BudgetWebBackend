@@ -1,10 +1,10 @@
-package pl.crystalek.budgetweb.share.validation.password;
+package pl.crystalek.budgetweb.user.validator.password;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 
-public class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
+class PasswordValidator implements ConstraintValidator<ValidPassword, String> {
 
     @Override
     public boolean isValid(String password, ConstraintValidatorContext context) {
@@ -15,32 +15,32 @@ public class PasswordValidator implements ConstraintValidator<ValidPassword, Str
             return false;
         }
 
-        if (password.length() < 8) {
+        if (password.length() < PasswordValidationConstraints.PASSWORD_MIN_LENGTH) {
             addMessage(context, PasswordValidationErrorType.PASSWORD_TOO_SHORT);
             return false;
         }
 
-        if (password.length() > 255) {
+        if (password.length() > PasswordValidationConstraints.PASSWORD_MAX_LENGTH) {
             addMessage(context, PasswordValidationErrorType.PASSWORD_TOO_LONG);
             return false;
         }
 
-        if (!password.matches(".*[A-Z].*")) {
+        if (!password.matches(PasswordValidationConstraints.UPPERCASE_REGEX)) {
             addMessage(context, PasswordValidationErrorType.MISSING_UPPERCASE);
             return false;
         }
 
-        if (!password.matches(".*[a-z].*")) {
+        if (!password.matches(PasswordValidationConstraints.LOWERCASE_REGEX)) {
             addMessage(context, PasswordValidationErrorType.MISSING_LOWERCASE);
             return false;
         }
 
-        if (!password.matches(".*\\d.*")) {
+        if (!password.matches(PasswordValidationConstraints.NUMBER_REGEX)) {
             addMessage(context, PasswordValidationErrorType.MISSING_NUMBER);
             return false;
         }
 
-        if (!password.matches(".*[!@#$%^&*].*")) {
+        if (!password.matches(PasswordValidationConstraints.SPECIAL_CHARACTERS)) {
             addMessage(context, PasswordValidationErrorType.MISSING_SPECIAL_CHAR);
             return false;
         }

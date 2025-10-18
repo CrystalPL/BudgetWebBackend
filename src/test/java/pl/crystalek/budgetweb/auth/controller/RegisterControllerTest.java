@@ -13,9 +13,9 @@ import pl.crystalek.budgetweb.confirmation.ConfirmationToken;
 import pl.crystalek.budgetweb.helper.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.helper.UserAccountUtil;
 import pl.crystalek.budgetweb.helper.request.RequestHelper;
-import pl.crystalek.budgetweb.share.validation.password.PasswordValidationErrorType;
 import pl.crystalek.budgetweb.user.profile.email.ChangeEmail;
 import pl.crystalek.budgetweb.user.temporary.TemporaryUser;
+import pl.crystalek.budgetweb.user.validator.password.PasswordValidationErrorType;
 
 import java.util.List;
 import java.util.stream.Stream;

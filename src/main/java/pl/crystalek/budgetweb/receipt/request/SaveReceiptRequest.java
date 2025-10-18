@@ -20,4 +20,5 @@ public record SaveReceiptRequest(
                 @ConvertGroup(to = SaveReceiptItemsData.Validation.class)
                         SaveReceiptItemsData
                 > itemsDataList
-) {}
+) {
+}

@@ -6,8 +6,10 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ClassUtils;
 
+import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,10 +24,12 @@ class ValidationService {
     @SneakyThrows
     private Validator createNonBeanValidator(final Validator validator) {
         final Class<?> userClass = ClassUtils.getUserClass(validator);
-        return (Validator) userClass.getDeclaredConstructor().newInstance();
+        final Constructor<?> declaredConstructor = userClass.getDeclaredConstructor();
+        declaredConstructor.setAccessible(true);
+        return (Validator) declaredConstructor.newInstance();
     }
 
-    Validator getValidator(final ValidationEntityType entityType) {
-        return validators.get(entityType);
+    Map<ValidationEntityType, Validator> getValidators(final List<ValidationEntityType> entityTypes) {
+        return entityTypes.stream().collect(Collectors.toMap(Function.identity(), validators::get));
     }
 }

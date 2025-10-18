@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.share.validation.password;
+package pl.crystalek.budgetweb.user.validator.email;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PasswordValidator.class)
-public @interface ValidPassword {
-    String message() default "INVALID_PASSWORD";
+@Constraint(validatedBy = EmailValidator.class)
+public @interface ValidEmail {
+    String message() default "INVALID_EMAIL";
 
     Class<?>[] groups() default {};
 

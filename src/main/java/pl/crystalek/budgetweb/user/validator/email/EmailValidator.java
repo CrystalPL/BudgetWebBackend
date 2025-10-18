@@ -1,13 +1,10 @@
-package pl.crystalek.budgetweb.share.validation.email;
+package pl.crystalek.budgetweb.user.validator.email;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.regex.Pattern;
-
-public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$");
+class EmailValidator implements ConstraintValidator<ValidEmail, String> {
 
     @Override
     public boolean isValid(String email, ConstraintValidatorContext context) {
@@ -18,12 +15,12 @@ public class EmailValidator implements ConstraintValidator<ValidEmail, String> {
             return false;
         }
 
-        if (email.length() > 255) {
+        if (email.length() > EmailValidationConstraints.EMAIL_MAX_LENGTH) {
             addMessage(context, EmailValidationErrorType.EMAIL_TOO_LONG);
             return false;
         }
 
-        if (!EMAIL_PATTERN.matcher(email).matches()) {
+        if (!email.matches(EmailValidationConstraints.EMAIL_REGEX)) {
             addMessage(context, EmailValidationErrorType.INVALID_EMAIL);
             return false;
         }
