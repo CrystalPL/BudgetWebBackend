@@ -14,11 +14,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.household.member.HouseholdMember;
 import pl.crystalek.budgetweb.household.member.invite.HouseholdInviteMember;
 import pl.crystalek.budgetweb.household.role.Role;
 import pl.crystalek.budgetweb.receipt.Receipt;
+import pl.crystalek.budgetweb.receipt.category.Category;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.time.Instant;

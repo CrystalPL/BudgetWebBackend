@@ -10,10 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.crystalek.budgetweb.helper.BaseAccessControllerTest;
 import pl.crystalek.budgetweb.helper.UserAccountUtil;
 import pl.crystalek.budgetweb.helper.request.RequestHelper;
-import pl.crystalek.budgetweb.share.validation.password.PasswordValidationErrorType;
 import pl.crystalek.budgetweb.user.model.User;
 import pl.crystalek.budgetweb.user.request.ChangePasswordRequest;
 import pl.crystalek.budgetweb.user.response.ChangePasswordResponseMessage;
+import pl.crystalek.budgetweb.user.validator.password.PasswordValidationErrorType;
 
 import java.util.stream.Stream;
 

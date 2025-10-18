@@ -47,7 +47,8 @@ class AuthController {
     public ResponseEntity<ResponseAPI<LoginResponseMessage>> login(
             @Validated(LoginRequest.LoginRequestValidation.class) @RequestBody final LoginRequest loginRequest,
             @RequestHeader("User-Agent") final String userAgent,
-            final HttpServletResponse response) {
+            final HttpServletResponse response
+    ) {
         final DeviceInfo deviceInfo = DeviceUtil.getDeviceInfo(userAgent);
         final LoginResponse responseAPI = authenticationService.authenticateAndAddCookie(loginRequest, response, deviceInfo);
 
@@ -59,13 +60,17 @@ class AuthController {
     }
 
     @PostMapping("/resend-email")
-    public ResponseEntity<ResponseAPI<AccountConfirmationResendEmailResponseMessage>> resendEmail(@Validated(ResendEmailRequest.ResendEmailValidation.class) @RequestBody final ResendEmailRequest resendEmailRequest) {
+    public ResponseEntity<ResponseAPI<AccountConfirmationResendEmailResponseMessage>> resendEmail(
+            @Validated(ResendEmailRequest.ResendEmailValidation.class) @RequestBody final ResendEmailRequest resendEmailRequest
+    ) {
         final ResponseAPI<AccountConfirmationResendEmailResponseMessage> response = temporaryUserFacade.resendEmail(resendEmailRequest.registrationToken());
         return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterResponse> register(@Validated(RegisterRequest.RegisterRequestValidation.class) @RequestBody final RegisterRequest registerRequest) {
+    public ResponseEntity<RegisterResponse> register(
+            @Validated(RegisterRequest.RegisterRequestValidation.class) @RequestBody final RegisterRequest registerRequest
+    ) {
         RegisterResponse result = registrationValidator.validate(registerRequest.email());
         if (result.isSuccess()) {
             result = temporaryUserFacade.createUser(registerRequest);
@@ -78,7 +83,9 @@ class AuthController {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<ResponseAPI<AccountConfirmationResponseMessage>> confirmAccountRegister(@Validated(AccountConfirmationRequest.AccountConfirmationValidation.class) @RequestBody final AccountConfirmationRequest accountConfirmationRequest, final HttpServletRequest request, final HttpServletResponse httpServletResponse) {
+    public ResponseEntity<ResponseAPI<AccountConfirmationResponseMessage>> confirmAccountRegister(
+            @Validated(AccountConfirmationRequest.AccountConfirmationValidation.class) @RequestBody final AccountConfirmationRequest accountConfirmationRequest
+    ) {
         final ResponseAPI<AccountConfirmationResponseMessage> response = temporaryUserFacade.confirmAccount(accountConfirmationRequest.confirmationToken());
 
         return ResponseEntity.status(response.getStatusCode()).body(response);

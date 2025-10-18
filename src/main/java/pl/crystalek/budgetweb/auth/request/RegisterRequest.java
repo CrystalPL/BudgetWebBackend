@@ -5,8 +5,8 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import pl.crystalek.budgetweb.share.validation.email.ValidEmail;
-import pl.crystalek.budgetweb.share.validation.password.ValidPassword;
+import pl.crystalek.budgetweb.user.validator.email.ValidEmail;
+import pl.crystalek.budgetweb.user.validator.password.ValidPassword;
 
 public record RegisterRequest(
         @NotBlank(message = "MISSING_USERNAME", groups = ValidationGroups.Username.class)

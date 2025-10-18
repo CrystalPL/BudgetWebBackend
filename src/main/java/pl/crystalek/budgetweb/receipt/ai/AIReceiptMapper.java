@@ -2,11 +2,11 @@ package pl.crystalek.budgetweb.receipt.ai;
 
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.category.Category;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIProcessedReceiptItem;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceipt;
 import pl.crystalek.budgetweb.receipt.ai.model.AIReceiptItem;
+import pl.crystalek.budgetweb.receipt.category.Category;
 import pl.crystalek.budgetweb.receipt.items.response.ReceiptItemCategoryDTO;
 import pl.crystalek.budgetweb.receipt.properties.ReceiptProperties;
 import pl.crystalek.budgetweb.user.model.User;

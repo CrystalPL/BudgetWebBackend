@@ -3,7 +3,7 @@ package pl.crystalek.budgetweb.user.request;
 import jakarta.validation.GroupSequence;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
-import pl.crystalek.budgetweb.share.validation.password.ValidPassword;
+import pl.crystalek.budgetweb.user.validator.password.ValidPassword;
 
 public record ChangePasswordRequest(
         @NotBlank(message = "MISSING_OLD_PASSWORD", groups = ValidationGroups.MissingOldPassword.class)

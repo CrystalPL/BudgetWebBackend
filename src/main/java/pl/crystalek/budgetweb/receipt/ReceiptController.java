@@ -19,11 +19,11 @@ import pl.crystalek.budgetweb.receipt.items.ReceiptItemService;
 import pl.crystalek.budgetweb.receipt.items.response.GetProductListResponse;
 import pl.crystalek.budgetweb.receipt.items.response.GetReceiptItemsResponse;
 import pl.crystalek.budgetweb.receipt.items.response.SuggestCategoryResponse;
-import pl.crystalek.budgetweb.receipt.request.save.SaveReceiptRequest;
+import pl.crystalek.budgetweb.receipt.request.SaveReceiptRequest;
 import pl.crystalek.budgetweb.receipt.response.CreateReceiptDetailsResponse;
 import pl.crystalek.budgetweb.receipt.response.DeleteReceiptResponse;
 import pl.crystalek.budgetweb.receipt.response.GetReceiptResponse;
-import pl.crystalek.budgetweb.receipt.response.save.SaveReceiptResponseMessage;
+import pl.crystalek.budgetweb.receipt.response.SaveReceiptResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Set;
@@ -38,13 +38,18 @@ class ReceiptController {
     ReceiptItemService receiptItemService;
 
     @PostMapping("/loadByAI")
-    public CompletableFuture<AIReceiptResponse> loadReceiptByAI(@RequestBody MultipartFile file,
-                                                                @AuthenticationPrincipal final long userId) {
+    public CompletableFuture<AIReceiptResponse> loadReceiptByAI(
+            @RequestBody MultipartFile file,
+            @AuthenticationPrincipal final long userId
+    ) {
         return receiptFacade.loadByAI(file, userId);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseAPI<DeleteReceiptResponse>> deleteReceipt(@PathVariable final String id, @AuthenticationPrincipal final long userId) {
+    public ResponseEntity<ResponseAPI<DeleteReceiptResponse>> deleteReceipt(
+            @PathVariable final String id,
+            @AuthenticationPrincipal final long userId
+    ) {
         final ResponseAPI<DeleteReceiptResponse> response = receiptFacade.deleteReceipt(id, userId);
 
         return ResponseEntity.status(response.getStatusCode()).body(response);

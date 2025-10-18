@@ -5,7 +5,7 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import org.apache.commons.lang3.StringUtils;
-import pl.crystalek.budgetweb.share.validation.password.ValidPassword;
+import pl.crystalek.budgetweb.user.validator.password.ValidPassword;
 
 public record PasswordResetRequest(
         @NotBlank(message = "MISSING_TOKEN", groups = ValidationGroups.MissingToken.class)

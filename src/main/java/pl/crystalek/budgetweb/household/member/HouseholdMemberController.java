@@ -34,7 +34,8 @@ class HouseholdMemberController {
     @PreAuthorize("hasAuthority(T(pl.crystalek.budgetweb.household.role.permission.Permission).HOUSEHOLD_MEMBER_DELETE)")
     @DeleteMapping("/deleteMember/{id}")
     public ResponseEntity<ResponseAPI<DeleteMemberResponseMessage>> deleteUser(
-            @PathVariable("id") final String memberId, @AuthenticationPrincipal final long userId
+            @PathVariable("id") final String memberId,
+            @AuthenticationPrincipal final long userId
     ) {
         final ResponseAPI<DeleteMemberResponseMessage> response = householdMemberService.deleteUser(memberId, userId);
 
