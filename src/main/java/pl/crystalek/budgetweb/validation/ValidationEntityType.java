@@ -16,5 +16,5 @@ public enum ValidationEntityType {
     @JsonProperty("receipt")
     RECEIPT,
     @JsonProperty("receiptItem")
-    RECEIPT_ITEM,
+    RECEIPT_ITEM, ADVANCED_FILTER,
 }

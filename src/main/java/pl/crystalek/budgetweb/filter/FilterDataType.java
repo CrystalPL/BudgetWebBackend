@@ -3,6 +3,7 @@ package pl.crystalek.budgetweb.filter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import pl.crystalek.budgetweb.filter.condition.FilterOperator;
 
 import java.util.EnumSet;
 

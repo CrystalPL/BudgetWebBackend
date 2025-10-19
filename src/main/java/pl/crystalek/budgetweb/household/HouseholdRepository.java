@@ -12,11 +12,7 @@ interface HouseholdRepository extends CrudRepository<Household, Long> {
                         (SELECT hm.household.id FROM HouseholdMember hm WHERE hm.user.id = :requesterId)""")
     void updateHouseholdName(final long requesterId, final String newHouseholdName);
 
-    @Query("""
-            SELECT h
-            FROM Household h
-                     JOIN HouseholdMember hm ON hm.household.id = h.id
-            WHERE hm.user.id = :userId
-            """)
-    Household getHouseholdByUserId(final long userId);
+    Household findByMembers_User_Id(final long userId);
+
+    boolean existsByMembers_User_Id(final long userId);
 }

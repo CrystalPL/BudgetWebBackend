@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -17,13 +18,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.crystalek.budgetweb.configuration.handler.CustomAccessDeniedHandler;
 import pl.crystalek.budgetweb.configuration.handler.CustomAuthenticationEntryPoint;
 import pl.crystalek.budgetweb.user.CustomUserDetailsService;
 
+@EnableJpaAuditing
 @EnableScheduling
 @EnableAsync
 @Configuration
@@ -33,7 +34,6 @@ import pl.crystalek.budgetweb.user.CustomUserDetailsService;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class SecurityConfiguration {
     CustomUserDetailsService customUserDetailsService;
-    PasswordEncoder passwordEncoder;
     CustomAccessDeniedHandler customAccessDeniedHandler;
     CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
@@ -70,8 +70,7 @@ class SecurityConfiguration {
 
     @Bean
     public AuthenticationProvider daoAuthenticationProvider() {
-        final DaoAuthenticationProvider impl = new DaoAuthenticationProvider(passwordEncoder);
-        impl.setUserDetailsService(customUserDetailsService);
+        final DaoAuthenticationProvider impl = new DaoAuthenticationProvider(customUserDetailsService);
         impl.setHideUserNotFoundExceptions(false);
         return impl;
     }

@@ -48,6 +48,6 @@ class AIReceiptPromptBuilder {
         final MimeType mimeType = fileExtension.contains("png") ? MimeTypeUtils.IMAGE_PNG : MimeTypeUtils.IMAGE_JPEG;
         final Media media = new Media(mimeType, new FileSystemResource(imageFile));
 
-        return new UserMessage(categories, media);
+        return UserMessage.builder().text(categories).media(media).build();
     }
 }

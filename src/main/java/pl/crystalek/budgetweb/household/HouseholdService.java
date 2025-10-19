@@ -32,6 +32,10 @@ public class HouseholdService {
     ApplicationEventPublisher eventPublisher;
     CacheManager cacheManager;
 
+    public boolean userHasHousehold(final long userId) {
+        return repository.existsByMembers_User_Id(userId);
+    }
+
     public ResponseAPI<CreateHouseholdResponseMessage> create(final CreateHouseholdRequest createHouseholdRequest, final long userId) {
         final User user = userService.getUserById(userId).get();
         final HouseholdMember householdMember = user.getHouseholdMember();
@@ -83,7 +87,7 @@ public class HouseholdService {
             return new ResponseAPI<>(false, TransferOwnerResponseMessage.YOURSELF_TRANSFER);
         }
 
-        final Household household = repository.getHouseholdByUserId(requesterId);
+        final Household household = repository.findByMembers_User_Id(requesterId);
         final User oldOwner = household.getOwner();
         if (oldOwner.getId() == requesterId) {
             return new ResponseAPI<>(false, TransferOwnerResponseMessage.NO_OWNER);
