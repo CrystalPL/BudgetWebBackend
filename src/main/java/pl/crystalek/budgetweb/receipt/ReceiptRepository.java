@@ -1,5 +1,6 @@
 package pl.crystalek.budgetweb.receipt;
 
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import pl.crystalek.budgetweb.receipt.response.GetReceiptResponse;
@@ -8,7 +9,7 @@ import pl.crystalek.budgetweb.receipt.response.UserWhoPaid;
 
 import java.util.Set;
 
-interface ReceiptRepository extends CrudRepository<Receipt, Long> {
+interface ReceiptRepository extends CrudRepository<Receipt, Long>, JpaSpecificationExecutor<Receipt> {
 
     @Query("""
             SELECT new pl.crystalek.budgetweb.receipt.response.GetReceiptResponse(

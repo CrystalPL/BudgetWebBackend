@@ -39,18 +39,18 @@ public record SaveReceiptItemsData(
 ) {
 
     @GroupSequence({
-            SaveReceiptItemsData.ValidationGroups.MissingReceiptId.class,
-            SaveReceiptItemsData.ValidationGroups.InvalidReceiptItemId.class,
-            SaveReceiptItemsData.ValidationGroups.NameNotBlank.class,
-            SaveReceiptItemsData.ValidationGroups.NameMinSize.class,
-            SaveReceiptItemsData.ValidationGroups.NameMaxSize.class,
-            SaveReceiptItemsData.ValidationGroups.MissingQuantity.class,
-            SaveReceiptItemsData.ValidationGroups.InvalidQuantity.class,
-            SaveReceiptItemsData.ValidationGroups.MissingPrice.class,
-            SaveReceiptItemsData.ValidationGroups.InvalidPrice.class,
-            SaveReceiptItemsData.ValidationGroups.MissingCategoryId.class,
-            SaveReceiptItemsData.ValidationGroups.InvalidNumberFormat.class,
-            SaveReceiptItemsData.ValidationGroups.InvalidCategoryId.class
+            ValidationGroups.MissingReceiptId.class,
+            ValidationGroups.InvalidReceiptItemId.class,
+            ValidationGroups.NameNotBlank.class,
+            ValidationGroups.NameMinSize.class,
+            ValidationGroups.NameMaxSize.class,
+            ValidationGroups.MissingQuantity.class,
+            ValidationGroups.InvalidQuantity.class,
+            ValidationGroups.MissingPrice.class,
+            ValidationGroups.InvalidPrice.class,
+            ValidationGroups.MissingCategoryId.class,
+            ValidationGroups.InvalidNumberFormat.class,
+            ValidationGroups.InvalidCategoryId.class
     })
     public interface Validation {}
 

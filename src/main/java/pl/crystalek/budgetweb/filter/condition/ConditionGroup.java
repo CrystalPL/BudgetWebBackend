@@ -11,15 +11,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.filter.AdvancedFilter;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,20 +28,34 @@ import java.util.stream.Collectors;
 @Table(name = "filter_condition_group")
 public class ConditionGroup implements Cloneable {
     @Id
+    @Getter
     @Column(unique = true, nullable = false, updatable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Getter
     @Enumerated(value = EnumType.STRING)
     FilterLogicalOperator logicalOperatorBefore;
+
+    @Column(nullable = false)
+    int position;
 
     @Setter
     @ManyToOne
     @JoinColumn(name = "filter_id", nullable = false, updatable = false)
     AdvancedFilter advancedFilter;
 
+    @Getter
+    @Setter
     @OneToMany(mappedBy = "conditionGroup", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<Condition> conditions;
+    @OrderColumn(name = "position")
+    List<Condition> conditions;
+
+    public ConditionGroup(final Long id, final FilterLogicalOperator logicalOperatorBefore, final AdvancedFilter advancedFilter) {
+        this.id = id;
+        this.logicalOperatorBefore = logicalOperatorBefore;
+        this.advancedFilter = advancedFilter;
+    }
 
     @Override
     public ConditionGroup clone() {
@@ -50,7 +65,7 @@ public class ConditionGroup implements Cloneable {
             conditionGroup.advancedFilter = null;
             conditionGroup.conditions = conditions.stream()
                     .map(condition -> cloneCondition(conditionGroup, condition))
-                    .collect(Collectors.toSet());
+                    .toList();
 
             return conditionGroup;
         } catch (CloneNotSupportedException e) {

@@ -18,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import pl.crystalek.budgetweb.configuration.handler.CustomAccessDeniedHandler;
@@ -36,6 +37,7 @@ class SecurityConfiguration {
     CustomUserDetailsService customUserDetailsService;
     CustomAccessDeniedHandler customAccessDeniedHandler;
     CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    BCryptPasswordEncoder passwordEncoder;
 
     @Bean
     public SecurityFilterChain applicationSecurity(final HttpSecurity httpSecurity, final AuthenticationFilter authenticationFilter) throws Exception {
@@ -72,6 +74,7 @@ class SecurityConfiguration {
     public AuthenticationProvider daoAuthenticationProvider() {
         final DaoAuthenticationProvider impl = new DaoAuthenticationProvider(customUserDetailsService);
         impl.setHideUserNotFoundExceptions(false);
+        impl.setPasswordEncoder(passwordEncoder);
         return impl;
     }
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderColumn;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,8 +25,7 @@ import pl.crystalek.budgetweb.filter.condition.ConditionGroup;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.time.Instant;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,12 +58,15 @@ public class AdvancedFilter implements Cloneable {
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     User user;
 
+    @Getter
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false, updatable = false)
     AdvancedFilterEntityType fieldType;
 
+    @Getter
     @OneToMany(mappedBy = "advancedFilter", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<ConditionGroup> conditionGroups;
+    @OrderColumn(name = "position")
+    List<ConditionGroup> conditionGroups;
 
     public AdvancedFilter(final String filterName, final String description, final User user, final AdvancedFilterEntityType fieldType) {
         this.filterName = filterName;
@@ -77,6 +80,10 @@ public class AdvancedFilter implements Cloneable {
         this.description = description;
     }
 
+    public AdvancedFilterField parseField(final String fieldEnumName) {
+        return fieldType.parseField(fieldEnumName).get();
+    }
+
     @Override
     public AdvancedFilter clone() {
         try {
@@ -84,7 +91,7 @@ public class AdvancedFilter implements Cloneable {
             advancedFilter.id = null;
             advancedFilter.conditionGroups = conditionGroups.stream()
                     .map(conditionGroup -> cloneConditionGroup(conditionGroup, advancedFilter))
-                    .collect(Collectors.toSet());
+                    .toList();
 
             return advancedFilter;
         } catch (CloneNotSupportedException e) {

@@ -10,10 +10,13 @@ import pl.crystalek.budgetweb.filter.request.SaveFilterRequest;
 import pl.crystalek.budgetweb.filter.response.BaseFilterResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class AdvancedFilterFacade {
+    AdvancedFilterRepository advancedFilterRepository;
     SaveFilter saveFilter;
     ActivateFilter activateFilter;
     DeleteFilter deleteFilter;
@@ -33,5 +36,13 @@ public class AdvancedFilterFacade {
 
     public ResponseAPI<BaseFilterResponseMessage> duplicateFilter(final DuplicateFilterRequest duplicateFilterRequest, final long requesterId) {
         return duplicateFilter.duplicateFilter(duplicateFilterRequest, requesterId);
+    }
+
+    public Optional<AdvancedFilter> getAdvancedFilter(final long id, final long requesterId) {
+        return advancedFilterRepository.findByIdAndUser_Id(id, requesterId);
+    }
+
+    public void saveAdvancedFilter(final AdvancedFilter advancedFilter) {
+        advancedFilterRepository.save(advancedFilter);
     }
 }
