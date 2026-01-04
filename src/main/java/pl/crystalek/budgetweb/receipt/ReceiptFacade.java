@@ -50,4 +50,8 @@ class ReceiptFacade {
 
         return new CreateReceiptDetailsResponse(whoPaidList, shopOccurrences);
     }
+
+    Set<UserWhoPaid> getWhoPaidList(final long requesterId) {
+        return repository.getWhoPaidList(requesterId);
+    }
 }

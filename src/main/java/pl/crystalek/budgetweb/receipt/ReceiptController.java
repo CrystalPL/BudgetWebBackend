@@ -24,6 +24,7 @@ import pl.crystalek.budgetweb.receipt.response.CreateReceiptDetailsResponse;
 import pl.crystalek.budgetweb.receipt.response.DeleteReceiptResponse;
 import pl.crystalek.budgetweb.receipt.response.GetReceiptResponse;
 import pl.crystalek.budgetweb.receipt.response.SaveReceiptResponseMessage;
+import pl.crystalek.budgetweb.receipt.response.UserWhoPaid;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
 import java.util.Set;
@@ -91,5 +92,10 @@ class ReceiptController {
     @GetMapping("/items/{receiptId}")
     public Set<GetReceiptItemsResponse> getReceiptItems(@PathVariable final long receiptId, @AuthenticationPrincipal final long userId) {
         return receiptItemService.getReceiptItems(receiptId, userId);
+    }
+
+    @GetMapping("/whoPaidList")
+    public Set<UserWhoPaid> getWhoPaidList(@AuthenticationPrincipal final long userId) {
+        return receiptFacade.getWhoPaidList(userId);
     }
 }
