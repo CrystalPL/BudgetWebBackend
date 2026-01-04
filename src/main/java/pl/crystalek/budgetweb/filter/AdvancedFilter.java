@@ -17,11 +17,12 @@ import jakarta.persistence.OrderColumn;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import pl.crystalek.budgetweb.filter.condition.ConditionGroup;
+import pl.crystalek.budgetweb.filter.condition.model.ConditionGroup;
 import pl.crystalek.budgetweb.user.model.User;
 
 import java.time.Instant;
@@ -38,6 +39,7 @@ public class AdvancedFilter implements Cloneable {
     Long id;
 
     @Getter
+    @Setter
     @Column(nullable = false)
     String filterName;
 
@@ -81,7 +83,7 @@ public class AdvancedFilter implements Cloneable {
     }
 
     public AdvancedFilterField parseField(final String fieldEnumName) {
-        return fieldType.parseField(fieldEnumName).get();
+        return fieldType.fromEnumName(fieldEnumName).get();
     }
 
     @Override

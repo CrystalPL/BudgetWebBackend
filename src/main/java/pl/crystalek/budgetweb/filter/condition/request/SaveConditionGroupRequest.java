@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.groups.ConvertGroup;
 import org.jetbrains.annotations.Nullable;
-import pl.crystalek.budgetweb.filter.condition.FilterLogicalOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterLogicalOperator;
 
 import java.util.List;
 

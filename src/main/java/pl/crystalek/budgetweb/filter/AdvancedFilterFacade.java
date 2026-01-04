@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import pl.crystalek.budgetweb.filter.request.DuplicateFilterRequest;
 import pl.crystalek.budgetweb.filter.request.FilterIdRequest;
 import pl.crystalek.budgetweb.filter.request.SaveFilterRequest;
+import pl.crystalek.budgetweb.filter.response.AdvancedFilterListGetterResponse;
 import pl.crystalek.budgetweb.filter.response.BaseFilterResponseMessage;
 import pl.crystalek.budgetweb.share.ResponseAPI;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,5 +46,9 @@ public class AdvancedFilterFacade {
 
     public void saveAdvancedFilter(final AdvancedFilter advancedFilter) {
         advancedFilterRepository.save(advancedFilter);
+    }
+
+    public List<AdvancedFilterListGetterResponse> getAdvancedFilterList(final AdvancedFilterEntityType filterEntityType, final long requesterId) {
+        return advancedFilterRepository.findByFieldTypeAndUserId(filterEntityType, requesterId);
     }
 }

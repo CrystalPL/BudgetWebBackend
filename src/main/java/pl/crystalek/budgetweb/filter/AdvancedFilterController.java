@@ -14,12 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.crystalek.budgetweb.filter.condition.ConditionFacade;
+import pl.crystalek.budgetweb.filter.condition.request.SaveFilterConditionRequest;
+import pl.crystalek.budgetweb.filter.condition.response.ConditionGroupResponse;
 import pl.crystalek.budgetweb.filter.request.DuplicateFilterRequest;
 import pl.crystalek.budgetweb.filter.request.FilterIdRequest;
 import pl.crystalek.budgetweb.filter.request.SaveFilterRequest;
+import pl.crystalek.budgetweb.filter.response.AdvancedFilterListGetterResponse;
 import pl.crystalek.budgetweb.filter.response.BaseFilterResponseMessage;
 import pl.crystalek.budgetweb.household.constraints.RequireHousehold;
 import pl.crystalek.budgetweb.share.ResponseAPI;
+
+import java.util.List;
 
 @RequireHousehold
 @RestController
@@ -28,6 +34,23 @@ import pl.crystalek.budgetweb.share.ResponseAPI;
 @RequiredArgsConstructor(access = AccessLevel.PACKAGE)
 class AdvancedFilterController {
     AdvancedFilterFacade advancedFilterFacade;
+    ConditionFacade conditionFacade;
+
+    @PostMapping("/condition/save")
+    public void saveFilterConditions(
+            @Validated(SaveFilterConditionRequest.Validation.class) @RequestBody final SaveFilterConditionRequest saveFilterConditionRequest,
+            @AuthenticationPrincipal final long userId
+    ) {
+        conditionFacade.saveCondition(saveFilterConditionRequest, userId);
+    }
+
+    @GetMapping("/condition/{advancedFilterId}")
+    public List<ConditionGroupResponse> getConditionGroups(
+            @PathVariable final Long advancedFilterId,
+            @AuthenticationPrincipal final long userId
+    ) {
+        return conditionFacade.getConditionGroupResponse(advancedFilterId, userId);
+    }
 
     @PostMapping("/save")
     public ResponseEntity<ResponseAPI<BaseFilterResponseMessage>> saveFilter(
@@ -66,10 +89,10 @@ class AdvancedFilterController {
     }
 
     @GetMapping("/{filterEntityType}")
-    public void getFilters(
+    public List<AdvancedFilterListGetterResponse> getFilters(
             @PathVariable @NotNull final AdvancedFilterEntityType filterEntityType,
             @AuthenticationPrincipal final long userId
     ) {
-        advancedFilterFacade.getFilters(filterEntityType, userId);
+        return advancedFilterFacade.getAdvancedFilterList(filterEntityType, userId);
     }
 }

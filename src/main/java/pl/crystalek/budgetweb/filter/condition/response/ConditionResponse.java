@@ -1,7 +1,7 @@
 package pl.crystalek.budgetweb.filter.condition.response;
 
-import pl.crystalek.budgetweb.filter.condition.FilterLogicalOperator;
-import pl.crystalek.budgetweb.filter.condition.FilterOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterLogicalOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterOperator;
 
 public record ConditionResponse(
         long id,

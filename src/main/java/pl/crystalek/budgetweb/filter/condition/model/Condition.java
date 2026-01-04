@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.filter.condition;
+package pl.crystalek.budgetweb.filter.condition.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

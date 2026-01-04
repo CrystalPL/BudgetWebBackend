@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 @SpringBootApplication
 public class BudgetWebBackendApplication {
 
-    public static void main(String[] args) throws MalformedURLException {
+    static void main(String[] args) throws MalformedURLException {
         final ConfigurableApplicationContext context = SpringApplication.run(BudgetWebBackendApplication.class, args);
         //todo obslugyzc filenotfoundexception gdy plik avatara nie moze zostac znaleziony
 //        final ChatModel bean = context.getBean(ChatModel.class);

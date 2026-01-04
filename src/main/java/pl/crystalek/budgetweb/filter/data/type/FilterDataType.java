@@ -4,7 +4,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.filter.condition.FilterOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterOperator;
 
 import java.util.EnumSet;
 

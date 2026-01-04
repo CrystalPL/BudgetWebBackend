@@ -37,9 +37,6 @@ class ConditionGroupValidator implements SaveConditionValidator {
             if (conditionGroupRequest.logicalOperatorBefore() == null) {
                 throw new BudgetAppException(SaveFilterConditionResponse.GROUP_NOT_HAVE_OPERATOR_BEFORE);
             }
-
-//            final List<SaveConditionRequest> conditions = conditionGroupRequest.conditions();
-//            new ConditionValidator(conditions, advancedFilter).val
         }
     }
 }

@@ -23,7 +23,7 @@ class DuplicateFilter {
         }
 
         final AdvancedFilter duplicateAdvancedFilter = advancedFilterOptional.get().clone();
-        duplicateAdvancedFilter.update(duplicateFilterRequest.name(), duplicateAdvancedFilter.getFilterName());
+        duplicateAdvancedFilter.setFilterName(duplicateFilterRequest.name());
 
         advancedFilterRepository.save(duplicateAdvancedFilter);
 

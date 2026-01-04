@@ -7,7 +7,7 @@ import pl.crystalek.budgetweb.exception.BudgetAppException;
 import pl.crystalek.budgetweb.filter.AdvancedFilter;
 import pl.crystalek.budgetweb.filter.AdvancedFilterEntityType;
 import pl.crystalek.budgetweb.filter.AdvancedFilterField;
-import pl.crystalek.budgetweb.filter.condition.FilterOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterOperator;
 import pl.crystalek.budgetweb.filter.condition.request.SaveConditionRequest;
 import pl.crystalek.budgetweb.filter.condition.response.SaveFilterConditionResponse;
 import pl.crystalek.budgetweb.filter.data.type.FilterDataType;
@@ -65,7 +65,7 @@ class ConditionValidator implements SaveConditionValidator {
 
     private void setAdvancedFilterFieldIfExists() {
         final AdvancedFilterEntityType fieldType = advancedFilter.getFieldType();
-        final Optional<AdvancedFilterField> advancedFilterFieldOptional = fieldType.parseField(saveConditionRequest.fieldName());
+        final Optional<AdvancedFilterField> advancedFilterFieldOptional = fieldType.fromFieldName(saveConditionRequest.fieldName());
         if (advancedFilterFieldOptional.isEmpty()) {
             throw new BudgetAppException(SaveFilterConditionResponse.INVALID_FIELD_NAME);
         }

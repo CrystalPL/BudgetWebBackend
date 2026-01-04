@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 import pl.crystalek.budgetweb.exception.BudgetAppException;
 import pl.crystalek.budgetweb.filter.AdvancedFilter;
 import pl.crystalek.budgetweb.filter.AdvancedFilterFacade;
+import pl.crystalek.budgetweb.filter.condition.model.Condition;
+import pl.crystalek.budgetweb.filter.condition.model.ConditionGroup;
 import pl.crystalek.budgetweb.filter.condition.response.ConditionGroupGetterResponse;
 import pl.crystalek.budgetweb.filter.condition.response.ConditionGroupResponse;
 import pl.crystalek.budgetweb.filter.condition.response.ConditionResponse;

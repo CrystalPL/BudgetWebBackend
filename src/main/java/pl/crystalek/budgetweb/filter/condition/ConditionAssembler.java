@@ -4,6 +4,10 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.filter.AdvancedFilter;
+import pl.crystalek.budgetweb.filter.condition.model.Condition;
+import pl.crystalek.budgetweb.filter.condition.model.ConditionGroup;
+import pl.crystalek.budgetweb.filter.condition.model.FilterLogicalOperator;
+import pl.crystalek.budgetweb.filter.condition.model.FilterOperator;
 import pl.crystalek.budgetweb.filter.condition.request.SaveConditionGroupRequest;
 import pl.crystalek.budgetweb.filter.condition.request.SaveConditionRequest;
 import pl.crystalek.budgetweb.filter.condition.request.SaveFilterConditionRequest;
@@ -49,7 +53,8 @@ class ConditionAssembler {
         final Integer closeParenthesisNumber = saveConditionRequest.closeParenthesisNumber();
         final String firstValue = saveConditionRequest.firstValue();
         final String secondValue = saveConditionRequest.secondValue();
-        final String fieldName = saveConditionRequest.fieldName();
+        final String fieldName = advancedFilter.getFieldType().fromFieldName(saveConditionRequest.fieldName()).get().name();
+
 
         return new Condition(conditionId, fieldName, firstValue, secondValue, openParenthesisNumber, closeParenthesisNumber, logicalOperatorBefore, filterOperator, conditionGroup);
     }

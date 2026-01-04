@@ -1,4 +1,4 @@
-package pl.crystalek.budgetweb.filter.condition;
+package pl.crystalek.budgetweb.filter.condition.model;
 
 public enum FilterOperator {
     CONTAINS,

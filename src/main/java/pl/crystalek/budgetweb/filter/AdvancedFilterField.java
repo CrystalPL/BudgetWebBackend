@@ -8,6 +8,8 @@ public interface AdvancedFilterField {
 
     String getFieldName();
 
+    String name();
+
     default boolean isValueValid(final String value) {
         return getFilterDataType().getValidator().isValueValid(value);
     }

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import pl.crystalek.budgetweb.receipt.filter.ReceiptFilterField;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -14,7 +15,14 @@ public enum AdvancedFilterEntityType {
 
     Class<? extends Enum<? extends AdvancedFilterField>> filterFieldClass;
 
-    public Optional<AdvancedFilterField> parseField(String fieldEnumName) {
+    public Optional<AdvancedFilterField> fromFieldName(String fieldName) {
+        return Arrays.stream(filterFieldClass.getEnumConstants())
+                .map(AdvancedFilterField.class::cast)
+                .filter(field -> field.getFieldName().equals(fieldName))
+                .findFirst();
+    }
+
+    public Optional<AdvancedFilterField> fromEnumName(String fieldEnumName) {
         try {
             final AdvancedFilterField advancedFilterField = Enum.valueOf(filterFieldClass.asSubclass(Enum.class), fieldEnumName);
             return Optional.of(advancedFilterField);
