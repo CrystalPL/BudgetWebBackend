@@ -3,7 +3,7 @@ package pl.crystalek.budgetweb.filter;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import pl.crystalek.budgetweb.receipt.filter.ReceiptFilterField;
+import pl.crystalek.budgetweb.receipt.ReceiptFilterField;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -24,8 +24,7 @@ public enum AdvancedFilterEntityType {
 
     public Optional<AdvancedFilterField> fromEnumName(String fieldEnumName) {
         try {
-            final AdvancedFilterField advancedFilterField = Enum.valueOf(filterFieldClass.asSubclass(Enum.class), fieldEnumName);
-            return Optional.of(advancedFilterField);
+            return Optional.of(Enum.valueOf(filterFieldClass.asSubclass(Enum.class), fieldEnumName)).map(AdvancedFilterField.class::cast);
         } catch (IllegalArgumentException exception) {
             return Optional.empty();
         }

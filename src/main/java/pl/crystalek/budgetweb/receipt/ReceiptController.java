@@ -3,6 +3,8 @@ package pl.crystalek.budgetweb.receipt;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -67,8 +69,11 @@ class ReceiptController {
     }
 
     @GetMapping
-    public Set<GetReceiptResponse> getReceipt(@AuthenticationPrincipal final long userId) {
-        return receiptFacade.getReceipts(userId);
+    public Page<GetReceiptResponse> getReceipts(
+            @AuthenticationPrincipal final long userId,
+            Pageable pageable
+    ) {
+        return receiptFacade.getReceipts(userId, pageable);
     }
 
     @GetMapping("/getCreateDetails")

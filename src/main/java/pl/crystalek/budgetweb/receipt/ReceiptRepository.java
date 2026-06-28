@@ -1,5 +1,7 @@
 package pl.crystalek.budgetweb.receipt;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -9,7 +11,7 @@ import pl.crystalek.budgetweb.receipt.response.UserWhoPaid;
 
 import java.util.Set;
 
-interface ReceiptRepository extends CrudRepository<Receipt, Long>, JpaSpecificationExecutor<Receipt> {
+interface ReceiptRepository extends CrudRepository<Receipt, Long>, JpaSpecificationExecutor<Receipt>, ReceiptGetterRepository {
 
     @Query("""
             SELECT new pl.crystalek.budgetweb.receipt.response.GetReceiptResponse(
@@ -22,7 +24,7 @@ interface ReceiptRepository extends CrudRepository<Receipt, Long>, JpaSpecificat
             WHERE hm.user.id = :userId
             GROUP BY r.id, r.shop, r.shoppingTime, r.whoPaid.nickname, r.settled
             """)
-    Set<GetReceiptResponse> getReceiptsByUserId(final Long userId);
+    Page<GetReceiptResponse> getReceiptsByUserId(final Long userId, final Pageable pageable);
 
     @Query("""
             SELECT new pl.crystalek.budgetweb.receipt.response.UserWhoPaid(hm2.user.id, hm2.user.userData.nickname)

@@ -3,9 +3,7 @@ package pl.crystalek.budgetweb.filter.condition;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Component;
 import pl.crystalek.budgetweb.exception.BudgetAppException;
 import pl.crystalek.budgetweb.filter.AdvancedFilter;
@@ -24,8 +22,7 @@ import java.util.Optional;
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 class SaveCondition {
     AdvancedFilterFacade advancedFilterFacade;
-    @Qualifier("receiptRepository")
-    JpaSpecificationExecutor<Receipt> receiptJpaSpecificationExecutor;
+//    ReceiptRepository repository;
 
     void saveCondition(final SaveFilterConditionRequest saveFilterConditionRequest, final long requesterId) {
         final Long advancedFilterId = saveFilterConditionRequest.advancedFilterId();
@@ -43,7 +40,7 @@ class SaveCondition {
         advancedFilter = conditionAssembler.createAdvancedFilter();
         advancedFilterFacade.saveAdvancedFilter(advancedFilter);
         final Specification<Receipt> receiptSpecification = new FilterSpecificationBuilder(advancedFilter).buildSpecification();
-        final List<Receipt> all = receiptJpaSpecificationExecutor.findAll(receiptSpecification);
-        System.out.println(all);
+//        final Page<GetReceiptResponse> all = repository.findReceipts(requesterId, receiptSpecification, PageRequest.of(2, 20));
+//        System.out.println(all);
     }
 }

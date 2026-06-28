@@ -3,6 +3,8 @@ package pl.crystalek.budgetweb.receipt;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import pl.crystalek.budgetweb.receipt.ai.AIReceiptService;
@@ -40,8 +42,8 @@ class ReceiptFacade {
         return deleteReceipt.deleteReceipt(stringReceiptId, requesterId);
     }
 
-    Set<GetReceiptResponse> getReceipts(final long requesterId) {
-        return repository.getReceiptsByUserId(requesterId);
+    Page<GetReceiptResponse> getReceipts(final long requesterId, final Pageable pageable) {
+        return repository.getReceiptsByUserId(requesterId, pageable);
     }
 
     CreateReceiptDetailsResponse getCreateReceiptDetails(final long requesterId) {
