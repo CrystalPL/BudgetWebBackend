@@ -19,6 +19,6 @@ import java.util.Set;
 class AIProperties {
     DataSize maxPhotoSize;
     Set<String> allowedPhotoExtensions;
-    String prompt;
+    String categorizationPrompt;
     List<String> forbiddenCharacters;
 }

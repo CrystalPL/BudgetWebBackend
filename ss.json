@@ -1,0 +1,329 @@
+{
+  "nazwa_sklepu": "Kaufland Polska Markety Sp. z o.o. Sp. j.",
+  "data_zakupow": null,
+  "produkty": [
+    {
+      "nazwa_produktu": "Op▒ata za plastik",
+      "proponowana_nazwa": "Op▒ata za plastik",
+      "ilosc": "2",
+      "cena": "0.27",
+      "suma": "0.54",
+      "kategoria": "Inne",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Mi▒soMielWpSzynLu",
+      "proponowana_nazwa": "Mi▒so mielone wieprzowo-szynkowe luz",
+      "ilosc": "1.012",
+      "cena": "12.99",
+      "suma": "13.15",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Mi▒soMielWpSzynLuz",
+      "proponowana_nazwa": "Mi▒so mielone wieprzowo-szynkowe luz",
+      "ilosc": "1.02",
+      "cena": "12.99",
+      "suma": "13.25",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "SzynkaFarmerska",
+      "proponowana_nazwa": "Szynka farmerska",
+      "ilosc": "1.018",
+      "cena": "12.99",
+      "suma": "13.22",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "SurowkaCzerwKapusKG",
+      "proponowana_nazwa": "Sur▒wka z czerwonej kapusty",
+      "ilosc": "0.308",
+      "cena": "36.92",
+      "suma": "11.37",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "SurowkaSwiezyOgoreRzodkiew",
+      "proponowana_nazwa": "Sur▒wka ▒wie▒y og▒rek rzodkiew",
+      "ilosc": "0.239",
+      "cena": "6.90",
+      "suma": "1.59",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Mleko Wypasione2%L",
+      "proponowana_nazwa": "Mleko Wypasione 2%",
+      "ilosc": "0.238",
+      "cena": "6.90",
+      "suma": "1.64",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "OPUST Trzeci 100% taniej",
+      "proponowana_nazwa": "Opust trzeci 100% taniej",
+      "ilosc": "3",
+      "cena": "4.29",
+      "suma": "12.87",
+      "kategoria": "Inne",
+      "upusty": [
+        "-4.29"
+      ]
+    },
+    {
+      "nazwa_produktu": "Mas▒oEkstraLaciate200g",
+      "proponowana_nazwa": "Mas▒o ekstra ▒aciate 200 g",
+      "ilosc": "3",
+      "cena": "5.99",
+      "suma": "17.97",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "OPUST Trzeci 100% gratis",
+      "proponowana_nazwa": "Opust trzeci 100% gratis",
+      "ilosc": null,
+      "cena": null,
+      "suma": "-6.00",
+      "kategoria": "Inne",
+      "upusty": [
+        "-6.00"
+      ]
+    },
+    {
+      "nazwa_produktu": "STD.Twar▒gP▒t▒usty250gKostk",
+      "proponowana_nazwa": "Twar▒g p▒t▒usty 250 g kostka",
+      "ilosc": null,
+      "cena": null,
+      "suma": null,
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "ValioSerekProtwan1iszar175g",
+      "proponowana_nazwa": "Valio serek proteinowy 175 g",
+      "ilosc": "2",
+      "cena": "3.95",
+      "suma": "7.90",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "OPUST Nowa cena",
+      "proponowana_nazwa": "Opust nowa cena",
+      "ilosc": "1",
+      "cena": "5.29",
+      "suma": "5.29",
+      "kategoria": "Inne",
+      "upusty": [
+        "-2.12"
+      ]
+    },
+    {
+      "nazwa_produktu": "MozzarellaChedda200g",
+      "proponowana_nazwa": "Mozzarella cheddar 200 g",
+      "ilosc": "1",
+      "cena": "5.99",
+      "suma": "5.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "STD.Twar▒gGrani200g",
+      "proponowana_nazwa": "Twar▒g grani 200 g",
+      "ilosc": "1",
+      "cena": "2.89",
+      "suma": "2.89",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "K.SerMozzarella125g",
+      "proponowana_nazwa": "Ser mozzarella 125 g",
+      "ilosc": "1",
+      "cena": "2.39",
+      "suma": "2.39",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "TymbarkNap▒jJabMi▒2l",
+      "proponowana_nazwa": "Tymbark nap▒j jab▒ko mi▒ta 2 l",
+      "ilosc": "1",
+      "cena": "3.49",
+      "suma": "3.49",
+      "kategoria": "Napoje",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "▒ywiecZdr▒jMgoGaz1,5L",
+      "proponowana_nazwa": "▒ywiec Zdr▒j woda gazowana 1,5 l",
+      "ilosc": "1",
+      "cena": "2.85",
+      "suma": "2.85",
+      "kategoria": "Napoje",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Winogrono jasne bezp. 500g",
+      "proponowana_nazwa": "Winogrono jasne bezpestkowe 500 g",
+      "ilosc": "1",
+      "cena": "11.99",
+      "suma": "11.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Nektarynki kosz 1kg",
+      "proponowana_nazwa": "Nektarynki kosz 1 kg",
+      "ilosc": "1",
+      "cena": "6.99",
+      "suma": "6.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Truskawki pol 500g",
+      "proponowana_nazwa": "Truskawki polskie 500 g",
+      "ilosc": "1",
+      "cena": "10.99",
+      "suma": "10.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Arbuz kg",
+      "proponowana_nazwa": "Arbuz",
+      "ilosc": "1.362",
+      "cena": "1.99",
+      "suma": "2.71",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Cebula ▒▒ta kg",
+      "proponowana_nazwa": "Cebula ▒▒ta",
+      "ilosc": "0.23",
+      "cena": "1.99",
+      "suma": "0.46",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Papryka czerwona kg",
+      "proponowana_nazwa": "Papryka czerwona",
+      "ilosc": "0.268",
+      "cena": "15.99",
+      "suma": "4.29",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "OPUST Cena z kart▒",
+      "proponowana_nazwa": "Opust cena z kart▒",
+      "ilosc": null,
+      "cena": null,
+      "suma": null,
+      "kategoria": "Inne",
+      "upusty": [
+        "-2.15"
+      ]
+    },
+    {
+      "nazwa_produktu": "Cukinie kg",
+      "proponowana_nazwa": "Cukinia",
+      "ilosc": "1.624",
+      "cena": "4.99",
+      "suma": "8.10",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Marchew m▒oda kg",
+      "proponowana_nazwa": "Marchew m▒oda",
+      "ilosc": "0.118",
+      "cena": "4.99",
+      "suma": "0.59",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "STD Pol Pomidor mi▒s czer kg",
+      "proponowana_nazwa": "Pomidor mi▒sisty czerwony",
+      "ilosc": "0.324",
+      "cena": "9.99",
+      "suma": "3.24",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "STD Mi▒ta don szt",
+      "proponowana_nazwa": "Mi▒ta doniczkowa",
+      "ilosc": "1",
+      "cena": "6.99",
+      "suma": "6.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "SONKORy▒Bia▒yPapier",
+      "proponowana_nazwa": "Ry▒ bia▒y",
+      "ilosc": "1",
+      "cena": "6.79",
+      "suma": "6.79",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Ketchup▒agodny480G",
+      "proponowana_nazwa": "Ketchup ▒agodny 480 g",
+      "ilosc": "1",
+      "cena": "5.99",
+      "suma": "5.99",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "PomidoryKroj400G",
+      "proponowana_nazwa": "Pomidory krojone 400 g",
+      "ilosc": "3",
+      "cena": "3.59",
+      "suma": "10.77",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "▒miej▒elki 100g",
+      "proponowana_nazwa": "▒elki 100 g",
+      "ilosc": "1",
+      "cena": "3.49",
+      "suma": "3.49",
+      "kategoria": "Smako▒yki",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "DzikWaferZielonaCebulka120g",
+      "proponowana_nazwa": "Wafle zielona cebulka 120 g",
+      "ilosc": "1",
+      "cena": "5.49",
+      "suma": "5.49",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    },
+    {
+      "nazwa_produktu": "Berlinki Par▒wki 450g",
+      "proponowana_nazwa": "Berlinki par▒wki 450 g",
+      "ilosc": "1",
+      "cena": "7.49",
+      "suma": "7.49",
+      "kategoria": "Artyku▒y spo▒ywcze",
+      "upusty": []
+    }
+  ]
+}

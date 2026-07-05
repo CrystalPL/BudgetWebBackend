@@ -36,8 +36,9 @@ test {
 }
 
 dependencies {
-    implementation 'org.springframework.ai:spring-ai-starter-model-openai'
+    implementation 'org.springframework.ai:spring-ai-starter-model-azure-openai'
     implementation platform("org.springframework.ai:spring-ai-bom:1.0.0-M7")
+    implementation 'com.azure:azure-ai-documentintelligence:1.0.1'
     implementation 'com.github.ua-parser:uap-java:1.6.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-devtools'

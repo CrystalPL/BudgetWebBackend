@@ -25,12 +25,20 @@ spring:
     resources:
       add-mappings: false
   ai:
-    openai:
-      api-key: ${OPENAI_KEY}
-      chat:
-        options:
-          model: gpt-4.1-mini
-          temperature: 0.1
+    azure:
+      openai:
+        api-key: ${AZURE_OPENAI_KEY}
+        endpoint: https://zabawa-ai.cognitiveservices.azure.com/
+        chat:
+          options:
+            deployment-name: gpt-5.4
+            temperature: 0.1
+
+azure:
+  document-intelligence:
+    # OSOBNY zasób Document Intelligence (zabawa-ai serwuje tylko OpenAI, nie DI)
+    endpoint: ${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT:https://placeholder.cognitiveservices.azure.com/}
+    api-key: ${AZURE_DOCUMENT_INTELLIGENCE_KEY:placeholder}
 logging:
   level:
     org:
@@ -53,7 +61,43 @@ ai:
   receipt:
     max-photo-size: 12MB
     allowed-photo-extensions: [ "jpg", "jpeg", "png" ]
-    prompt: "Wysłałem Ci zdjęcie paragonu zawierającego nazwę sklepu, date zakupu oraz informacje o produktach, które kupiłem. Podaj mi proszę nazwę sklepu(pole nazwa_sklepu), date zakupów(pole data_zakupow), dane te mają być w formacie JSON. Następnie daj mi listę produktów (nazwa produktu(pole nazwa_produktu), ilość(pole ilosc), cena(pole cena), suma(pole suma)), które kupiłem w formacie JSON. Zawsze dodawaj pole proponowana_nazwa (masz zaproponować własną nazwę dla produktu), a odczytaną wartość dać w polu nazwa_produktu. Usuwaj z proponowanej nazwy różne zbędne przyrostki, które nie tworzą nazwy produktu. Gdy znajdziesz pod jakimś produktem opust/rabat to dodaj do produktu wyżej liste (pole listy ma się nazywac upusty) z opustami(same kwoty) i nie twórz dodatkowej pozycji na opust. Chce żebyś dla spróbował dopasować dla produktów kategorie. Jeśli nie ma pasującej kategorii to nie zgaduj, nie twórz kategorii własnych. Kategorie: {KATEGORIE}"
+    categorization-prompt: |
+      Jesteś ekstraktorem danych z paragonu. Dostajesz:
+      1) listę produktów z indeksami (wyodrębnioną wcześniej z paragonu),
+      2) listę dozwolonych kategorii,
+      3) surowy tekst paragonu (OCR) — potrzebny do wykrycia rabatów.
+      Zwróć WYŁĄCZNIE jeden obiekt JSON (bez komentarzy, bez bloków ```), o dokładnie takiej strukturze:
+      {
+        "produkty": [
+          { "index": int, "proponowana_nazwa": string, "kategoria": string, "rabat": number }
+        ],
+        "kaucje": [
+          { "nazwa": string, "ilosc": number, "cena": number, "kategoria": string }
+        ]
+      }
+      Zasady dla "produkty":
+      - Zwróć DOKŁADNIE tyle pozycji, ile jest na liście produktów, z tymi samymi wartościami "index".
+      - "proponowana_nazwa": czytelna nazwa produktu; rozwiń skróty i usuń kody/przyrostki, zachowując sens. Jeśli nie potrafisz poprawić, przepisz oryginał.
+      - "kategoria": MUSI pochodzić z podanej listy kategorii. Jeśli żadna nie pasuje -> null.
+      - "rabat": suma rabatów przypisanych do tego produktu, jako liczba UJEMNA (np. -4.29). Brak rabatu -> 0.
+        Linie rabatowe w OCR to m.in.: "OPUST", "RABAT", "UPUST", "... % taniej", "gratis", "Nowa cena", "Cena z kartą".
+        Rabat dotyczy produktu, który stoi bezpośrednio NAD linią rabatu. Kilka linii rabatu pod jednym produktem -> zsumuj.
+      - NIE przypisuj nikomu linii zbiorczej "OPUSTY ŁĄCZNIE" (to tylko suma kontrolna).
+      - Nie dodawaj produktów spoza listy i nie zmieniaj przypisania indeksów.
+      Zasady dla "kaucje" (sekcja "OPAKOWANIA ZWROTNE" w OCR — uwaga, kolumny bywają poprzeplatane):
+      - Utwórz osobną pozycję dla KAŻDEJ linii kaucji (WYDANIA i PRZYJĘCIA). Jeśli sekcji nie ma -> pusta lista [].
+      - "ilosc": ZAWSZE 1.
+      - "cena": wartość CAŁEJ linii kaucji ze znakiem (nie cena jednostkowa!).
+        "WYDANIA" = kaucja pobrana -> DODATNIA (np. 2 butelki PET po 0,50 = wartość linii 1.00).
+        "PRZYJĘCIA"/zwrot opakowania -> UJEMNA (np. 1 opakowanie zwrócone za 10,00 = wartość linii -10.00).
+      - W "nazwa" możesz dopisać liczbę sztuk, np. "Butelka PET (2 szt)".
+      - NIE twórz pozycji z linii zbiorczej "OPAKOWANIA ZWROTNE SUMA".
+      - "kategoria": z listy jeśli pasuje, inaczej null.
+      Kategorie: {KATEGORIE}
+      Lista produktów (index. nazwa):
+      {PRODUKTY}
+      Surowy paragon (OCR):
+      {PARAGON}
     forbidden-characters:
       - ignore previous instructions
       - disregard above instructions

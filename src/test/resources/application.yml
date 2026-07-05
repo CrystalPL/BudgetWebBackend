@@ -18,12 +18,19 @@ spring:
             enable: true
             required: true
   ai:
-    openai:
-      api-key: ${OPENAI_KEY}
-      chat:
-        options:
-          temperature: 0.1
-          model: gpt-4.1-mini
+    azure:
+      openai:
+        api-key: ${AZURE_OPENAI_KEY}
+        endpoint: https://zabawa-ai.cognitiveservices.azure.com/
+        chat:
+          options:
+            temperature: 0.1
+            deployment-name: Paragony
+
+azure:
+  document-intelligence:
+    endpoint: ${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT:https://placeholder.cognitiveservices.azure.com/}
+    api-key: ${AZURE_DOCUMENT_INTELLIGENCE_KEY:placeholder}
 logging:
   level:
     org:

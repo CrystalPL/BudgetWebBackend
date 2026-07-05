@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/budget_app?allowPublicKeyRetrieval=true&&useSSL=false&serverTimezone=Europe/Warsaw
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    password: root
+    password: admin
   jpa:
     show-sql: true
     generate-ddl: true

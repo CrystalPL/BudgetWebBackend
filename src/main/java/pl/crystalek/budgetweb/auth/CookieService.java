@@ -22,7 +22,7 @@ public class CookieService {
     public void deleteCookie(final HttpServletResponse response) {
         final Cookie cookie = new Cookie(tokenProperties.getCookieName(), null);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         cookie.setMaxAge(0);
 
@@ -32,7 +32,7 @@ public class CookieService {
     public void createCookieAndAddToResponse(final String accessToken, final boolean rememberMe, final HttpServletResponse response) {
         final Cookie cookie = new Cookie(tokenProperties.getCookieName(), accessToken);
         cookie.setHttpOnly(true);
-        cookie.setSecure(true);
+        cookie.setSecure(false);
         cookie.setPath("/");
         if (rememberMe) {
             cookie.setMaxAge(COOKIE_MAX_AGE);
